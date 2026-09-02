@@ -31,3 +31,31 @@ def create_document_metadata(
     db.refresh(new_doc)
     log_audit(db, current_user.id, "CREATE_DOCUMENT_METADATA", "Document", new_doc.id)
     return new_doc
+
+@router.get("/cases/{case_id}/documents", response_model=List[DocumentResponse])
+def get_documents(
+    case_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    case = db.query(Case).filter(Case.id == case_id).first()
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+    if current_user.role == RoleEnum.IO and case.assigned_io_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    return db.query(Document).filter(Document.case_id == case_id).all()
+
+@router.get("/cases/{case_id}/documents", response_model=List[DocumentResponse])
+def get_documents(
+    case_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    case = db.query(Case).filter(Case.id == case_id).first()
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+    if current_user.role == RoleEnum.IO and case.assigned_io_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    return db.query(Document).filter(Document.case_id == case_id).all()

@@ -131,3 +131,33 @@ def transfer_asset(
     db.refresh(asset)
     log_audit(db, current_user.id, "TRANSFER_ASSET", "Asset", asset.id, details=f"To user {to_user.id}")
     return asset
+
+@router.get("/assets/{asset_id}/events", response_model=List[AssetLifecycleEventResponse])
+def get_asset_events(
+    asset_id: int, 
+    db: Session = Depends(get_db), 
+    current_user: User = Depends(get_current_user)
+):
+    asset = db.query(Asset).filter(Asset.id == asset_id).first()
+    if not asset:
+        raise HTTPException(status_code=404, detail="Asset not found")
+    case = db.query(Case).filter(Case.id == asset.case_id).first()
+    if current_user.role == RoleEnum.IO and case.assigned_io_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    return db.query(AssetLifecycleEvent).filter(AssetLifecycleEvent.asset_id == asset_id).order_by(AssetLifecycleEvent.timestamp.desc()).all()
+
+@router.get("/assets/{asset_id}/events", response_model=List[AssetLifecycleEventResponse])
+def get_asset_events(
+    asset_id: int, 
+    db: Session = Depends(get_db), 
+    current_user: User = Depends(get_current_user)
+):
+    asset = db.query(Asset).filter(Asset.id == asset_id).first()
+    if not asset:
+        raise HTTPException(status_code=404, detail="Asset not found")
+    case = db.query(Case).filter(Case.id == asset.case_id).first()
+    if current_user.role == RoleEnum.IO and case.assigned_io_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    return db.query(AssetLifecycleEvent).filter(AssetLifecycleEvent.asset_id == asset_id).order_by(AssetLifecycleEvent.timestamp.desc()).all()
