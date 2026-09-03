@@ -1,0 +1,51 @@
+# Python bytecode and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env/
+venv.bak/
+env.bak/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing and coverage tools
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local database and generated files
+*.db
+*.sqlite3
+*.sqlite
+test_output.txt
+
+# Alembic cache / generated states
+alembic/*.pyc
+alembic/__pycache__/
