@@ -17,6 +17,29 @@ class DocumentResponse(DocumentBase):
     sha256_hash: Optional[str]
     storage_path: Optional[str]
     ocr_text: Optional[str]
+    current_version: int
     created_at: datetime
     class Config:
         from_attributes = True
+
+class DocumentVersionResponse(BaseModel):
+    id: int
+    document_id: int
+    version_number: int
+    original_filename: str
+    content_type: str
+    size_bytes: int
+    sha256_hash: str
+    ocr_text: Optional[str]
+    ocr_status: str
+    uploaded_by_id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class IntegrityVerificationResponse(BaseModel):
+    valid: bool
+    document_id: Optional[int] = None
+    checked_versions: int = 0
+    invalid_version_ids: list[int] = []

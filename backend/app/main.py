@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1 import auth, cases, assets, documents
+from app.api.v1 import audit, auth, cases, assets, documents
+from app.core.config import settings
 from app.db.database import engine, Base
 
 # NOTE: Not creating tables here because we use Alembic. 
@@ -10,8 +11,8 @@ app = FastAPI(title="Secure Police Asset & Document Lifecycle Management System"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, restrict this to frontend URL
-    allow_credentials=True,
+    allow_origins=[origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",") if origin.strip()],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -20,6 +21,7 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(cases.router, prefix="/api/v1/cases", tags=["cases"])
 app.include_router(assets.router, prefix="/api/v1", tags=["assets"])
 app.include_router(documents.router, prefix="/api/v1", tags=["documents"])
+app.include_router(audit.router, prefix="/api/v1", tags=["audit"])
 
 @app.get("/")
 def read_root():

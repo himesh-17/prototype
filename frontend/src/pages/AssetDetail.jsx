@@ -83,15 +83,15 @@ const AssetDetail = () => {
   const currentCustodian = users.find(u => u.id === asset.current_custodian_id);
 
   return (
-    <div className="animate-fade-in">
-      <div className="mb-6">
-        <Link to={`/cases/${asset.case_id}`} className="btn btn-secondary" style={{ padding: '0.5rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-elevated)' }}>
-          <ArrowLeft size={16} /> Back to Case
+    <div className="page space-y-6">
+      <div>
+        <Link to={`/cases/${asset.case_id}`} className="btn btn-secondary text-xs px-3 py-1.5 inline-flex items-center gap-2">
+          <ArrowLeft size={14} /> Back to Case
         </Link>
       </div>
 
-      <div className="card mb-6" style={{ position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'var(--accent-primary)' }}></div>
+      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-6 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-1 h-full bg-[#00d4aa]"></div>
         
         <div className="flex justify-between items-start">
           <div>

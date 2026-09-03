@@ -1,32 +1,60 @@
-import { useState, useEffect } from 'react';
-import { getCases, createCase, getUsers } from '../services/api';
-import { Briefcase, Plus, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { getCases, createCase, getUsers } from '../services/api';
+import { EmptyState } from '../components/common/EmptyState';
+import {
+  Briefcase,
+  Plus,
+  X,
+  Search,
+  Filter,
+  Calendar,
+  User,
+  Shield,
+  AlertCircle,
+  Clock,
+  ArrowRight,
+  FolderPlus
+} from 'lucide-react';
 
-const CaseList = () => {
+export const CaseList = () => {
+  const { user, activeRole } = useAuth();
   const [cases, setCases] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  
+
+  // Search & Filter State
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [priorityFilter, setPriorityFilter] = useState('ALL');
+
   // New Case Form State
   const [newCase, setNewCase] = useState({
-    case_number: '',
+    case_number: `CR-2026-0${Math.floor(Math.random() * 900 + 100)}`,
     title: '',
     description: '',
-    assigned_io_id: ''
+    assigned_io_id: '2',
+    police_station: 'Cyber Crime Police Station, Rohini, New Delhi',
+    acts_sections: 'BNS Sec 318(4) / IT Act Sec 66C, 66D',
+    court_jurisdiction: 'Special CBI & Cyber Court, Patiala House',
+    priority: 'HIGH',
+    hearing_date: '',
   });
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
+
+  const canCreateCase = activeRole === 'ADMIN' || activeRole === 'IO';
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const [casesData, usersData] = await Promise.all([getCases(), getUsers()]);
-      setCases(casesData);
-      setUsers(usersData.filter(u => u.role === 'IO' || u.role === 'ADMIN')); // Only IOs/Admins can be assigned
-    } catch (error) {
-      console.error(error);
+      setCases(casesData || []);
+      setUsers((usersData || []).filter(u => u.role === 'IO' || u.role === 'ADMIN'));
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -41,70 +69,231 @@ const CaseList = () => {
     setCreating(true);
     setError('');
     try {
+      const assignedUser = users.find(u => u.id === parseInt(newCase.assigned_io_id));
       await createCase({
         ...newCase,
-        assigned_io_id: parseInt(newCase.assigned_io_id)
+        assigned_io_id: parseInt(newCase.assigned_io_id),
+        assigned_io_name: assignedUser?.name || 'Inspector Rajesh Deshmukh',
       });
       setShowModal(false);
-      setNewCase({ case_number: '', title: '', description: '', assigned_io_id: '' });
+      setNewCase({
+        case_number: `CR-2026-0${Math.floor(Math.random() * 900 + 100)}`,
+        title: '',
+        description: '',
+        assigned_io_id: '2',
+        police_station: 'Cyber Crime Police Station, Rohini, New Delhi',
+        acts_sections: 'BNS Sec 318(4) / IT Act Sec 66C',
+        court_jurisdiction: 'Special CBI & Cyber Court, Patiala House',
+        priority: 'HIGH',
+        hearing_date: '',
+      });
       fetchData();
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to create case');
     } finally {
       setCreating(false);
     }
   };
 
+  const filteredCases = cases.filter(c => {
+    const matchesSearch =
+      c.case_number.toLowerCase().includes(search.toLowerCase()) ||
+      c.title.toLowerCase().includes(search.toLowerCase()) ||
+      (c.description || '').toLowerCase().includes(search.toLowerCase()) ||
+      (c.acts_sections || '').toLowerCase().includes(search.toLowerCase()) ||
+      (c.assigned_io_name || '').toLowerCase().includes(search.toLowerCase());
+
+    const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
+    const matchesPriority = priorityFilter === 'ALL' || c.priority === priorityFilter;
+
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
+
   return (
-    <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '0.75rem', borderRadius: '1rem', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
-            <Briefcase size={28} style={{ color: 'var(--accent-primary)' }} />
+    <div className="page space-y-6">
+      {/* Header */}
+      <div className="page-header pb-2 border-b border-slate-800/80">
+        <div className="page-heading">
+          <div className="flex items-center gap-2">
+            <span className="page-eyebrow font-sans text-slate-400">Central Investigation Registry</span>
+            <span className="text-slate-600">/</span>
+            <span className="text-xs font-sans text-teal-400 font-medium">NCRB</span>
           </div>
-          <div>
-            <h2>Active Cases</h2>
-            <p className="text-muted" style={{ fontSize: '0.9rem' }}>Manage and oversee ongoing investigations</p>
-          </div>
+          <h1 className="page-title flex items-center gap-3">
+            <span className="font-sans font-semibold text-slate-100">Cases & Inquiries</span>
+            <span className="badge badge-info text-xs">{cases.length} Total</span>
+          </h1>
+          <p className="page-description font-sans text-slate-400 text-xs">
+            Secure digital case repository, evidentiary dockets, and investigating officer assignment ledger.
+          </p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          <Plus size={18} /> New Case
-        </button>
+
+        {/* RBAC Guard: Only ADMIN and IO can register new cases */}
+        {canCreateCase && (
+          <button
+            onClick={() => setShowModal(true)}
+            className="btn btn-primary text-xs px-4 py-2 inline-flex items-center gap-1.5 shadow-lg shadow-teal-500/20"
+          >
+            <Plus size={16} strokeWidth={2} />
+            <span className="font-sans font-medium">New Case File</span>
+          </button>
+        )}
       </div>
 
-      <div className="card">
+      {/* Filter & Search Bar */}
+      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-3.5 flex flex-wrap items-center justify-between gap-3.5 shadow-sm backdrop-blur-sm">
+        <div className="relative flex-1 min-w-[260px]">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="search"
+            className="input bg-slate-950/60 border-slate-700 text-xs pl-9 py-2 rounded-xl text-slate-100 placeholder:text-slate-500 focus:border-teal-400"
+            placeholder="Search case number, title, sections, or assigned officer..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400">
+            <Filter size={13} />
+            <span>Status:</span>
+          </div>
+          <select
+            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value)}
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="OPEN">Open</option>
+            <option value="CLOSED">Closed</option>
+            <option value="ARCHIVED">Archived</option>
+          </select>
+
+          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400 ml-2">
+            <span>Priority:</span>
+          </div>
+          <select
+            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
+            value={priorityFilter}
+            onChange={e => setPriorityFilter(e.target.value)}
+          >
+            <option value="ALL">All Priorities</option>
+            <option value="CRITICAL">Critical</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Cases Table or Proper Empty State */}
+      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden shadow-lg backdrop-blur-sm">
         {loading ? (
-          <div className="flex justify-center my-8"><div className="spinner" /></div>
-        ) : cases.length === 0 ? (
-          <div className="text-center my-8 text-muted">
-            <Briefcase size={48} style={{ opacity: 0.2, margin: '0 auto 1rem' }} />
-            <p>No cases found. Create one to get started.</p>
+          <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
+            <div className="spinner" style={{ width: 24, height: 24 }} />
+            <span className="text-xs font-sans text-slate-400">Fetching case records...</span>
+          </div>
+        ) : filteredCases.length === 0 ? (
+          <div className="p-8">
+            <EmptyState
+              icon={FolderPlus}
+              title={search || statusFilter !== 'ALL' || priorityFilter !== 'ALL' ? 'No matching cases' : 'No active cases in registry'}
+              description={
+                search || statusFilter !== 'ALL' || priorityFilter !== 'ALL'
+                  ? 'No criminal investigation files matched your active filter criteria. Try clearing filters or searching for another term.'
+                  : 'Start by registering your first investigation case file. Each case receives an immutable cryptographic docket and chain of custody ledger.'
+              }
+              actionLabel={canCreateCase ? "New Case File" : null}
+              onAction={canCreateCase ? () => setShowModal(true) : null}
+              secondaryLabel={search || statusFilter !== 'ALL' || priorityFilter !== 'ALL' ? 'Reset Filters' : null}
+              onSecondaryAction={() => {
+                setSearch('');
+                setStatusFilter('ALL');
+                setPriorityFilter('ALL');
+              }}
+            />
           </div>
         ) : (
-          <div className="table-wrapper">
+          <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
-                  <th>Case Number</th>
-                  <th>Title</th>
+                  <th style={{ width: '150px' }}>Case Number</th>
+                  <th>Title & Allegation</th>
+                  <th>Offences Charged</th>
+                  <th>Assigned Officer</th>
+                  <th>Priority</th>
                   <th>Status</th>
                   <th>Date Created</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {cases.map((c) => (
-                  <tr key={c.id}>
-                    <td><div className="badge badge-info">{c.case_number}</div></td>
-                    <td style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{c.title}</td>
+                {filteredCases.map(c => (
+                  <tr key={c.id} className="hover:bg-slate-800/40 transition-colors">
                     <td>
-                      <span className={`badge ${c.status === 'OPEN' ? 'badge-warning' : c.status === 'CLOSED' ? 'badge-success' : 'badge-danger'}`}>
+                      <span className="badge badge-info font-mono text-xs font-semibold">
+                        {c.case_number}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="font-sans font-medium text-xs text-slate-100 truncate max-w-[260px]">
+                        {c.title}
+                      </div>
+                      <div className="font-sans text-[11px] text-slate-400 truncate max-w-[260px] mt-0.5">
+                        {c.description || 'No description provided.'}
+                      </div>
+                    </td>
+                    <td>
+                      <span className="font-sans text-xs text-slate-300 truncate max-w-[180px] block">
+                        {c.acts_sections || 'BNS Sec 318 / IT Act 66C'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="font-sans text-xs text-slate-200 font-medium">
+                        {c.assigned_io_name || `Officer #${c.assigned_io_id}`}
+                      </div>
+                      <div className="font-sans text-[11px] text-slate-400">
+                        {c.police_station || 'Cyber Crime PS'}
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        className={`text-[11px] font-sans font-medium px-2.5 py-0.5 rounded-full border ${
+                          c.priority === 'CRITICAL'
+                            ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                            : c.priority === 'HIGH'
+                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                            : 'bg-slate-700/30 text-slate-300 border-slate-600/30'
+                        }`}
+                      >
+                        {c.priority || 'NORMAL'}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          c.status === 'OPEN'
+                            ? 'badge-warn'
+                            : c.status === 'CLOSED'
+                            ? 'badge-accent'
+                            : 'badge-info'
+                        } text-[11px]`}
+                      >
                         {c.status}
                       </span>
                     </td>
-                    <td style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{new Date(c.created_at).toLocaleDateString()}</td>
+                    <td className="font-sans text-xs text-slate-400 whitespace-nowrap">
+                      {new Date(c.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
                     <td>
-                      <Link to={`/cases/${c.id}`} className="btn btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}>Manage</Link>
+                      <Link
+                        to={`/cases/${c.id}`}
+                        className="btn btn-secondary text-xs px-3 py-1 inline-flex items-center gap-1 hover:border-teal-400/40"
+                      >
+                        <span className="font-sans font-medium">Manage</span>
+                        <ArrowRight size={12} className="text-slate-400 group-hover:text-teal-400" />
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -114,45 +303,162 @@ const CaseList = () => {
         )}
       </div>
 
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Create New Case</h3>
-              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.2s' }}>
-                <X size={24} />
+      {/* New Case Creation Modal */}
+      {showModal && canCreateCase && (
+        <div className="modal-backdrop" onClick={() => setShowModal(false)} role="dialog" aria-modal="true">
+          <div
+            className="modal max-w-xl bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in max-h-[90vh] flex flex-col"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-800 bg-slate-950 px-6 py-4">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                  <Briefcase size={18} strokeWidth={2} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-100 font-sans">
+                    Register Criminal Investigation Case File
+                  </h3>
+                  <p className="text-xs text-slate-400 font-sans">
+                    National Crime Records Bureau Case Docket
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="modal-close p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
+                aria-label="Close modal"
+              >
+                <X size={18} />
               </button>
             </div>
-            
-            {error && <div className="badge badge-danger mb-4 w-full justify-center" style={{ width: '100%', padding: '0.75rem' }}>{error}</div>}
-            
-            <form onSubmit={handleCreateCase}>
-              <div className="input-group">
-                <label className="input-label">Case Number</label>
-                <input required className="input-field" value={newCase.case_number} onChange={e => setNewCase({...newCase, case_number: e.target.value})} placeholder="e.g. CR-2026-001" />
+
+            {/* Form */}
+            <form onSubmit={handleCreateCase} className="p-6 space-y-4 overflow-y-auto flex-1">
+              {error && (
+                <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-400">
+                  {error}
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-sans uppercase tracking-wider text-slate-400 font-medium">
+                    Case / FIR Number
+                  </label>
+                  <input
+                    className="input bg-slate-950 border-slate-700 text-xs py-2 font-mono text-slate-200"
+                    value={newCase.case_number}
+                    onChange={e => setNewCase({ ...newCase, case_number: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-sans uppercase tracking-wider text-slate-400 font-medium">
+                    Priority Level
+                  </label>
+                  <select
+                    className="input bg-slate-950 border-slate-700 text-xs py-2 text-slate-200"
+                    value={newCase.priority}
+                    onChange={e => setNewCase({ ...newCase, priority: e.target.value })}
+                  >
+                    <option value="CRITICAL">Critical (Cyber Terrorism / State Security)</option>
+                    <option value="HIGH">High (Inter-state Identity/Financial Fraud)</option>
+                    <option value="MEDIUM">Medium (Standard Cyber Offence)</option>
+                    <option value="LOW">Low (Routine Regulatory Investigation)</option>
+                  </select>
+                </div>
               </div>
-              <div className="input-group">
-                <label className="input-label">Title</label>
-                <input required className="input-field" value={newCase.title} onChange={e => setNewCase({...newCase, title: e.target.value})} placeholder="Case Title" />
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-sans uppercase tracking-wider text-slate-400 font-medium">
+                  Case Title
+                </label>
+                <input
+                  className="input bg-slate-950 border-slate-700 text-xs py-2 text-slate-200"
+                  placeholder="e.g. State vs. Network Syndicate: SCADA Intrusion"
+                  value={newCase.title}
+                  onChange={e => setNewCase({ ...newCase, title: e.target.value })}
+                  required
+                />
               </div>
-              <div className="input-group">
-                <label className="input-label">Description</label>
-                <textarea className="input-field" value={newCase.description} onChange={e => setNewCase({...newCase, description: e.target.value})} rows={3} placeholder="Brief description..." />
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-sans uppercase tracking-wider text-slate-400 font-medium">
+                  Acts & Penal Sections Invoked
+                </label>
+                <input
+                  className="input bg-slate-950 border-slate-700 text-xs py-2 font-sans text-slate-300"
+                  placeholder="e.g. BNS Sec 318(4), Sec 336 / IT Act Sec 66C"
+                  value={newCase.acts_sections}
+                  onChange={e => setNewCase({ ...newCase, acts_sections: e.target.value })}
+                  required
+                />
               </div>
-              <div className="input-group">
-                <label className="input-label">Assign Investigating Officer (IO)</label>
-                <select required className="input-field" value={newCase.assigned_io_id} onChange={e => setNewCase({...newCase, assigned_io_id: e.target.value})}>
-                  <option value="" disabled>Select an Officer...</option>
-                  {users.map(u => (
-                    <option key={u.id} value={u.id}>{u.name} ({u.badge_number || 'N/A'})</option>
-                  ))}
-                </select>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-sans uppercase tracking-wider text-slate-400 font-medium">
+                    Assigned Investigating Officer (IO)
+                  </label>
+                  <select
+                    className="input bg-slate-950 border-slate-700 text-xs py-2 text-slate-200"
+                    value={newCase.assigned_io_id}
+                    onChange={e => setNewCase({ ...newCase, assigned_io_id: e.target.value })}
+                    required
+                  >
+                    {users.map(u => (
+                      <option key={u.id} value={u.id}>
+                        {u.name} ({u.badge_number || 'IO'})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-sans uppercase tracking-wider text-slate-400 font-medium">
+                    Originating Police Station
+                  </label>
+                  <input
+                    className="input bg-slate-950 border-slate-700 text-xs py-2 text-slate-200"
+                    value={newCase.police_station}
+                    onChange={e => setNewCase({ ...newCase, police_station: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
-              
-              <div className="flex justify-between mt-6 pt-4" style={{ borderTop: '1px solid var(--border-color)' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary" disabled={creating} style={{ minWidth: '140px' }}>
-                  {creating ? <div className="spinner" /> : 'Create Case'}
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-sans uppercase tracking-wider text-slate-400 font-medium">
+                  Brief Facts / First Information Summary
+                </label>
+                <textarea
+                  className="input bg-slate-950 border-slate-700 text-xs py-2 min-h-[70px] text-slate-200"
+                  placeholder="Summary of allegations, preliminary findings, and suspect entities..."
+                  value={newCase.description}
+                  onChange={e => setNewCase({ ...newCase, description: e.target.value })}
+                  rows={3}
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="btn btn-secondary text-xs px-4 py-2 font-sans"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={creating}
+                  className="btn btn-primary text-xs px-5 py-2 inline-flex items-center gap-1.5 font-sans"
+                >
+                  {creating ? <span className="spinner" /> : <Briefcase size={14} />}
+                  <span>Initialize Digital Case Docket</span>
                 </button>
               </div>
             </form>
@@ -164,4 +470,3 @@ const CaseList = () => {
 };
 
 export default CaseList;
-

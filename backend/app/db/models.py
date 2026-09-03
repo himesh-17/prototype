@@ -95,11 +95,31 @@ class Document(Base):
     sha256_hash = Column(String, nullable=True)
     storage_path = Column(String, nullable=True)
     ocr_text = Column(Text, nullable=True)
+    current_version = Column(Integer, default=1, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     case = relationship("Case", back_populates="documents")
     asset = relationship("Asset", back_populates="documents")
     uploader = relationship("User")
+    versions = relationship("DocumentVersion", back_populates="document", cascade="all, delete-orphan")
+
+class DocumentVersion(Base):
+    __tablename__ = "document_versions"
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
+    version_number = Column(Integer, nullable=False)
+    original_filename = Column(String, nullable=False)
+    stored_filename = Column(String, nullable=False)
+    content_type = Column(String, nullable=False)
+    size_bytes = Column(Integer, nullable=False)
+    sha256_hash = Column(String, nullable=False)
+    ocr_text = Column(Text, nullable=True)
+    ocr_status = Column(String, nullable=False, default="PENDING")
+    uploaded_by_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    document = relationship("Document", back_populates="versions")
+    uploaded_by = relationship("User")
 
 class AuditLog(Base):
     __tablename__ = "audit_logs"
@@ -110,5 +130,7 @@ class AuditLog(Base):
     entity_id = Column(Integer)
     details = Column(Text, nullable=True)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+    previous_hash = Column(String, nullable=True)
+    entry_hash = Column(String, nullable=False, unique=True)
 
     user = relationship("User")

@@ -3,16 +3,20 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
 from app.db.database import get_db
-from app.db.models import User
+from app.db.models import RoleEnum, User
 from app.schemas.user import UserCreate, UserResponse, Token
 from app.core.security import verify_password, get_password_hash, create_access_token
 from app.core.dependencies import get_current_user
+from app.core.dependencies import check_roles
+from app.core.config import settings
 from datetime import timedelta
 
 router = APIRouter()
 
 @router.post("/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
+    if not settings.ALLOW_SELF_REGISTRATION:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Self-registration is disabled")
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -48,5 +52,5 @@ def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 @router.get("", response_model=List[UserResponse])
-def get_users(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def get_users(db: Session = Depends(get_db), current_user: User = Depends(check_roles([RoleEnum.ADMIN]))):
     return db.query(User).all()

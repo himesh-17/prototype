@@ -4,12 +4,14 @@ from app.main import app
 from app.db.database import Base, engine, SessionLocal
 from app.db.models import User, RoleEnum
 from app.core.security import get_password_hash
+from app.core.config import settings
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+settings.ALLOW_SELF_REGISTRATION = True
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -182,21 +184,19 @@ def test_transfer_asset(io_token, admin_token):
     assert response.status_code == 200
     assert response.json()["status"] == "IN_LAB"
 
-def test_document_metadata_creation(io_token):
+def test_document_upload(io_token):
     cases_resp = client.get("/api/v1/cases", headers={"Authorization": f"Bearer {io_token}"})
     case_id = cases_resp.json()[0]["id"]
     
     response = client.post(
-        f"/api/v1/cases/{case_id}/documents",
+        f"/api/v1/cases/{case_id}/documents/upload",
         headers={"Authorization": f"Bearer {io_token}"},
-        json={
-            "filename": "seizure_memo.pdf",
-            "document_type": "MEMO"
-        }
+        data={"document_type": "MEMO"},
+        files={"file": ("seizure_memo.txt", b"Seizure memo", "text/plain")},
     )
-    assert response.status_code == 200
-    assert response.json()["filename"] == "seizure_memo.pdf"
-    assert response.json()["sha256_hash"] == "PENDING"
+    assert response.status_code == 201
+    assert response.json()["filename"] == "seizure_memo.txt"
+    assert response.json()["sha256_hash"] != "PENDING"
 
 def test_io_access_other_io_case(io_token):
     # Create another IO
@@ -236,4 +236,3 @@ def test_unauthorized_asset_transfer(io_token):
 def test_audit_logs(admin_token):
     response = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {admin_token}"})
     # Wait, we didn't expose an endpoint to read audit logs, but we can just check it exists conceptually.
-

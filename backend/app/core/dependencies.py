@@ -1,3 +1,6 @@
+from datetime import datetime, timezone
+from hashlib import sha256
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -35,8 +38,22 @@ def check_roles(roles: list[RoleEnum]):
         return current_user
     return role_checker
 
-def log_audit(db: Session, user_id: int, action: str, entity_type: str, entity_id: int, details: str = None):
+def log_audit(db: Session, user_id: int, action: str, entity_type: str, entity_id: int, details: str | None = None):
     from app.db.models import AuditLog
-    log = AuditLog(user_id=user_id, action=action, entity_type=entity_type, entity_id=entity_id, details=details)
+
+    previous_log = db.query(AuditLog).order_by(AuditLog.id.desc()).first()
+    previous_hash = previous_log.entry_hash if previous_log else None
+    timestamp = datetime.now(timezone.utc)
+    payload = "|".join(str(value) for value in (previous_hash or "", user_id, action, entity_type, entity_id, details or "", timestamp.isoformat()))
+    log = AuditLog(
+        user_id=user_id,
+        action=action,
+        entity_type=entity_type,
+        entity_id=entity_id,
+        details=details,
+        timestamp=timestamp,
+        previous_hash=previous_hash,
+        entry_hash=sha256(payload.encode()).hexdigest(),
+    )
     db.add(log)
     db.commit()
