@@ -141,109 +141,76 @@ export const CaseDetail = () => {
   const assignedIO = users.find(u => u.id === caseData.assigned_io_id);
 
   return (
-    <div className="page space-y-6">
-      {/* Navigation Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-        <Link to="/cases" className="hover:text-zinc-200 flex items-center gap-1">
-          <ArrowLeft size={13} />
-          <span>Cases</span>
-        </Link>
-        <span>/</span>
-        <span className="text-teal-400 font-semibold">{caseData.case_number}</span>
-      </div>
-
-      {/* Case Header Card */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-6 shadow-sm space-y-4">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="badge badge-info text-sm font-mono px-3 py-1 font-semibold">
-                {caseData.case_number}
-              </span>
-              <span
-                className={`badge ${
-                  caseData.status === 'OPEN'
-                    ? 'badge-warn'
-                    : caseData.status === 'CLOSED'
-                    ? 'badge-accent'
-                    : 'badge-info'
-                }`}
-              >
-                {caseData.status}
-              </span>
-              <span
-                className={`text-xs font-mono font-medium px-2.5 py-0.5 rounded-full border ${
-                  caseData.priority === 'CRITICAL'
-                    ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                    : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                }`}
-              >
-                {caseData.priority || 'HIGH PRIORITY'}
-              </span>
-            </div>
-            <h1 className="text-xl font-bold text-zinc-100 tracking-tight">
-              {caseData.title}
-            </h1>
-            <p className="text-sm text-zinc-400 max-w-3xl leading-relaxed">
-              {caseData.description || 'No description provided.'}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowUploadModal(true)}
-              className="btn btn-primary text-xs px-4 py-2 inline-flex items-center gap-1.5 shadow-lg shadow-teal-500/20"
+    <div className="page">
+      <div className="page-header">
+        <div className="page-heading">
+          <Link to="/cases" className="page-eyebrow inline-flex items-center gap-1.5 hover:text-slate-300">
+            <ArrowLeft size={14} />
+            Cases
+          </Link>
+          <h1 className="page-title">{caseData.title}</h1>
+          <p className="page-description">
+            {caseData.description || 'No description provided.'}
+          </p>
+          <div className="flex items-center gap-2 flex-wrap pt-1">
+            <span className="badge badge-info">{caseData.case_number}</span>
+            <span
+              className={`badge ${
+                caseData.status === 'OPEN'
+                  ? 'badge-warn'
+                  : caseData.status === 'CLOSED'
+                  ? 'badge-accent'
+                  : 'badge-info'
+              }`}
             >
-              <Plus size={15} />
-              <span>Upload Document</span>
-            </button>
-            <button
-              onClick={() => setShowEditModal(true)}
-              className="btn btn-secondary text-xs px-3 py-2 inline-flex items-center gap-1.5"
-            >
-              <Edit2 size={14} />
-              <span>Edit Case</span>
-            </button>
+              {caseData.status}
+            </span>
+            <span className="badge">{caseData.priority || 'HIGH'}</span>
           </div>
         </div>
 
-        {/* Case Metadata Badges Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-3 border-t border-slate-800 text-xs font-mono">
-          <div className="bg-slate-900/60 p-3 rounded-xl border border-white/[0.04]">
-            <span className="text-zinc-500 block text-[11px] mb-1">Statutory Sections</span>
-            <span className="text-zinc-200 font-semibold">{caseData.acts_sections || 'BNS / IT Act'}</span>
-          </div>
-          <div className="bg-slate-900/60 p-3 rounded-xl border border-white/[0.04]">
-            <span className="text-zinc-500 block text-[11px] mb-1">Investigating Officer</span>
-            <span className="text-[#00d4aa] font-semibold">
-              {caseData.assigned_io_name || assignedIO?.name || 'Inspector Rajesh Deshmukh'}
-            </span>
-          </div>
-          <div className="bg-slate-900/60 p-3 rounded-xl border border-white/[0.04]">
-            <span className="text-zinc-500 block text-[11px] mb-1">Originating Station</span>
-            <span className="text-zinc-200">{caseData.police_station || 'Cyber Crime PS, Delhi'}</span>
-          </div>
-          <div className="bg-slate-900/60 p-3 rounded-xl border border-white/[0.04]">
-            <span className="text-zinc-500 block text-[11px] mb-1">Court Jurisdiction</span>
-            <span className="text-amber-400 font-semibold">{caseData.court_jurisdiction || 'Special Cyber Court'}</span>
-          </div>
+        <div className="page-actions">
+          <button onClick={() => setShowUploadModal(true)} className="btn btn-primary">
+            <Plus size={16} />
+            Upload document
+          </button>
+          <button onClick={() => setShowEditModal(true)} className="btn btn-secondary">
+            <Edit2 size={15} />
+            Edit case
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <span className="page-eyebrow">Sections</span>
+          <p className="text-sm text-slate-200 mt-1.5">{caseData.acts_sections || 'BNS / IT Act'}</p>
+        </div>
+        <div>
+          <span className="page-eyebrow">Investigating officer</span>
+          <p className="text-sm text-slate-200 mt-1.5">
+            {caseData.assigned_io_name || assignedIO?.name || 'Inspector Rajesh Deshmukh'}
+          </p>
+        </div>
+        <div>
+          <span className="page-eyebrow">Police station</span>
+          <p className="text-sm text-slate-200 mt-1.5">{caseData.police_station || 'Cyber Crime PS, Delhi'}</p>
+        </div>
+        <div>
+          <span className="page-eyebrow">Court</span>
+          <p className="text-sm text-slate-200 mt-1.5">{caseData.court_jurisdiction || 'Special Cyber Court'}</p>
         </div>
       </div>
 
       {/* Main Grid: Documents (with type badges) & Physical Evidence */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Document List with Type Badges (2 Cols) */}
-        <div className="lg:col-span-2 rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm overflow-hidden shadow-sm flex flex-col">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/60">
-            <div className="flex items-center gap-2">
-              <FileText size={16} className="text-[#00d4aa]" />
-              <h3 className="text-sm font-semibold text-zinc-100">
-                Case Documents & Evidentiary Exhibits
-              </h3>
-            </div>
-            <span className="text-xs font-mono text-zinc-400">
-              {documents.length} Files Lodged
-            </span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 panel flex flex-col">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <FileText size={17} className="text-teal-400" />
+              Documents
+            </h3>
+            <span className="text-sm text-slate-400">{documents.length} files</span>
           </div>
 
           <div className="overflow-x-auto flex-1">
@@ -270,10 +237,10 @@ export const CaseDetail = () => {
                       className="hover:bg-slate-800/40 cursor-pointer transition-colors"
                     >
                       <td>
-                        <div className="font-medium text-xs text-zinc-100">
+                        <div className="font-medium text-slate-100">
                           {d.filename}
                         </div>
-                        <div className="text-[11px] font-mono text-zinc-500 truncate max-w-xs mt-0.5">
+                        <div className="text-xs text-slate-500 truncate max-w-xs mt-1 font-mono">
                           SHA256: {d.sha256_hash?.substring(0, 18)}...
                         </div>
                       </td>
@@ -318,15 +285,15 @@ export const CaseDetail = () => {
         </div>
 
         {/* Physical Evidence Items & Custody (1 Col) */}
-        <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-5 shadow-sm space-y-4 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-              <div className="flex items-center gap-2">
-                <Box size={16} className="text-[#00d4aa]" />
-                <h3 className="text-sm font-semibold text-zinc-100">Physical Assets & Media</h3>
-              </div>
-              <span className="text-xs font-mono text-zinc-400">{assets.length} Items</span>
-            </div>
+        <div className="panel flex flex-col">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <Box size={17} className="text-teal-400" />
+              Physical assets
+            </h3>
+            <span className="text-sm text-slate-400">{assets.length}</span>
+          </div>
+          <div className="panel-body space-y-4">
 
             <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
               {assets.length === 0 ? (
@@ -372,18 +339,15 @@ export const CaseDetail = () => {
       </div>
 
       {/* Case Timeline: Legal & Investigative Milestones */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-6 shadow-sm space-y-5">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <Clock size={16} className="text-[#00d4aa]" />
-            <h3 className="text-sm font-semibold text-zinc-100">
-              Case Timeline & Legal Milestones (Immutable Sequence)
-            </h3>
-          </div>
-          <span className="text-xs font-mono text-zinc-400">
-            {timeline.length} Registered Events
-          </span>
+      <div className="panel">
+        <div className="panel-head">
+          <h3 className="panel-title">
+            <Clock size={17} className="text-teal-400" />
+            Timeline
+          </h3>
+          <span className="text-sm text-slate-400">{timeline.length} events</span>
         </div>
+        <div className="panel-body">
 
         <div className="relative border-l-2 border-teal-500/30 ml-4 space-y-6 pl-6 py-2">
           {timeline.map((item, idx) => (
@@ -413,6 +377,7 @@ export const CaseDetail = () => {
               </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
 

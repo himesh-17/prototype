@@ -114,20 +114,20 @@ const UserManagement = () => {
               {u.name?.charAt(0).toUpperCase() || '?'}
             </div>
             <div>
-              <div className="row-meta font-sans font-medium text-slate-100 text-xs">{u.name}</div>
-              <div className="text-[11px] font-sans text-slate-400">{u.id === user.id ? '(current session)' : ''}</div>
+              <div className="row-meta">{u.name}</div>
+              <div className="text-xs text-slate-400">{u.id === user.id ? 'Current session' : ''}</div>
             </div>
           </div>
         </td>
         <td>
-          <span className={`badge ${roleBadge[u.role] || 'badge-info'} text-[11px]`}>
+          <span className={`badge ${roleBadge[u.role] || 'badge-info'}`}>
             {u.role.replace('_', ' ')}
           </span>
         </td>
-        <td className="font-sans text-xs text-slate-400">{u.badge_number || '—'}</td>
-        <td className="font-sans text-xs text-slate-300 truncate max-w-[200px]">{u.department || '—'}</td>
-        <td className="font-sans text-xs text-slate-400">{u.email}</td>
-        <td className="font-sans text-xs text-slate-400 whitespace-nowrap">{formatSafeDate(u.created_at)}</td>
+        <td className="text-slate-400">{u.badge_number || '—'}</td>
+        <td className="text-slate-300 truncate max-w-[200px]">{u.department || '—'}</td>
+        <td className="text-slate-400">{u.email}</td>
+        <td className="text-slate-400 whitespace-nowrap">{formatSafeDate(u.created_at)}</td>
         <td className="row-actions">
           {isEditing ? (
             <div className="flex gap-2">
@@ -187,12 +187,12 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="page space-y-6">
+    <div className="page">
       <div className="page-header">
         <div className="page-heading">
           <span className="page-eyebrow">Administration</span>
-          <h1 className="page-title">User Management</h1>
-          <p className="page-description">Manage system users and roles. Admin access only.</p>
+          <h1 className="page-title">Users</h1>
+          <p className="page-description">Accounts and roles for this system.</p>
         </div>
         <button className="btn btn-primary" onClick={() => setCreating(true)}>
           <UserPlus size={16} strokeWidth={1.8} /> Add User
@@ -200,12 +200,14 @@ const UserManagement = () => {
       </div>
 
       {creating && (
-        <div className="surface surface-padded" style={{ maxWidth: '500px', marginBottom: '1rem' }}>
-          <div className="section-header">
-            <span className="section-title">Create User</span>
-            <button className="btn btn-ghost btn-sm" onClick={() => setCreating(false)}><X size={16} strokeWidth={1.8} /></button>
+        <div className="panel" style={{ maxWidth: 560 }}>
+          <div className="panel-head">
+            <h3 className="panel-title">Create user</h3>
+            <button className="btn btn-ghost btn-sm" onClick={() => setCreating(false)} aria-label="Close">
+              <X size={16} />
+            </button>
           </div>
-          <form onSubmit={handleCreate} className="field-grid">
+          <form onSubmit={handleCreate} className="panel-body field-grid">
             <div className="input-group">
               <label htmlFor="nu-name">Name</label>
               <input id="nu-name" className="input-field" value={newUser.name} onChange={e => setNewUser({ ...newUser, name: e.target.value })} required />
@@ -245,14 +247,21 @@ const UserManagement = () => {
         </div>
       )}
 
-      <div className="surface surface-padded" style={{ overflow: 'hidden' }}>
-        <div className="field-grid" style={{ marginBottom: '1rem', maxWidth: '500px' }}>
-          <div className="input-group" style={{ marginBottom: 0 }}>
-            <label htmlFor="user-search">Search Users</label>
-            <input id="user-search" type="search" className="input-field" placeholder="Name, email, role, badge…" value={search} onChange={e => setSearch(e.target.value)} />
-          </div>
+      <div className="toolbar">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+          <input
+            id="user-search"
+            type="search"
+            className="pl-10"
+            placeholder="Search name, email, role, or badge"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
         </div>
+      </div>
 
+      <div className="panel">
         {loading ? (
           <div className="spinner-block"><div className="spinner" /></div>
         ) : filteredUsers.length === 0 ? (

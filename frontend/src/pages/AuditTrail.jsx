@@ -36,7 +36,7 @@ const actionColors = {
 const ActionBadge = ({ action }) => {
   const variant = actionColors[action] || 'info';
   return (
-    <span className={`badge badge-${variant} font-mono text-[11px]`}>
+    <span className={`badge badge-${variant}`}>
       {action.replace(/_/g, ' ')}
     </span>
   );
@@ -122,40 +122,30 @@ export const AuditTrail = () => {
   });
 
   return (
-    <div className="page space-y-6">
-      {/* Header */}
-      <div className="page-header pb-2 border-b border-white/[0.06]">
+    <div className="page">
+      <div className="page-header">
         <div className="page-heading">
-          <div className="flex items-center gap-2">
-            <span className="page-eyebrow">Cryptographic Ledger</span>
-            <span className="text-zinc-600">/</span>
-            <span className="text-xs font-mono text-teal-400">SHA-256 Chain</span>
-          </div>
-          <h1 className="page-title flex items-center gap-3">
-            <span>Tamper-Evident Audit Trail</span>
-            <span className="badge badge-accent font-mono text-xs">
-              {logs.length} Blocks Recorded
-            </span>
-          </h1>
+          <span className="page-eyebrow">Administration</span>
+          <h1 className="page-title">Audit trail</h1>
           <p className="page-description">
-            Mathematical Merkle-chained provenance ledger. Every document, access request, and custody transfer is cryptographically sealed.
+            Hash-chained log of document access, custody, and case events.
           </p>
         </div>
         <div className="page-actions">
           <button
-            className="btn btn-primary text-xs px-4 py-2 inline-flex items-center gap-2 shadow-lg shadow-teal-500/20"
+            className="btn btn-primary"
             onClick={handleVerify}
             disabled={verifying}
           >
             {verifying ? (
               <>
                 <span className="spinner" />
-                <span>Validating Merkle Tree...</span>
+                Verifying…
               </>
             ) : (
               <>
-                <RotateCcw size={15} strokeWidth={2} />
-                <span>Verify Cryptographic Chain</span>
+                <RotateCcw size={15} />
+                Verify chain
               </>
             )}
           </button>
@@ -172,15 +162,15 @@ export const AuditTrail = () => {
           }`}
         >
           <div className="flex items-center gap-3">
-            <ShieldCheck size={20} className={verificationResult.valid ? 'text-[#00d4aa]' : 'text-rose-400'} />
-            <div className="text-xs font-mono">
-              <div className="font-semibold">
+            <ShieldCheck size={20} />
+            <div className="text-sm">
+              <div className="font-medium">
                 {verificationResult.valid
-                  ? 'Cryptographic Hash Chain Verified ✓ (100% Integrity)'
-                  : 'Ledger Hash Mismatch Detected ✗'}
+                  ? 'Hash chain verified'
+                  : 'Hash mismatch detected'}
               </div>
-              <div className="text-zinc-400 mt-0.5">
-                Verified {verificationResult.checked_versions} blocks against root state hash. Zero unauthorized modifications detected.
+              <div className="text-slate-400 mt-1">
+                Checked {verificationResult.checked_versions} blocks.
               </div>
             </div>
           </div>
@@ -195,59 +185,36 @@ export const AuditTrail = () => {
       )}
 
       {/* Filter & Search Bar */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-3.5 flex flex-wrap items-center justify-between gap-3.5 shadow-sm backdrop-blur-sm">
-        <div className="relative flex-1 min-w-[260px]">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+      <div className="toolbar">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
           <input
             type="search"
-            className="input bg-slate-950/60 border-slate-700 text-xs pl-9 py-2 rounded-xl text-slate-100 placeholder:text-slate-500 focus:border-teal-400"
-            placeholder="Search action, user, details, or entry hash..."
+            className="pl-10"
+            placeholder="Search action, user, or hash"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
-
-        <div className="flex items-center gap-3 flex-wrap">
-          {/* Action Filter */}
-          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400">
-            <Filter size={13} />
-            <span>Action:</span>
-          </div>
-          <select
-            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
-            value={actionFilter}
-            onChange={e => setActionFilter(e.target.value)}
-          >
-            <option value="ALL">All Actions</option>
-            <option value="UPLOAD_DOCUMENT">Upload Document</option>
-            <option value="VERIFY_DOCUMENT">Verify Document</option>
-            <option value="TRANSFER_ASSET">Transfer Custody</option>
-            <option value="LOG_ASSET">Log Evidence</option>
-            <option value="RECORD_JUDGMENT">Record Judgment</option>
-            <option value="CREATE_CASE">Create Case</option>
-            <option value="LOGIN">User Auth / Login</option>
-          </select>
-
-          {/* Date Range Filter */}
-          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400 ml-2">
-            <Calendar size={13} />
-            <span>Date Range:</span>
-          </div>
-          <select
-            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
-            value={dateRange}
-            onChange={e => setDateRange(e.target.value)}
-          >
-            <option value="ALL">All Time</option>
-            <option value="TODAY">Today (Last 24 hrs)</option>
-            <option value="WEEK">Last 7 Days</option>
-            <option value="MONTH">Last 30 Days</option>
-          </select>
-        </div>
+        <select value={actionFilter} onChange={e => setActionFilter(e.target.value)}>
+          <option value="ALL">All actions</option>
+          <option value="UPLOAD_DOCUMENT">Upload document</option>
+          <option value="VERIFY_DOCUMENT">Verify document</option>
+          <option value="TRANSFER_ASSET">Transfer custody</option>
+          <option value="LOG_ASSET">Log evidence</option>
+          <option value="RECORD_JUDGMENT">Record judgment</option>
+          <option value="CREATE_CASE">Create case</option>
+          <option value="LOGIN">Login</option>
+        </select>
+        <select value={dateRange} onChange={e => setDateRange(e.target.value)}>
+          <option value="ALL">All time</option>
+          <option value="TODAY">Last 24 hours</option>
+          <option value="WEEK">Last 7 days</option>
+          <option value="MONTH">Last 30 days</option>
+        </select>
       </div>
 
-      {/* Audit Logs Table */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden shadow-lg backdrop-blur-sm">
+      <div className="panel">
         {loading ? (
           <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
             <div className="spinner" style={{ width: 24, height: 24 }} />
@@ -282,55 +249,58 @@ export const AuditTrail = () => {
               </thead>
               <tbody>
                 {filteredLogs.map(log => (
-                  <tr key={log.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="text-xs font-mono text-zinc-400 whitespace-nowrap">
+                  <tr key={log.id} className="is-clickable" onClick={() => setSelectedLog(log)}>
+                    <td className="text-slate-400 whitespace-nowrap">
                       {formatDate(log.timestamp)}
                     </td>
                     <td>
                       <ActionBadge action={log.action} />
                     </td>
                     <td>
-                      <span className="text-xs font-mono text-zinc-300 font-semibold">
+                      <span className="text-slate-200">
                         {log.entity_type} #{log.entity_id}
                       </span>
                     </td>
                     <td>
-                      <div className="text-xs font-semibold text-zinc-200">
-                        {log.user_name || log.user?.name || 'System Daemon'}
+                      <div className="row-meta">
+                        {log.user_name || log.user?.name || 'System'}
                       </div>
-                      <div className="text-[10px] font-mono text-zinc-500">
+                      <div className="row-sub">
                         {log.user_role || 'ADMIN'}
                       </div>
                     </td>
                     <td>
-                      <div className="text-xs text-zinc-400 truncate max-w-xs">
+                      <div className="truncate max-w-xs">
                         {log.details || '—'}
                       </div>
                     </td>
-
-                    {/* Clean Single-line Monospace Truncated Hash Chain with Copy Option */}
                     <td>
-                      <div className="inline-flex items-center gap-2 font-mono text-xs text-slate-300 bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-700/60">
-                        <span className="text-teal-400 font-semibold">
-                          {log.entry_hash?.substring(0, 8)}...{log.entry_hash?.substring(log.entry_hash.length - 4)}
+                      <div className="inline-flex items-center gap-2 font-mono text-xs text-slate-300">
+                        <span>
+                          {log.entry_hash?.substring(0, 10)}…
                         </span>
                         <button
-                          onClick={() => handleCopyHash(log.entry_hash, log.id)}
-                          className="text-slate-400 hover:text-teal-400 transition-colors p-0.5 rounded"
-                          title="Copy full SHA-256 hash"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCopyHash(log.entry_hash, log.id);
+                          }}
+                          className="text-slate-500 hover:text-teal-400"
+                          title="Copy hash"
                         >
-                          {copiedHash === log.id ? <Check size={13} className="text-teal-400" /> : <Copy size={13} />}
+                          {copiedHash === log.id ? <Check size={14} /> : <Copy size={14} />}
                         </button>
                       </div>
                     </td>
-
                     <td>
                       <button
-                        onClick={() => setSelectedLog(log)}
-                        className="btn btn-ghost text-xs p-1.5 rounded-lg text-zinc-400 hover:text-[#00d4aa] hover:bg-white/5"
-                        title="Inspect full cryptographic block"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedLog(log);
+                        }}
+                        className="btn btn-ghost btn-sm"
+                        title="Inspect"
                       >
-                        <ExternalLink size={14} />
+                        <ExternalLink size={15} />
                       </button>
                     </td>
                   </tr>

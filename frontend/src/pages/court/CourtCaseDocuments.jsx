@@ -78,46 +78,36 @@ export const CourtCaseDocuments = () => {
   });
 
   return (
-    <div className="page space-y-6">
-      {/* Header */}
-      <div className="page-header pb-2 border-b border-slate-800/80">
+    <div className="page">
+      <div className="page-header">
         <div className="page-heading">
-          <div className="flex items-center gap-2">
-            <span className="page-eyebrow font-sans text-slate-400">Judicial Registry</span>
-            <span className="text-slate-600">/</span>
-            <span className="text-xs font-sans text-teal-400 font-medium">Court Evidence Repository</span>
-          </div>
-          <h1 className="page-title flex items-center gap-3">
-            <span className="font-sans font-semibold text-slate-100">Case Documents & Evidence (Read-Only)</span>
-            <span className="badge badge-info text-xs">
-              {documents.length} Records
-            </span>
-          </h1>
-          <p className="page-description font-sans text-slate-400 text-xs">
-            Read-only court docket view with cryptographic digital signature verification and tamper seals.
+          <span className="page-eyebrow">Court</span>
+          <h1 className="page-title">Case documents</h1>
+          <p className="page-description">
+            Read-only docket with signature and seal status.
           </p>
         </div>
 
-        <div className="page-actions flex items-center gap-2">
+        <div className="page-actions">
           <button
             onClick={() => setShowRequestModal(true)}
-            className="btn btn-secondary text-xs px-3.5 py-2 inline-flex items-center gap-1.5 font-sans font-medium"
+            className="btn btn-secondary"
           >
             <Send size={14} />
             <span>Document Request Form</span>
           </button>
           <button
             onClick={() => setShowJudgmentModal(true)}
-            className="btn btn-primary text-xs px-3.5 py-2 inline-flex items-center gap-1.5 font-sans font-medium shadow-lg shadow-teal-500/20"
+            className="btn btn-primary"
           >
-            <Scale size={14} />
-            <span>Upload Judgment / Order</span>
+            <Scale size={15} />
+            Upload order
           </button>
         </div>
       </div>
 
       {/* Elevated Filter Bar */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-3.5 flex flex-wrap items-center justify-between gap-3.5 shadow-sm backdrop-blur-sm">
+      <div className="toolbar">
         <div className="relative flex-1 min-w-[260px]">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input

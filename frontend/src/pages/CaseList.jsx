@@ -110,84 +110,61 @@ export const CaseList = () => {
   });
 
   return (
-    <div className="page space-y-6">
-      {/* Header */}
-      <div className="page-header pb-2 border-b border-slate-800/80">
+    <div className="page">
+      <div className="page-header">
         <div className="page-heading">
-          <div className="flex items-center gap-2">
-            <span className="page-eyebrow font-sans text-slate-400">Central Investigation Registry</span>
-            <span className="text-slate-600">/</span>
-            <span className="text-xs font-sans text-teal-400 font-medium">NCRB</span>
-          </div>
-          <h1 className="page-title flex items-center gap-3">
-            <span className="font-sans font-semibold text-slate-100">Cases & Inquiries</span>
-            <span className="badge badge-info text-xs">{cases.length} Total</span>
-          </h1>
-          <p className="page-description font-sans text-slate-400 text-xs">
-            Secure digital case repository, evidentiary dockets, and investigating officer assignment ledger.
+          <span className="page-eyebrow">Registry</span>
+          <h1 className="page-title">Cases</h1>
+          <p className="page-description">
+            Investigation files, assignment, and docket status.
           </p>
         </div>
 
-        {/* RBAC Guard: Only ADMIN and IO can register new cases */}
         {canCreateCase && (
-          <button
-            onClick={() => setShowModal(true)}
-            className="btn btn-primary text-xs px-4 py-2 inline-flex items-center gap-1.5 shadow-lg shadow-teal-500/20"
-          >
-            <Plus size={16} strokeWidth={2} />
-            <span className="font-sans font-medium">New Case File</span>
+          <button onClick={() => setShowModal(true)} className="btn btn-primary">
+            <Plus size={16} />
+            New case
           </button>
         )}
       </div>
 
-      {/* Filter & Search Bar */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-3.5 flex flex-wrap items-center justify-between gap-3.5 shadow-sm backdrop-blur-sm">
-        <div className="relative flex-1 min-w-[260px]">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+      <div className="toolbar">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
           <input
             type="search"
-            className="input bg-slate-950/60 border-slate-700 text-xs pl-9 py-2 rounded-xl text-slate-100 placeholder:text-slate-500 focus:border-teal-400"
-            placeholder="Search case number, title, sections, or assigned officer..."
+            className="pl-10"
+            placeholder="Search case number, title, or officer"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400">
-            <Filter size={13} />
-            <span>Status:</span>
-          </div>
-          <select
-            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
-            value={statusFilter}
-            onChange={e => setStatusFilter(e.target.value)}
-          >
-            <option value="ALL">All Statuses</option>
-            <option value="OPEN">Open</option>
-            <option value="CLOSED">Closed</option>
-            <option value="ARCHIVED">Archived</option>
-          </select>
+        <select
+          className="w-auto min-w-[140px]"
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value)}
+        >
+          <option value="ALL">All statuses</option>
+          <option value="OPEN">Open</option>
+          <option value="CLOSED">Closed</option>
+          <option value="ARCHIVED">Archived</option>
+        </select>
 
-          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400 ml-2">
-            <span>Priority:</span>
-          </div>
-          <select
-            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
-            value={priorityFilter}
-            onChange={e => setPriorityFilter(e.target.value)}
-          >
-            <option value="ALL">All Priorities</option>
-            <option value="CRITICAL">Critical</option>
-            <option value="HIGH">High</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="LOW">Low</option>
-          </select>
-        </div>
+        <select
+          className="w-auto min-w-[140px]"
+          value={priorityFilter}
+          onChange={e => setPriorityFilter(e.target.value)}
+        >
+          <option value="ALL">All priorities</option>
+          <option value="CRITICAL">Critical</option>
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
+        </select>
       </div>
 
-      {/* Cases Table or Proper Empty State */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden shadow-lg backdrop-blur-sm">
+      <div className="panel">
         {loading ? (
           <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
             <div className="spinner" style={{ width: 24, height: 24 }} />
@@ -237,10 +214,10 @@ export const CaseList = () => {
                       </span>
                     </td>
                     <td>
-                      <div className="font-sans font-medium text-xs text-slate-100 truncate max-w-[260px]">
+                      <div className="font-medium text-slate-100 truncate max-w-[260px]">
                         {c.title}
                       </div>
-                      <div className="font-sans text-[11px] text-slate-400 truncate max-w-[260px] mt-0.5">
+                      <div className="text-xs text-slate-400 truncate max-w-[260px] mt-1">
                         {c.description || 'No description provided.'}
                       </div>
                     </td>

@@ -55,44 +55,36 @@ export const ForensicWorkstation = () => {
   }, []);
 
   return (
-    <div className="page space-y-6">
-      {/* Header */}
-      <div className="page-header pb-2 border-b border-slate-800/80">
+    <div className="page">
+      <div className="page-header">
         <div className="page-heading">
-          <div className="flex items-center gap-2">
-            <span className="page-eyebrow font-sans text-slate-400">Central Forensic Science Laboratory</span>
-            <span className="text-slate-600">/</span>
-            <span className="text-xs font-sans text-teal-400 font-medium">CBI Cyber Division</span>
-          </div>
-          <h1 className="page-title flex items-center gap-3">
-            <span className="font-sans font-semibold text-slate-100">Forensic Evidence & Analysis Workstation</span>
-            <span className="badge badge-accent text-xs font-sans">CFSL Clean Room 2</span>
-          </h1>
-          <p className="page-description font-sans text-slate-400 text-xs">
-            ISO/IEC 17025 accredited digital forensics lab. Hardware write-blocker imaging, volatile RAM extraction, and tamper-evident custody ledger.
+          <span className="page-eyebrow">CFSL</span>
+          <h1 className="page-title">Forensic workstation</h1>
+          <p className="page-description">
+            Evidence intake, imaging records, and signed lab reports.
           </p>
         </div>
 
-        <div className="page-actions flex items-center gap-2">
+        <div className="page-actions">
           <button
             onClick={() => setShowIntakeModal(true)}
-            className="btn btn-secondary text-xs px-3.5 py-2 inline-flex items-center gap-1.5 font-sans font-medium"
+            className="btn btn-secondary"
           >
             <Box size={14} />
             <span>Evidence Intake Form</span>
           </button>
           <button
             onClick={() => setShowReportModal(true)}
-            className="btn btn-primary text-xs px-3.5 py-2 inline-flex items-center gap-1.5 font-sans font-medium shadow-lg shadow-teal-500/20"
+            className="btn btn-primary"
           >
-            <Microscope size={14} />
-            <span>Submit Forensic Report</span>
+            <Microscope size={15} />
+            Submit report
           </button>
         </div>
       </div>
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Assigned Evidence"
           value={assets.length}

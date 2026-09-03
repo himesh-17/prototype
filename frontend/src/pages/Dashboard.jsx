@@ -28,22 +28,18 @@ import {
   ShieldCheck,
   CheckCircle2,
   Clock,
-  ArrowRight,
   Scale,
   Microscope,
   HardDrive,
   Activity,
   Send,
-  ExternalLink,
   ChevronRight,
   Sparkles,
-  Key,
-  ShieldAlert,
   Server
 } from 'lucide-react';
 
 export const Dashboard = () => {
-  const { user, activeRole, switchRole } = useAuth();
+  const { user, activeRole } = useAuth();
   const [cases, setCases] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [users, setUsers] = useState([]);
@@ -121,9 +117,8 @@ export const Dashboard = () => {
   // ADMIN DASHBOARD VIEW
   // -------------------------------------------------------------
   const renderAdminDashboard = () => (
-    <div className="space-y-6">
-      {/* 1. Stat Cards with trends, colors, and icons */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Cases"
           value={cases.length}
@@ -163,7 +158,7 @@ export const Dashboard = () => {
       </div>
 
       {chainVerified && (
-        <div className="rounded-xl bg-teal-500/10 border border-teal-500/30 p-4 text-xs font-mono text-teal-300 flex items-center justify-between animate-fade-in">
+        <div className="rounded-xl bg-teal-500/10 border border-teal-500/30 px-4 py-3 text-sm text-teal-300 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShieldCheck size={18} className="text-[#00d4aa]" />
             <span>Cryptographic Merkle tree audit verified. 100% block integrity intact across all national nodes.</span>
@@ -175,20 +170,16 @@ export const Dashboard = () => {
       )}
 
       {/* Main Grid: Recent Cases + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Cases (2 Cols) */}
-        <div className="lg:col-span-2 rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm overflow-hidden flex flex-col shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-850/60">
-            <div className="flex items-center gap-2">
-              <Briefcase size={16} className="text-[#00d4aa]" />
-              <h3 className="text-sm font-semibold text-zinc-100">Recent Cases</h3>
-            </div>
-            <Link
-              to="/cases"
-              className="text-xs font-mono text-[#00d4aa] hover:underline flex items-center gap-1"
-            >
-              <span>View all cases</span>
-              <ChevronRight size={13} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 panel flex flex-col">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <Briefcase size={17} className="text-teal-400" />
+              Recent cases
+            </h3>
+            <Link to="/cases" className="panel-link">
+              View all
+              <ChevronRight size={14} />
             </Link>
           </div>
 
@@ -222,10 +213,10 @@ export const Dashboard = () => {
                         </span>
                       </td>
                       <td>
-                        <div className="text-xs font-semibold text-zinc-100 truncate max-w-xs">
+                        <div className="text-sm font-medium text-slate-100 truncate max-w-xs">
                           {c.title}
                         </div>
-                        <div className="text-[11px] text-zinc-500 font-mono truncate mt-0.5">
+                        <div className="text-xs text-slate-400 truncate mt-1">
                           {c.acts_sections || 'BNS / IT Act'}
                         </div>
                       </td>
@@ -271,215 +262,156 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions Panel */}
-        <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-5 flex flex-col justify-between shadow-sm">
-          <div>
-            <div className="flex items-center gap-2 pb-3 border-b border-white/[0.08] mb-4">
-              <Sparkles size={16} className="text-[#00d4aa]" />
-              <h3 className="text-sm font-semibold text-zinc-100">Admin Quick Actions</h3>
-            </div>
-            <div className="space-y-2.5">
-              <Link
-                to="/cases"
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-850/60 border border-white/[0.06] hover:border-teal-500/40 hover:bg-teal-500/5 transition-all text-left group"
-              >
+        <div className="panel flex flex-col">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <Sparkles size={17} className="text-teal-400" />
+              Quick actions
+            </h3>
+          </div>
+          <div className="panel-body flex flex-col gap-3 flex-1">
+              <Link to="/cases" className="action-tile group">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-teal-500/10 text-[#00d4aa] flex items-center justify-center border border-teal-500/20">
+                  <div className="h-9 w-9 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
                     <Plus size={16} />
                   </div>
                   <div>
-                    <span className="text-xs font-semibold text-zinc-100 block group-hover:text-[#00d4aa]">
-                      Register New Case
-                    </span>
-                    <span className="text-[11px] text-zinc-500 block">
-                      Initiate digital investigation file
-                    </span>
+                    <span className="text-sm font-medium text-slate-100 block">Register case</span>
+                    <span className="text-xs text-slate-400 block mt-0.5">Open a new investigation file</span>
                   </div>
                 </div>
-                <ChevronRight size={14} className="text-zinc-500 group-hover:text-[#00d4aa]" />
+                <ChevronRight size={16} className="text-slate-500" />
               </Link>
 
-              <button
-                type="button"
-                onClick={() => setShowDocUpload(true)}
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-850/60 border border-white/[0.06] hover:border-teal-500/40 hover:bg-teal-500/5 transition-all text-left group"
-              >
+              <button type="button" onClick={() => setShowDocUpload(true)} className="action-tile">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/20">
+                  <div className="h-9 w-9 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
                     <FileText size={16} />
                   </div>
                   <div>
-                    <span className="text-xs font-semibold text-zinc-100 block group-hover:text-sky-400">
-                      Upload Secure Document
-                    </span>
-                    <span className="text-[11px] text-zinc-500 block">
-                      Hash & seal with HSM token
-                    </span>
+                    <span className="text-sm font-medium text-slate-100 block">Upload document</span>
+                    <span className="text-xs text-slate-400 block mt-0.5">Hash and seal the file</span>
                   </div>
                 </div>
-                <ChevronRight size={14} className="text-zinc-500 group-hover:text-sky-400" />
+                <ChevronRight size={16} className="text-slate-500" />
               </button>
 
-              <button
-                type="button"
-                onClick={handleVerifyChain}
-                disabled={verifyingChain}
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-850/60 border border-white/[0.06] hover:border-teal-500/40 hover:bg-teal-500/5 transition-all text-left group"
-              >
+              <button type="button" onClick={handleVerifyChain} disabled={verifyingChain} className="action-tile">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+                  <div className="h-9 w-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                     <ShieldCheck size={16} />
                   </div>
                   <div>
-                    <span className="text-xs font-semibold text-zinc-100 block group-hover:text-emerald-400">
-                      Verify Ledger Hash Chain
-                    </span>
-                    <span className="text-[11px] text-zinc-500 block">
-                      {verifyingChain ? 'Checking Merkle tree...' : 'Full SHA-256 integrity scan'}
+                    <span className="text-sm font-medium text-slate-100 block">Verify ledger</span>
+                    <span className="text-xs text-slate-400 block mt-0.5">
+                      {verifyingChain ? 'Checking integrity…' : 'Scan hash chain'}
                     </span>
                   </div>
                 </div>
-                <ChevronRight size={14} className="text-zinc-500 group-hover:text-emerald-400" />
+                <ChevronRight size={16} className="text-slate-500" />
               </button>
 
-              <Link
-                to="/users"
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-850/60 border border-white/[0.06] hover:border-teal-500/40 hover:bg-teal-500/5 transition-all text-left group"
-              >
+              <Link to="/users" className="action-tile">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20">
+                  <div className="h-9 w-9 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
                     <Users size={16} />
                   </div>
                   <div>
-                    <span className="text-xs font-semibold text-zinc-100 block group-hover:text-purple-400">
-                      User Access Control
-                    </span>
-                    <span className="text-[11px] text-zinc-500 block">
-                      Manage officers, judges, & experts
-                    </span>
+                    <span className="text-sm font-medium text-slate-100 block">User access</span>
+                    <span className="text-xs text-slate-400 block mt-0.5">Officers, judges, experts</span>
                   </div>
                 </div>
-                <ChevronRight size={14} className="text-zinc-500 group-hover:text-purple-400" />
+                <ChevronRight size={16} className="text-slate-500" />
               </Link>
-            </div>
-          </div>
-
-          {/* Quick Stats Footnote */}
-          <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-zinc-500">
-            <span>NCRB Security Level</span>
-            <span className="text-[#00d4aa] font-semibold">RESTRICTED // DEF-GRADE</span>
           </div>
         </div>
       </div>
 
       {/* 4. Bottom Grid: System Status + Recent Activity Feed (Fills Whitespace) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* System Status Panel (1 Col) */}
-        <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-5 flex flex-col shadow-sm">
-          <div className="flex items-center gap-2 pb-3 border-b border-white/[0.08] mb-4">
-            <Server size={16} className="text-[#00d4aa]" />
-            <h3 className="text-sm font-semibold text-zinc-100">System & Ledger Status</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="panel">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <Server size={17} className="text-teal-400" />
+              System status
+            </h3>
           </div>
 
-          <div className="space-y-3.5 text-xs font-mono">
-            <div className="p-3 rounded-xl bg-slate-850/60 border border-white/[0.04]">
+          <div className="panel-body space-y-5 text-sm">
+            <div>
               <div className="flex justify-between items-center mb-1.5">
-                <span className="text-zinc-400">Merkle Tree Integrity</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <CheckCircle2 size={13} /> 100% VALID
+                <span className="text-slate-400">Merkle integrity</span>
+                <span className="text-emerald-400 font-medium flex items-center gap-1.5">
+                  <CheckCircle2 size={15} /> Valid
                 </span>
               </div>
-              <p className="text-[11px] text-zinc-500">
-                Root Hash: 8f4c19...d3c5 (Checked every 60s)
-              </p>
+              <p className="text-xs text-slate-500 font-mono">Root 8f4c19…d3c5</p>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-850/60 border border-white/[0.04]">
-              <div className="flex justify-between items-center mb-1.5">
-                <span className="text-zinc-400">Encrypted Storage Quota</span>
-                <span className="text-zinc-200">42.8 GB / 100 GB</span>
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-slate-400">Encrypted storage</span>
+                <span className="text-slate-200">42.8 / 100 GB</span>
               </div>
-              <div className="w-full bg-black/40 h-2 rounded-full overflow-hidden border border-white/5">
-                <div className="bg-[#00d4aa] h-full rounded-full" style={{ width: '42.8%' }} />
-              </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-850/60 border border-white/[0.04]">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-zinc-400">Encryption Standard</span>
-                <span className="text-teal-400 font-semibold">AES-256-GCM</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-400">Hardware Security Enclave</span>
-                <span className="text-zinc-200">FIPS 140-3 Level 4</span>
+              <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+                <div className="bg-teal-400 h-full rounded-full" style={{ width: '42.8%' }} />
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-850/60 border border-white/[0.04]">
-              <span className="text-zinc-400 block mb-2">Active Inter-Agency Nodes:</span>
-              <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <div className="flex items-center gap-1.5 text-zinc-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> NCRB HQ Delhi
-                </div>
-                <div className="flex items-center gap-1.5 text-zinc-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> CFSL CBI Lab
-                </div>
-                <div className="flex items-center gap-1.5 text-zinc-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Cyber Courts
-                </div>
-                <div className="flex items-center gap-1.5 text-zinc-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> EOW Mumbai
-                </div>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-slate-400">Encryption</span>
+                <span className="text-slate-200">AES-256-GCM</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">HSM enclave</span>
+                <span className="text-slate-200">FIPS 140-3</span>
+              </div>
+            </div>
+
+            <div>
+              <span className="text-slate-400 block mb-3">Connected nodes</span>
+              <div className="grid grid-cols-1 gap-2 text-sm text-slate-300">
+                <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> NCRB HQ Delhi</div>
+                <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> CFSL CBI Lab</div>
+                <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Cyber Courts</div>
+                <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> EOW Mumbai</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Recent Activity Feed (2 Cols) */}
-        <div className="lg:col-span-2 rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm overflow-hidden flex flex-col shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-slate-850/60">
-            <div className="flex items-center gap-2">
-              <Activity size={16} className="text-[#00d4aa]" />
-              <h3 className="text-sm font-semibold text-zinc-100">Real-Time System Activity Feed</h3>
-            </div>
-            <Link
-              to="/audit"
-              className="text-xs font-mono text-[#00d4aa] hover:underline flex items-center gap-1"
-            >
-              <span>Full Audit Trail</span>
-              <ChevronRight size={13} />
+        <div className="lg:col-span-2 panel flex flex-col">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <Activity size={17} className="text-teal-400" />
+              Recent activity
+            </h3>
+            <Link to="/audit" className="panel-link">
+              Full trail
+              <ChevronRight size={14} />
             </Link>
           </div>
 
-          <div className="p-6 space-y-4 overflow-y-auto flex-1 max-h-[380px]">
+          <div className="panel-body">
             {auditLogs.slice(0, 6).map((log, index) => (
-              <div
-                key={log.id || index}
-                className="flex items-start gap-3 p-3 rounded-xl bg-slate-850/60/70 border border-white/[0.04] hover:border-white/[0.08] transition-colors"
-              >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black/40 border border-white/10 text-[#00d4aa] font-mono text-xs">
+              <div key={log.id || index} className="feed-item">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-950 border border-slate-800 text-teal-400 text-xs font-semibold">
                   {log.user_role?.substring(0, 2) || 'AD'}
                 </div>
-                <div className="min-w-0 flex-1 text-xs">
-                  <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-zinc-200">
-                        {log.user_name || 'Authorized Officer'}
-                      </span>
-                      <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded">
-                        {log.action?.replace(/_/g, ' ')}
-                      </span>
-                    </div>
-                    <span className="text-[11px] font-mono text-zinc-500">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                    <span className="font-medium text-slate-100">
+                      {log.user_name || 'Authorized officer'}
+                    </span>
+                    <span className="text-xs text-slate-500">
                       {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
-                  <p className="text-zinc-400 mt-1 truncate">
-                    {log.details}
+                  <p className="text-sm text-slate-400 mt-1">
+                    <span className="text-slate-300">{log.action?.replace(/_/g, ' ')}</span>
+                    {log.details ? ` — ${log.details}` : ''}
                   </p>
-                  <div className="mt-1 text-[11px] font-mono text-zinc-500 flex items-center gap-2">
-                    <span className="text-teal-400/80">Block SHA256: {log.entry_hash?.substring(0, 16)}...</span>
-                  </div>
                 </div>
               </div>
             ))}
@@ -497,9 +429,8 @@ export const Dashboard = () => {
     const myDocs = documents.filter(d => d.uploader_id === 2 || d.case_id === 1);
 
     return (
-      <div className="space-y-6">
-        {/* Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="space-y-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="My Assigned Cases"
             value={myCases.length || 3}
@@ -538,12 +469,12 @@ export const Dashboard = () => {
 
 
         {/* My Assigned Cases */}
-        <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm overflow-hidden shadow-sm">
-          <div className="px-6 py-4 border-b border-white/[0.08] bg-slate-850/60 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-              <Briefcase size={16} className="text-[#00d4aa]" /> My Active Cases
+        <div className="panel overflow-hidden">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <Briefcase size={17} className="text-teal-400" /> Active cases
             </h3>
-            <span className="text-xs font-mono text-zinc-400">{myCases.length} Assigned</span>
+            <span className="text-sm text-slate-400">{myCases.length} assigned</span>
           </div>
           <div className="p-0 overflow-x-auto">
             <table className="table">
@@ -578,77 +509,63 @@ export const Dashboard = () => {
         </div>
 
         {/* Investigation Documents & Timeline */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Documents with type badges */}
-          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-5 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-              <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-                <FileText size={16} className="text-[#00d4aa]" /> Case Documents & Evidence
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="panel">
+            <div className="panel-head">
+              <h3 className="panel-title">
+                <FileText size={17} className="text-teal-400" /> Documents
               </h3>
               <button
                 onClick={() => setShowDocUpload(true)}
-                className="text-xs text-[#00d4aa] font-mono hover:underline"
+                className="panel-link"
               >
-                + Upload
+                Upload
               </button>
             </div>
-            <div className="space-y-2.5 max-h-96 overflow-y-auto pr-1">
+            <div className="panel-body space-y-3 max-h-96 overflow-y-auto">
               {myDocs.map(d => (
                 <div
                   key={d.id}
                   onClick={() => setSelectedDocForView(d)}
-                  className="p-3 rounded-xl bg-slate-850/60 border border-white/[0.06] hover:border-[#00d4aa]/40 cursor-pointer transition-all flex items-center justify-between gap-3"
+                  className="py-3 border-b border-slate-800 last:border-0 cursor-pointer"
                 >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-zinc-200 truncate">
-                        {d.filename}
-                      </span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
-                        {d.document_type}
-                      </span>
-                    </div>
-                    <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
-                      SHA256: {d.sha256_hash?.substring(0, 16)}... • v{d.current_version || 1}
-                    </p>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-slate-100 truncate">{d.filename}</span>
+                    <span className="badge badge-accent shrink-0">{d.document_type}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-mono shrink-0">
-                    <ShieldCheck size={14} /> Signed
-                  </div>
+                  <p className="text-xs text-slate-500 font-mono mt-1">
+                    SHA-256 {d.sha256_hash?.substring(0, 16)}… · v{d.current_version || 1}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Chronological Investigation Timeline */}
-          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-5 space-y-4">
-            <div className="pb-3 border-b border-white/[0.06]">
-              <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-                <Clock size={16} className="text-[#00d4aa]" /> Investigation Chronology
-              </h3>
-              <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
-                Operation Chakra (CR-2026-0891) Legal Timeline
-              </p>
+          <div className="panel">
+            <div className="panel-head">
+              <div>
+                <h3 className="panel-title">
+                  <Clock size={17} className="text-teal-400" /> Chronology
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">CR-2026-0891</p>
+              </div>
             </div>
-            <div className="space-y-4 max-h-96 overflow-y-auto pl-2">
-              <div className="relative border-l-2 border-teal-500/30 pl-4 space-y-4">
-                <div className="relative">
-                  <div className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-[#00d4aa]" />
-                  <span className="text-[11px] font-mono text-zinc-500 block">2026-08-14 09:30 IST</span>
-                  <h4 className="text-xs font-semibold text-zinc-200">Zero FIR Registered</h4>
-                  <p className="text-xs text-zinc-400 mt-0.5">Registered at Cyber PS Rohini on FIU requisition.</p>
+            <div className="panel-body">
+              <div className="timeline">
+                <div className="timeline-item">
+                  <div className="timeline-meta">2026-08-14 · 09:30 IST</div>
+                  <h4 className="timeline-title">Zero FIR registered</h4>
+                  <p className="timeline-detail">Cyber PS Rohini on FIU requisition.</p>
                 </div>
-                <div className="relative">
-                  <div className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-[#00d4aa]" />
-                  <span className="text-[11px] font-mono text-zinc-500 block">2026-08-16 18:00 IST</span>
-                  <h4 className="text-xs font-semibold text-zinc-200">Raid & Physical NVMe Seizure</h4>
-                  <p className="text-xs text-zinc-400 mt-0.5">Hardware seized under Section 105 BNSS Panchnama.</p>
+                <div className="timeline-item">
+                  <div className="timeline-meta">2026-08-16 · 18:00 IST</div>
+                  <h4 className="timeline-title">Raid and NVMe seizure</h4>
+                  <p className="timeline-detail">Seized under Section 105 BNSS panchnama.</p>
                 </div>
-                <div className="relative">
-                  <div className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-[#00d4aa]" />
-                  <span className="text-[11px] font-mono text-zinc-500 block">2026-08-20 11:45 IST</span>
-                  <h4 className="text-xs font-semibold text-zinc-200">Custody Transfer to CFSL</h4>
-                  <p className="text-xs text-zinc-400 mt-0.5">Drive transferred to Dr. Aarav Nambiar for bitstream imaging.</p>
+                <div className="timeline-item">
+                  <div className="timeline-meta">2026-08-20 · 11:45 IST</div>
+                  <h4 className="timeline-title">Custody transfer to CFSL</h4>
+                  <p className="timeline-detail">Transferred to Dr. Aarav Nambiar for imaging.</p>
                 </div>
               </div>
             </div>
@@ -662,9 +579,8 @@ export const Dashboard = () => {
   // COURT (JUDGE) DASHBOARD VIEW
   // -------------------------------------------------------------
   const renderCourtDashboard = () => (
-    <div className="space-y-6">
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Cases Under Hearing"
           value={4}
@@ -700,41 +616,12 @@ export const Dashboard = () => {
         />
       </div>
 
-      {/* Court Docket Action Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4 p-4 rounded-2xl bg-slate-800/40 border border-slate-700/40">
-        <div>
-          <h3 className="text-sm font-semibold text-zinc-100">
-            Special CBI & Cyber Court Judicial Bench
+      <div className="panel overflow-hidden">
+        <div className="panel-head">
+          <h3 className="panel-title">
+            <Scale size={17} className="text-amber-400" /> Hearing docket
           </h3>
-          <p className="text-xs text-zinc-400 font-mono">
-            Presiding: Hon'ble Justice Meenakshi Sundaram • Patiala House Courts
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowRequestModal(true)}
-            className="btn btn-secondary text-xs px-3.5 py-2 inline-flex items-center gap-1.5"
-          >
-            <Send size={14} />
-            <span>+ Request Documents</span>
-          </button>
-          <button
-            onClick={() => setShowJudgmentModal(true)}
-            className="btn btn-primary text-xs px-3.5 py-2 inline-flex items-center gap-1.5"
-          >
-            <Scale size={14} />
-            <span>+ Upload Judgment / Order</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Cases Under Hearing Docket */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm overflow-hidden shadow-sm">
-        <div className="px-6 py-4 border-b border-white/[0.08] bg-slate-850/60 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-            <Scale size={16} className="text-amber-400" /> Active Trial & Hearing Docket
-          </h3>
-          <span className="text-xs font-mono text-zinc-400">4 Cases Scheduled</span>
+          <span className="text-sm text-slate-400">4 scheduled</span>
         </div>
         <div className="p-0 overflow-x-auto">
           <table className="table">
@@ -753,8 +640,8 @@ export const Dashboard = () => {
                 <tr key={c.id}>
                   <td><span className="badge badge-warn font-mono">{c.case_number}</span></td>
                   <td>
-                    <div className="font-medium text-zinc-100 text-xs truncate max-w-sm">{c.title}</div>
-                    <div className="text-[11px] font-mono text-zinc-500">{c.acts_sections}</div>
+                    <div className="font-medium text-slate-100 truncate max-w-sm">{c.title}</div>
+                    <div className="text-xs text-slate-500 mt-1">{c.acts_sections}</div>
                   </td>
                   <td className="text-xs font-mono text-teal-400 font-semibold">
                     {c.hearing_date ? new Date(c.hearing_date).toLocaleDateString() : '2026-09-18'}
@@ -774,71 +661,54 @@ export const Dashboard = () => {
       </div>
 
       {/* Court Requisitions Issued & Judgments */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Requisitions */}
-        <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-5 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-            <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-              <Send size={16} className="text-[#00d4aa]" /> Judicial Document Requisitions
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="panel">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <Send size={17} className="text-teal-400" /> Requisitions
             </h3>
-            <button
-              onClick={() => setShowRequestModal(true)}
-              className="text-xs text-[#00d4aa] font-mono hover:underline"
-            >
-              + Issue Requisition
+            <button onClick={() => setShowRequestModal(true)} className="panel-link">
+              Issue
             </button>
           </div>
-          <div className="space-y-3">
+          <div className="panel-body space-y-4">
             {courtRequests.map(cr => (
-              <div key={cr.id} className="p-3 rounded-xl bg-slate-850/60 border border-white/[0.06] space-y-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-mono font-semibold text-zinc-200">
+              <div key={cr.id} className="py-3 border-b border-slate-800 last:border-0 last:pb-0 first:pt-0">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="text-sm font-medium text-slate-100">
                     {cr.case_number}: {cr.request_type}
                   </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-400 border border-rose-500/30">
-                    {cr.priority}
-                  </span>
+                  <span className="badge badge-danger shrink-0">{cr.priority}</span>
                 </div>
-                <p className="text-[11px] text-zinc-400">
-                  Directed to: {cr.requested_to} • Return by: {cr.due_date}
+                <p className="text-sm text-slate-400 mt-1.5">
+                  To {cr.requested_to} · Due {cr.due_date}
                 </p>
-                <div className="text-[11px] font-mono text-[#00d4aa] flex items-center gap-1 pt-1">
-                  <CheckCircle2 size={12} /> Status: {cr.status}
-                </div>
+                <p className="text-xs text-teal-400 mt-1">{cr.status}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Judgments pronounced */}
-        <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm p-5 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-            <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-              <ShieldCheck size={16} className="text-amber-400" /> Pronounced Orders & Judgments
+        <div className="panel">
+          <div className="panel-head">
+            <h3 className="panel-title">
+              <ShieldCheck size={17} className="text-amber-400" /> Orders
             </h3>
-            <button
-              onClick={() => setShowJudgmentModal(true)}
-              className="text-xs text-amber-400 font-mono hover:underline"
-            >
-              + Upload Order
+            <button onClick={() => setShowJudgmentModal(true)} className="panel-link">
+              Upload
             </button>
           </div>
-          <div className="space-y-3">
-            <div className="p-3 rounded-xl bg-slate-850/60 border border-white/[0.06] space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-semibold text-zinc-200">
-                  CR-2026-0891: Bail Rejection Order (Accused Manish Rawat)
+          <div className="panel-body">
+            <div>
+              <div className="flex items-start justify-between gap-3">
+                <span className="text-sm font-medium text-slate-100">
+                  CR-2026-0891 · Bail rejection (Manish Rawat)
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
-                  PROCEEDING SEALED
-                </span>
+                <span className="badge badge-accent shrink-0">Sealed</span>
               </div>
-              <p className="text-[11px] text-zinc-400">
-                Pronounced: August 28, 2026 • Sealed with Judicial PKI Token JUD-DEL-089
+              <p className="text-sm text-slate-400 mt-1.5">
+                Pronounced 28 Aug 2026
               </p>
-              <div className="text-[11px] font-mono text-zinc-500 truncate">
-                SHA256: 8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a
-              </div>
             </div>
           </div>
         </div>
@@ -850,9 +720,8 @@ export const Dashboard = () => {
   // FORENSIC ANALYST VIEW
   // -------------------------------------------------------------
   const renderForensicDashboard = () => (
-    <div className="space-y-6">
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Assigned Evidence Items"
           value={assets.length || 4}
@@ -887,41 +756,12 @@ export const Dashboard = () => {
         />
       </div>
 
-      {/* Forensic Workstation Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4 p-4 rounded-2xl bg-slate-800/40 border border-slate-700/40">
-        <div>
-          <h3 className="text-sm font-semibold text-zinc-100">
-            Central Forensic Science Laboratory (CFSL) Workstation
+      <div className="panel overflow-hidden">
+        <div className="panel-head">
+          <h3 className="panel-title">
+            <HardDrive size={17} className="text-purple-400" /> Lab custody
           </h3>
-          <p className="text-xs text-zinc-400 font-mono">
-            Scientist: Dr. Aarav Nambiar (PhD) • CFSL-BIO-772 • Clean Room 2 CBI
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowIntakeModal(true)}
-            className="btn btn-secondary text-xs px-3.5 py-2 inline-flex items-center gap-1.5"
-          >
-            <Plus size={14} />
-            <span>+ Evidence Intake Form</span>
-          </button>
-          <button
-            onClick={() => setShowForensicReportModal(true)}
-            className="btn btn-primary text-xs px-3.5 py-2 inline-flex items-center gap-1.5"
-          >
-            <Microscope size={14} />
-            <span>+ Submit Forensic Report</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Assigned Evidence Items Grid */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 shadow-lg backdrop-blur-sm overflow-hidden shadow-sm">
-        <div className="px-6 py-4 border-b border-white/[0.08] bg-slate-850/60 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
-            <HardDrive size={16} className="text-purple-400" /> Assigned Evidence Items in Lab Custody
-          </h3>
-          <span className="text-xs font-mono text-zinc-400">{assets.length} In Custody</span>
+          <span className="text-sm text-slate-400">{assets.length} items</span>
         </div>
         <div className="p-0 overflow-x-auto">
           <table className="table">
@@ -940,8 +780,8 @@ export const Dashboard = () => {
                 <tr key={a.id}>
                   <td><span className="badge badge-info font-mono">{a.asset_number}</span></td>
                   <td>
-                    <div className="font-medium text-zinc-100 text-xs">{a.name}</div>
-                    <div className="text-[11px] text-zinc-500 font-mono">Case: {a.case_number || 'CR-2026-0891'}</div>
+                    <div className="font-medium text-slate-100">{a.name}</div>
+                    <div className="text-xs text-slate-500 mt-1">Case {a.case_number || 'CR-2026-0891'}</div>
                   </td>
                   <td className="text-xs font-mono text-zinc-300">{a.asset_type}</td>
                   <td>
@@ -969,109 +809,52 @@ export const Dashboard = () => {
   );
 
   return (
-    <div className="page space-y-6">
-      {/* Page Header */}
-      <div className="page-header pb-2 border-b border-white/[0.06]">
+    <div className="page">
+      <div className="page-header">
         <div className="page-heading">
-          <div className="flex items-center gap-2">
-            <span className="page-eyebrow">NCRB • Secure Document System</span>
-            <span className="text-zinc-600">/</span>
-            <span className="text-xs font-mono text-teal-400">SIH-26190</span>
-          </div>
-          <h1 className="page-title flex items-center gap-3">
-            <span>Dashboard Overview</span>
-            <span className="text-xs font-mono font-medium px-2.5 py-0.5 rounded-full border border-teal-500/30 bg-teal-500/10 text-[#00d4aa]">
-              {activeRole} PERSPECTIVE
-            </span>
-          </h1>
+          <span className="page-eyebrow">
+            {activeRole === 'ADMIN' && 'Administrator'}
+            {activeRole === 'IO' && 'Investigating officer'}
+            {activeRole === 'JUDGE' && 'Court docket'}
+            {activeRole === 'FORENSIC_EXPERT' && 'Forensic laboratory'}
+          </span>
+          <h1 className="page-title">Overview</h1>
           <p className="page-description">
-            Secure digital asset lifecycle, cryptographic chain of custody, and forensic verification console.
+            Cases, documents, and chain of custody for your current role.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
-          {/* Role-Specific Primary Actions in Header */}
+        <div className="page-actions">
           {activeRole === 'IO' && (
-            <button
-              onClick={() => setShowDocUpload(true)}
-              className="btn btn-primary text-xs px-3.5 py-2 inline-flex items-center gap-1.5 shadow-lg shadow-teal-500/20"
-            >
-              <Plus size={15} />
-              <span className="font-sans font-medium">Upload Document</span>
+            <button onClick={() => setShowDocUpload(true)} className="btn btn-primary">
+              <Plus size={16} />
+              Upload document
             </button>
           )}
           {activeRole === 'JUDGE' && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowRequestModal(true)}
-                className="btn btn-secondary text-xs px-3.5 py-2 inline-flex items-center gap-1.5"
-              >
-                <Send size={14} />
-                <span className="font-sans font-medium">Requisition</span>
+            <>
+              <button onClick={() => setShowRequestModal(true)} className="btn btn-secondary">
+                <Send size={15} />
+                Requisition
               </button>
-              <button
-                onClick={() => setShowJudgmentModal(true)}
-                className="btn btn-primary text-xs px-3.5 py-2 inline-flex items-center gap-1.5 shadow-lg shadow-teal-500/20"
-              >
-                <Scale size={14} />
-                <span className="font-sans font-medium">Record Order</span>
+              <button onClick={() => setShowJudgmentModal(true)} className="btn btn-primary">
+                <Scale size={15} />
+                Record order
               </button>
-            </div>
+            </>
           )}
           {activeRole === 'FORENSIC_EXPERT' && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowIntakeModal(true)}
-                className="btn btn-secondary text-xs px-3.5 py-2 inline-flex items-center gap-1.5"
-              >
-                <Plus size={14} />
-                <span className="font-sans font-medium">Evidence Intake</span>
+            <>
+              <button onClick={() => setShowIntakeModal(true)} className="btn btn-secondary">
+                <Plus size={15} />
+                Evidence intake
               </button>
-              <button
-                onClick={() => setShowForensicReportModal(true)}
-                className="btn btn-primary text-xs px-3.5 py-2 inline-flex items-center gap-1.5 shadow-lg shadow-teal-500/20"
-              >
-                <Microscope size={14} />
-                <span className="font-sans font-medium">Submit Report</span>
+              <button onClick={() => setShowForensicReportModal(true)} className="btn btn-primary">
+                <Microscope size={15} />
+                Submit report
               </button>
-            </div>
+            </>
           )}
-
-          {/* Perspective Quick Switch Tabs */}
-          <div className="flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
-            <button
-              onClick={() => switchRole('ADMIN')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-colors ${
-                activeRole === 'ADMIN' ? 'bg-teal-400 text-slate-950 font-semibold shadow-sm' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Admin
-            </button>
-            <button
-              onClick={() => switchRole('IO')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-colors ${
-                activeRole === 'IO' ? 'bg-teal-400 text-slate-950 font-semibold shadow-sm' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Investigator
-            </button>
-            <button
-              onClick={() => switchRole('JUDGE')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-colors ${
-                activeRole === 'JUDGE' ? 'bg-teal-400 text-slate-950 font-semibold shadow-sm' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Court
-            </button>
-            <button
-              onClick={() => switchRole('FORENSIC_EXPERT')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-colors ${
-                activeRole === 'FORENSIC_EXPERT' ? 'bg-teal-400 text-slate-950 font-semibold shadow-sm' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Forensics
-            </button>
-          </div>
         </div>
       </div>
 

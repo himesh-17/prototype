@@ -76,65 +76,47 @@ export const DocumentSearch = () => {
   });
 
   return (
-    <div className="page space-y-6">
-      {/* Header */}
-      <div className="page-header pb-2 border-b border-slate-800/80">
+    <div className="page">
+      <div className="page-header">
         <div className="page-heading">
-          <div className="flex items-center gap-2">
-            <span className="page-eyebrow font-sans text-slate-400">Federated Search</span>
-            <span className="text-slate-600">/</span>
-            <span className="text-xs font-sans text-teal-400 font-medium">OCR & Cryptographic Discovery</span>
-          </div>
-          <h1 className="page-title flex items-center gap-3">
-            <span className="font-sans font-semibold text-slate-100">Document & Evidence Search</span>
-            <span className="badge badge-info text-xs">{filteredResults.length} Indexed</span>
-          </h1>
-          <p className="page-description font-sans text-slate-400 text-xs">
-            Search across OCR extracted witness statements, FIR descriptions, forensic findings, and SHA-256 cryptographic hashes.
+          <span className="page-eyebrow">Evidence</span>
+          <h1 className="page-title">Document search</h1>
+          <p className="page-description">
+            Find FIRs, statements, reports, and hashed exhibits.
           </p>
         </div>
       </div>
 
-      {/* Elevated Search Bar & Filter Group */}
-      <form onSubmit={handleSearch} className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-3.5 flex flex-wrap items-center justify-between gap-3.5 shadow-sm backdrop-blur-sm">
-        <div className="relative flex-1 min-w-[280px]">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+      <form onSubmit={handleSearch} className="toolbar">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
           <input
             type="search"
-            className="input bg-slate-950/60 border-slate-700 text-xs pl-10 py-2.5 rounded-xl text-slate-100 placeholder:text-slate-500 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/30"
-            placeholder="Search by keyword, witness name, SCADA, SHA-256 hash, or OCR phrases..."
+            className="pl-10"
+            placeholder="Search filename, type, or hash"
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
         </div>
-
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400">
-            <Filter size={13} />
-            <span>Type:</span>
-          </div>
-          <select
-            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
-            value={typeFilter}
-            onChange={e => setTypeFilter(e.target.value)}
-          >
-            <option value="ALL">All Types</option>
-            <option value="FIR">FIR</option>
-            <option value="Witness Statement">Witness Statement</option>
-            <option value="Forensic Report">Forensic Report</option>
-            <option value="Evidence">Evidence</option>
-            <option value="Judicial Order">Judicial Order</option>
-          </select>
-
-          <button type="submit" className="btn btn-primary text-xs px-4 py-2 inline-flex items-center gap-1.5 font-sans font-medium shadow-md shadow-teal-500/10">
-            <Search size={14} />
-            <span>Search</span>
-          </button>
-        </div>
+        <select
+          className="w-auto min-w-[160px]"
+          value={typeFilter}
+          onChange={e => setTypeFilter(e.target.value)}
+        >
+          <option value="ALL">All types</option>
+          <option value="FIR">FIR</option>
+          <option value="Witness Statement">Witness Statement</option>
+          <option value="Forensic Report">Forensic Report</option>
+          <option value="Evidence">Evidence</option>
+          <option value="Judicial Order">Judicial Order</option>
+        </select>
+        <button type="submit" className="btn btn-primary">
+          <Search size={16} />
+          Search
+        </button>
       </form>
 
-      {/* Results Table */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden shadow-lg backdrop-blur-sm">
+      <div className="panel">
         {loading ? (
           <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
             <div className="spinner" style={{ width: 24, height: 24 }} />
@@ -179,15 +161,15 @@ export const DocumentSearch = () => {
                       className="hover:bg-slate-800/40 cursor-pointer transition-colors"
                     >
                       <td>
-                        <div className="font-sans font-medium text-xs text-slate-100 truncate max-w-sm">
+                        <div className="font-medium text-slate-100 truncate max-w-sm">
                           {doc.filename}
                         </div>
-                        <div className="text-[11px] font-mono text-slate-400 truncate max-w-sm mt-0.5">
-                          SHA256: {doc.sha256_hash?.substring(0, 16)}...{doc.sha256_hash?.substring(doc.sha256_hash.length - 4)}
+                        <div className="row-sub truncate max-w-sm">
+                          {doc.sha256_hash?.substring(0, 16)}…
                         </div>
                       </td>
                       <td>
-                        <span className={`text-[11px] font-sans font-medium px-2.5 py-0.5 rounded-full border ${typeClass}`}>
+                        <span className={`badge ${typeClass.includes('emerald') ? 'badge-accent' : 'badge-info'}`}>
                           {doc.document_type}
                         </span>
                       </td>
