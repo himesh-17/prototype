@@ -382,8 +382,7 @@ prototype/
 │   ├── package.json
 │   ├── vite.config.js
 │   └── tailwind config (via @tailwindcss/vite)
-│
-└── opencode.json                   # Agent plugin config
+└── 
 ```
 
 ---
