@@ -67,23 +67,23 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
   };
 
   const classificationClass = classificationStyles[document.classification] || classificationStyles['Confidential'];
-  const typeClass = docTypeStyles[document.document_type] || 'bg-zinc-800 text-zinc-300 border-zinc-700';
+  const typeClass = docTypeStyles[document.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
 
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal modal-wide max-w-4xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 flex flex-col max-h-[90vh]"
+        className="modal modal-wide max-w-4xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 flex flex-col max-h-[90vh]"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#16161d] px-6 py-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
               <FileText size={20} strokeWidth={1.8} />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base font-semibold text-zinc-100 truncate">
+                <h3 className="text-base font-semibold text-[var(--text-primary)] truncate">
                   {document.filename}
                 </h3>
                 <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${typeClass}`}>
@@ -93,7 +93,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
                   {document.classification || 'Confidential'}
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 font-mono mt-0.5">
+              <p className="text-xs text-[var(--text-tertiary)] font-mono mt-0.5">
                 Case: {document.case_number || 'CR-2026-0891'} • Version v{document.current_version || 1} • {document.file_size || '3.2 MB'}
               </p>
             </div>
@@ -110,7 +110,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
             </button>
             <button
               onClick={onClose}
-              className="modal-close p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5"
+              className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
               aria-label="Close document viewer"
             >
               <X size={18} />
@@ -125,7 +125,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
             className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${
               activeTab === 'metadata'
                 ? 'border-[#00d4aa] text-[#00d4aa]'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
             }`}
           >
             Cryptographic Metadata
@@ -135,7 +135,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
             className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${
               activeTab === 'signature'
                 ? 'border-[#00d4aa] text-[#00d4aa]'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
             }`}
           >
             Digital Signature & Integrity
@@ -145,7 +145,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
             className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${
               activeTab === 'ocr'
                 ? 'border-[#00d4aa] text-[#00d4aa]'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
             }`}
           >
             OCR Text Preview
@@ -155,7 +155,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
             className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${
               activeTab === 'preview'
                 ? 'border-[#00d4aa] text-[#00d4aa]'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
             }`}
           >
             Secure Document Preview
@@ -167,14 +167,14 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
           {activeTab === 'metadata' && (
             <div className="space-y-6">
               {/* SHA-256 Hash Block */}
-              <div className="rounded-xl bg-[#0d0d12] border border-white/[0.08] p-4">
+               <div className="rounded-lg bg-[#0d0d12] border border-white/[0.08] p-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                   <span className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-1.5">
                     <Key size={13} className="text-[#00d4aa]" /> SHA-256 Cryptographic Checksum
                   </span>
                   <button
                     onClick={handleCopyHash}
-                    className="btn btn-ghost text-[11px] py-1 px-2 text-zinc-300 hover:text-[#00d4aa] flex items-center gap-1"
+                    className="btn btn-ghost text-[11px] py-1 px-2 text-[var(--text-secondary)] hover:text-[#00d4aa] flex items-center gap-1"
                   >
                     {copiedHash ? <Check size={12} className="text-[#00d4aa]" /> : <Copy size={12} />}
                     <span>{copiedHash ? 'Copied' : 'Copy Hash'}</span>
@@ -183,64 +183,64 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
                 <div className="font-mono text-xs text-teal-400/90 break-all bg-black/40 p-3 rounded-lg border border-teal-500/20 select-all">
                   {document.sha256_hash || '7e2b8f3c4e1d9a0b5c6f8a2e1d3b5c7e9a0f2b4c6d8e0a1b3c5d7e9f1a3b5c7d'}
                 </div>
-                <p className="text-[11px] text-zinc-500 mt-2">
+                <p className="text-[11px] text-[var(--text-tertiary)] mt-2">
                   Recorded in immutable Merkle tree audit chain at time of upload. Tamper-evident guarantee.
                 </p>
               </div>
 
               {/* Metadata Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-xl bg-[#16161d] p-4 border border-white/[0.06] space-y-3">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-                    <Layers size={14} className="text-zinc-300" /> Document Specifications
+                 <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-white/[0.06] space-y-3">
+                   <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-2">
+                     <Layers size={14} className="text-[var(--text-secondary)]" /> Document Specifications
                   </h4>
                   <dl className="space-y-2 text-xs font-mono">
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Document ID</dt>
-                      <dd className="text-zinc-200">DOC-{document.id.toString().padStart(5, '0')}</dd>
+                      <dt className="text-[var(--text-tertiary)]">Document ID</dt>
+                      <dd className="text-[var(--text-primary)]">DOC-{document.id.toString().padStart(5, '0')}</dd>
                     </div>
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Document Type</dt>
-                      <dd className="text-zinc-200">{document.document_type}</dd>
+                      <dt className="text-[var(--text-tertiary)]">Document Type</dt>
+                      <dd className="text-[var(--text-primary)]">{document.document_type}</dd>
                     </div>
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Classification</dt>
+                      <dt className="text-[var(--text-tertiary)]">Classification</dt>
                       <dd className="text-amber-400 font-semibold">{document.classification || 'Confidential'}</dd>
                     </div>
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Version</dt>
-                      <dd className="text-zinc-200">v{document.current_version || 1} (Latest)</dd>
+                      <dt className="text-[var(--text-tertiary)]">Version</dt>
+                      <dd className="text-[var(--text-primary)]">v{document.current_version || 1} (Latest)</dd>
                     </div>
                     <div className="flex justify-between py-1">
-                      <dt className="text-zinc-500">Storage Protocol</dt>
+                      <dt className="text-[var(--text-tertiary)]">Storage Protocol</dt>
                       <dd className="text-teal-400">AES-256-GCM HSM Enclave</dd>
                     </div>
                   </dl>
                 </div>
 
-                <div className="rounded-xl bg-[#16161d] p-4 border border-white/[0.06] space-y-3">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-                    <User size={14} className="text-zinc-300" /> Origin & Custody
+                 <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-white/[0.06] space-y-3">
+                   <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-2">
+                     <User size={14} className="text-[var(--text-secondary)]" /> Origin & Custody
                   </h4>
                   <dl className="space-y-2 text-xs font-mono">
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Uploaded By</dt>
-                      <dd className="text-zinc-200">{document.uploader_name || 'Inspector Rajesh Deshmukh'}</dd>
+                      <dt className="text-[var(--text-tertiary)]">Uploaded By</dt>
+                      <dd className="text-[var(--text-primary)]">{document.uploader_name || 'Inspector Rajesh Deshmukh'}</dd>
                     </div>
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Date & Time</dt>
-                      <dd className="text-zinc-200">{new Date(document.created_at || Date.now()).toLocaleString()}</dd>
+                      <dt className="text-[var(--text-tertiary)]">Date & Time</dt>
+                      <dd className="text-[var(--text-primary)]">{new Date(document.created_at || Date.now()).toLocaleString()}</dd>
                     </div>
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Station / Agency</dt>
-                      <dd className="text-zinc-200">Cyber Crime PS / NCRB</dd>
+                      <dt className="text-[var(--text-tertiary)]">Station / Agency</dt>
+                      <dd className="text-[var(--text-primary)]">Cyber Crime PS / NCRB</dd>
                     </div>
                     <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-zinc-500">Chain Node</dt>
-                      <dd className="text-zinc-200">NCRB-NODE-DELHI-01</dd>
+                      <dt className="text-[var(--text-tertiary)]">Chain Node</dt>
+                      <dd className="text-[var(--text-primary)]">NCRB-NODE-DELHI-01</dd>
                     </div>
                     <div className="flex justify-between py-1">
-                      <dt className="text-zinc-500">Integrity Status</dt>
+                      <dt className="text-[var(--text-tertiary)]">Integrity Status</dt>
                       <dd className="text-emerald-400 font-semibold flex items-center gap-1">
                         <ShieldCheck size={13} /> Intact & Verified
                       </dd>
@@ -253,17 +253,17 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
 
           {activeTab === 'signature' && (
             <div className="space-y-5">
-              <div className="rounded-xl bg-[#16161d] p-5 border border-white/[0.08]">
+               <div className="rounded-lg bg-[var(--bg-overlay)] p-5 border border-white/[0.08]">
                 <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-white/[0.06]">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
                       <ShieldCheck size={18} />
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-zinc-100">
+                      <h4 className="text-sm font-semibold text-[var(--text-primary)]">
                         PKI Digital Signature Certificate
                       </h4>
-                      <p className="text-xs text-zinc-400 font-mono">
+                      <p className="text-xs text-[var(--text-tertiary)] font-mono">
                         Compliant with Information Technology Act, 2000 (Section 3A)
                       </p>
                     </div>
@@ -275,27 +275,27 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                   <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-zinc-500 block mb-1">Signatory:</span>
-                    <span className="text-zinc-100 font-medium">
+                    <span className="text-[var(--text-tertiary)] block mb-1">Signatory:</span>
+                    <span className="text-[var(--text-primary)] font-medium">
                       {document.digital_signature?.signed_by || document.uploader_name || 'Inspector Rajesh Deshmukh'}
                     </span>
                   </div>
                   <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-zinc-500 block mb-1">Certifying Authority:</span>
-                    <span className="text-zinc-100 font-medium">
+                    <span className="text-[var(--text-tertiary)] block mb-1">Certifying Authority:</span>
+                    <span className="text-[var(--text-primary)] font-medium">
                       {document.digital_signature?.certificate_authority || 'NIC-CA / e-Mudhra Government of India'}
                     </span>
                   </div>
                   <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-zinc-500 block mb-1">Signing Timestamp:</span>
-                    <span className="text-zinc-100 font-medium">
+                    <span className="text-[var(--text-tertiary)] block mb-1">Signing Timestamp:</span>
+                    <span className="text-[var(--text-primary)] font-medium">
                       {document.digital_signature?.timestamp
                         ? new Date(document.digital_signature.timestamp).toLocaleString()
                         : new Date().toLocaleString()}
                     </span>
                   </div>
                   <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-zinc-500 block mb-1">Certificate Key ID:</span>
+                    <span className="text-[var(--text-tertiary)] block mb-1">Certificate Key ID:</span>
                     <span className="text-teal-400 font-medium">
                       {document.digital_signature?.key_id || 'RSA-4096-7892-IN-NCRB'}
                     </span>
@@ -303,7 +303,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-3">
-                  <p className="text-xs text-zinc-400">
+                  <p className="text-xs text-[var(--text-tertiary)]">
                     Cryptographic hash matches the original uploaded byte sequence 100%. No modifications detected.
                   </p>
                   <button
@@ -318,7 +318,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
               </div>
 
               {verifyResult && (
-                <div className="rounded-xl bg-teal-500/10 border border-teal-500/20 p-4 text-xs font-mono text-teal-300 flex items-start gap-2.5 animate-fade-in">
+                 <div className="rounded-lg bg-teal-500/10 border border-teal-500/20 p-4 text-xs font-mono text-teal-300 flex items-start gap-2.5 animate-fade-in">
                   <Check size={16} className="shrink-0 text-[#00d4aa] mt-0.5" />
                   <div>
                     <span className="font-semibold block">HSM Hardware Enclave Attestation Confirmed:</span>
@@ -332,32 +332,32 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
           {activeTab === 'ocr' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                <span className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-1.5">
                   <Search size={14} className="text-[#00d4aa]" /> Machine Extracted OCR Text (Tesseract / EasyOCR v4)
                 </span>
                 <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                   OCR CONFIDENCE: 98.4%
                 </span>
               </div>
-              <div className="rounded-xl bg-black/60 border border-white/[0.08] p-4 text-xs font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap max-h-80 overflow-y-auto select-text">
+              <div className="rounded-lg bg-black/60 border border-white/[0.08] p-4 text-xs font-mono text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap max-h-80 overflow-y-auto select-text">
                 {document.ocr_text || 'No OCR text extracted for this document. Text processing is currently queued.'}
               </div>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-[var(--text-tertiary)]">
                 Indexed for semantic search and keyword lookups across all agency nodes.
               </p>
             </div>
           )}
 
           {activeTab === 'preview' && (
-            <div className="rounded-xl bg-zinc-950 border border-white/[0.08] p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[300px]">
-              <div className="h-14 w-14 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400">
+            <div className="rounded-lg bg-[var(--bg-base)] border border-white/[0.08] p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[300px]">
+              <div className="h-14 w-14 rounded-lg bg-[var(--bg-card)] border border-white/10 flex items-center justify-center text-[var(--text-tertiary)]">
                 <FileCheck2 size={28} className="text-[#00d4aa]" />
               </div>
               <div className="max-w-md">
-                <h4 className="text-sm font-semibold text-zinc-200">
+                <h4 className="text-sm font-semibold text-[var(--text-primary)]">
                   Watermarked Secure View Protected
                 </h4>
-                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                <p className="text-xs text-[var(--text-tertiary)] mt-1 leading-relaxed">
                   Document content is encrypted with dynamic judicial forensic watermarking (Officer ID, IP, and UTC timestamp embedded).
                 </p>
               </div>
@@ -375,7 +375,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-white/[0.08] bg-[#141419] px-6 py-3 flex items-center justify-between text-xs text-zinc-500 font-mono">
+        <div className="border-t border-white/[0.08] bg-[#141419] px-6 py-3 flex items-center justify-between text-xs text-[var(--text-tertiary)] font-mono">
           <span>Nyaya Setu • NCRB Secure Node #26190</span>
           <button onClick={onClose} className="btn btn-secondary text-xs px-3 py-1">
             Close Viewer

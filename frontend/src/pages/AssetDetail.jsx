@@ -80,7 +80,7 @@ const AssetDetail = () => {
   if (!asset) {
     return (
       <div className="page">
-        <p className="text-slate-400">Asset not found.</p>
+        <p className="text-[var(--text-secondary)]">Asset not found.</p>
       </div>
     );
   }
@@ -91,7 +91,7 @@ const AssetDetail = () => {
     <div className="page">
       <div className="page-header">
         <div className="page-heading">
-          <Link to={`/cases/${asset.case_id}`} className="page-eyebrow inline-flex items-center gap-1.5 hover:text-slate-300">
+          <Link to={`/cases/${asset.case_id}`} className="page-eyebrow inline-flex items-center gap-1.5 hover:text-[var(--text-secondary)]">
             <ArrowLeft size={14} />
             Case file
           </Link>
@@ -114,7 +114,7 @@ const AssetDetail = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 text-sm text-slate-400">
+      <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
         <MapPin size={15} />
         {asset.location || 'Unknown location'}
       </div>
@@ -199,14 +199,14 @@ const AssetDetail = () => {
                     {currentCustodian.name.charAt(0)}
                   </div>
                   <div>
-                    <div className="font-medium text-slate-100">{currentCustodian.name}</div>
-                    <div className="text-sm text-slate-400 mt-0.5">
+                    <div className="font-medium text-[var(--text-primary)]">{currentCustodian.name}</div>
+                    <div className="text-sm text-[var(--text-secondary)] mt-0.5">
                       {currentCustodian.role} · {currentCustodian.department || 'No department'}
                     </div>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-slate-400">Custodian ID: {asset.current_custodian_id}</p>
+                <p className="text-sm text-[var(--text-secondary)]">Custodian ID: {asset.current_custodian_id}</p>
               )}
             </div>
           </div>
@@ -218,11 +218,11 @@ const AssetDetail = () => {
             <div className="panel-body space-y-4">
               <div>
                 <span className="page-eyebrow">Logged</span>
-                <p className="text-sm text-slate-200 mt-1.5">{new Date(asset.created_at).toLocaleString()}</p>
+                <p className="text-sm text-[var(--text-primary)] mt-1.5">{new Date(asset.created_at).toLocaleString()}</p>
               </div>
               <div>
                 <span className="page-eyebrow">Updated</span>
-                <p className="text-sm text-slate-200 mt-1.5">{new Date(asset.updated_at).toLocaleString()}</p>
+                <p className="text-sm text-[var(--text-primary)] mt-1.5">{new Date(asset.updated_at).toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ const AssetDetail = () => {
           </div>
           <div className="panel-body">
             {events.length === 0 ? (
-              <p className="text-sm text-slate-400">No timeline events found.</p>
+              <p className="text-sm text-[var(--text-secondary)]">No timeline events found.</p>
             ) : (
               <div className="timeline">
                 {events.map((evt) => {
@@ -258,7 +258,7 @@ const AssetDetail = () => {
                           {evt.remarks && evt.remarks}
                         </p>
                       )}
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-[var(--text-tertiary)] mt-1">
                         Recorded by {performedBy ? performedBy.name : `User ${evt.performed_by}`}
                       </p>
                     </div>

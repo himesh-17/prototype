@@ -52,7 +52,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in"
+        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -62,17 +62,17 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
               <Scale size={18} strokeWidth={2} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-100">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                 Upload Judicial Order / Judgment
               </h3>
-              <p className="text-xs text-zinc-400 font-mono">
+              <p className="text-xs text-[var(--text-tertiary)] font-mono">
                 Special CBI & Cyber Court • Digital Registry
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5"
+            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -89,7 +89,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Target Case
               </label>
               <select
@@ -106,7 +106,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Order Type
               </label>
               <select
@@ -123,7 +123,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Presiding Judge / Bench
               </label>
               <input
@@ -135,7 +135,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Hearing / Pronouncement Date
               </label>
               <input
@@ -149,7 +149,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Operative Order Text / Judgment Summary
             </label>
             <textarea
@@ -163,7 +163,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Upload Signed Order Copy (PDF)
             </label>
             <input
@@ -172,13 +172,13 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
               onChange={e => setFile(e.target.files[0])}
               className="input bg-[#0e0e13] border-white/10 text-xs py-1.5"
             />
-            <p className="text-[11px] text-zinc-500">
+            <p className="text-[11px] text-[var(--text-tertiary)]">
               If no file is attached, an official digital decree will be synthesized and cryptographically sealed.
             </p>
           </div>
 
           {/* Judicial Security Note */}
-          <div className="rounded-xl bg-teal-500/10 border border-teal-500/20 p-3 text-xs font-mono text-teal-300 flex items-center gap-2">
+          <div className="rounded-lg bg-teal-500/10 border border-teal-500/20 p-3 text-xs font-mono text-teal-300 flex items-center gap-2">
             <Shield size={16} className="shrink-0 text-[#00d4aa]" />
             <span>Cryptographic Judicial Seal [JUDICIAL-SEAL-PHC-2026] will be permanently affixed.</span>
           </div>

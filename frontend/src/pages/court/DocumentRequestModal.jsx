@@ -52,7 +52,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in"
+        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -62,17 +62,17 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
               <FileSearch size={18} strokeWidth={2} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-100">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                 Issue Judicial Document Requisition
               </h3>
-              <p className="text-xs text-zinc-400 font-mono">
+              <p className="text-xs text-[var(--text-tertiary)] font-mono">
                 Direct Investigation / Forensic Team to Furnish Records
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5"
+            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -90,7 +90,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Case Reference
               </label>
               <select
@@ -107,7 +107,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Priority Level
               </label>
               <select
@@ -123,7 +123,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Document / Evidence Requirement Description
             </label>
             <input
@@ -137,7 +137,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Direct To Agency / Officer
               </label>
               <select
@@ -152,7 +152,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Submission Deadline
               </label>
               <input
@@ -166,7 +166,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Judicial Directions / Specific Points of Inquiry
             </label>
             <textarea
@@ -179,7 +179,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
           </div>
 
           {/* Legal Notice */}
-          <div className="rounded-xl bg-[#16161d] p-3 text-xs font-mono text-zinc-400 border border-white/[0.06] flex items-center gap-2">
+          <div className="rounded-lg bg-[var(--bg-overlay)] p-3 text-xs font-mono text-[var(--text-tertiary)] border border-white/[0.06] flex items-center gap-2">
             <ShieldCheck size={16} className="text-[#00d4aa] shrink-0" />
             <span>Issued under Section 91 CrPC / Section 94 BNSS. Formal notice will be transmitted via encrypted inter-agency bus.</span>
           </div>

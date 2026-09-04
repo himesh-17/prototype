@@ -104,7 +104,7 @@ export const Dashboard = () => {
     return (
       <div className="page flex flex-col items-center justify-center min-h-[60vh]">
         <div className="spinner" style={{ width: 28, height: 28 }} />
-        <span className="text-xs font-mono text-zinc-400 mt-4">
+        <span className="text-xs font-mono text-[var(--text-tertiary)] mt-4">
           Loading Nyaya Setu cryptographic ledger...
         </span>
       </div>
@@ -158,7 +158,7 @@ export const Dashboard = () => {
       </div>
 
       {chainVerified && (
-        <div className="rounded-xl bg-teal-500/10 border border-teal-500/30 px-4 py-3 text-sm text-teal-300 flex items-center justify-between">
+        <div className="rounded-lg bg-teal-500/10 border border-teal-500/30 px-4 py-3 text-sm text-teal-300 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShieldCheck size={18} className="text-[#00d4aa]" />
             <span>Cryptographic Merkle tree audit verified. 100% block integrity intact across all national nodes.</span>
@@ -213,10 +213,10 @@ export const Dashboard = () => {
                         </span>
                       </td>
                       <td>
-                        <div className="text-sm font-medium text-slate-100 truncate max-w-xs">
+                        <div className="text-sm font-medium text-[var(--text-primary)] truncate max-w-xs">
                           {c.title}
                         </div>
-                        <div className="text-xs text-slate-400 truncate mt-1">
+                        <div className="text-xs text-[var(--text-secondary)] truncate mt-1">
                           {c.acts_sections || 'BNS / IT Act'}
                         </div>
                       </td>
@@ -227,7 +227,7 @@ export const Dashboard = () => {
                               ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                               : c.priority === 'HIGH'
                               ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                              : 'bg-zinc-800 text-zinc-300 border-zinc-700'
+                              : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]'
                           }`}
                         >
                           {c.priority || 'NORMAL'}
@@ -272,56 +272,56 @@ export const Dashboard = () => {
           <div className="panel-body flex flex-col gap-3 flex-1">
               <Link to="/cases" className="action-tile group">
                 <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
+                  <div className="h-11 w-11 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
                     <Plus size={16} />
                   </div>
                   <div>
-                    <span className="text-sm font-medium text-slate-100 block">Register case</span>
-                    <span className="text-xs text-slate-400 block mt-0.5">Open a new investigation file</span>
+                    <span className="text-sm font-medium text-[var(--text-primary)] block">Register case</span>
+                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Open a new investigation file</span>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-slate-500" />
+                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
               </Link>
 
               <button type="button" onClick={() => setShowDocUpload(true)} className="action-tile">
                 <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
+                  <div className="h-11 w-11 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
                     <FileText size={16} />
                   </div>
                   <div>
-                    <span className="text-sm font-medium text-slate-100 block">Upload document</span>
-                    <span className="text-xs text-slate-400 block mt-0.5">Hash and seal the file</span>
+                    <span className="text-sm font-medium text-[var(--text-primary)] block">Upload document</span>
+                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Hash and seal the file</span>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-slate-500" />
+                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
               </button>
 
               <button type="button" onClick={handleVerifyChain} disabled={verifyingChain} className="action-tile">
                 <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                  <div className="h-11 w-11 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                     <ShieldCheck size={16} />
                   </div>
                   <div>
-                    <span className="text-sm font-medium text-slate-100 block">Verify ledger</span>
-                    <span className="text-xs text-slate-400 block mt-0.5">
+                    <span className="text-sm font-medium text-[var(--text-primary)] block">Verify ledger</span>
+                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">
                       {verifyingChain ? 'Checking integrity…' : 'Scan hash chain'}
                     </span>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-slate-500" />
+                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
               </button>
 
               <Link to="/users" className="action-tile">
                 <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                  <div className="h-11 w-11 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
                     <Users size={16} />
                   </div>
                   <div>
-                    <span className="text-sm font-medium text-slate-100 block">User access</span>
-                    <span className="text-xs text-slate-400 block mt-0.5">Officers, judges, experts</span>
+                    <span className="text-sm font-medium text-[var(--text-primary)] block">User access</span>
+                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Officers, judges, experts</span>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-slate-500" />
+                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
               </Link>
           </div>
         </div>
@@ -340,38 +340,38 @@ export const Dashboard = () => {
           <div className="panel-body space-y-5 text-sm">
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <span className="text-slate-400">Merkle integrity</span>
+                <span className="text-[var(--text-secondary)]">Merkle integrity</span>
                 <span className="text-emerald-400 font-medium flex items-center gap-1.5">
                   <CheckCircle2 size={15} /> Valid
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-mono">Root 8f4c19…d3c5</p>
+              <p className="text-xs text-[var(--text-tertiary)] font-mono">Root 8f4c19…d3c5</p>
             </div>
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-400">Encrypted storage</span>
-                <span className="text-slate-200">42.8 / 100 GB</span>
+                <span className="text-[var(--text-secondary)]">Encrypted storage</span>
+                <span className="text-[var(--text-primary)]">42.8 / 100 GB</span>
               </div>
-              <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-[var(--bg-base)] h-2 rounded-full overflow-hidden">
                 <div className="bg-teal-400 h-full rounded-full" style={{ width: '42.8%' }} />
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-slate-400">Encryption</span>
-                <span className="text-slate-200">AES-256-GCM</span>
+                <span className="text-[var(--text-secondary)]">Encryption</span>
+                <span className="text-[var(--text-primary)]">AES-256-GCM</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">HSM enclave</span>
-                <span className="text-slate-200">FIPS 140-3</span>
+                <span className="text-[var(--text-secondary)]">HSM enclave</span>
+                <span className="text-[var(--text-primary)]">FIPS 140-3</span>
               </div>
             </div>
 
             <div>
-              <span className="text-slate-400 block mb-3">Connected nodes</span>
-              <div className="grid grid-cols-1 gap-2 text-sm text-slate-300">
+              <span className="text-[var(--text-secondary)] block mb-3">Connected nodes</span>
+              <div className="grid grid-cols-1 gap-2 text-sm text-[var(--text-secondary)]">
                 <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> NCRB HQ Delhi</div>
                 <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> CFSL CBI Lab</div>
                 <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Cyber Courts</div>
@@ -396,20 +396,20 @@ export const Dashboard = () => {
           <div className="panel-body">
             {auditLogs.slice(0, 6).map((log, index) => (
               <div key={log.id || index} className="feed-item">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-950 border border-slate-800 text-teal-400 text-xs font-semibold">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] text-teal-400 text-xs font-semibold">
                   {log.user_role?.substring(0, 2) || 'AD'}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                    <span className="font-medium text-slate-100">
+                    <span className="font-medium text-[var(--text-primary)]">
                       {log.user_name || 'Authorized officer'}
                     </span>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-[var(--text-tertiary)]">
                       {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-400 mt-1">
-                    <span className="text-slate-300">{log.action?.replace(/_/g, ' ')}</span>
+                  <p className="text-sm text-[var(--text-secondary)] mt-1">
+                    <span className="text-[var(--text-secondary)]">{log.action?.replace(/_/g, ' ')}</span>
                     {log.details ? ` — ${log.details}` : ''}
                   </p>
                 </div>
@@ -474,7 +474,7 @@ export const Dashboard = () => {
             <h3 className="panel-title">
               <Briefcase size={17} className="text-teal-400" /> Active cases
             </h3>
-            <span className="text-sm text-slate-400">{myCases.length} assigned</span>
+            <span className="text-sm text-[var(--text-secondary)]">{myCases.length} assigned</span>
           </div>
           <div className="p-0 overflow-x-auto">
             <table className="table">
@@ -492,9 +492,9 @@ export const Dashboard = () => {
                 {myCases.map(c => (
                   <tr key={c.id}>
                     <td><span className="badge badge-info font-mono">{c.case_number}</span></td>
-                    <td className="font-medium text-zinc-100">{c.title}</td>
-                    <td className="text-xs font-mono text-zinc-400">{c.acts_sections}</td>
-                    <td className="text-xs text-zinc-400">{c.court_jurisdiction}</td>
+                    <td className="font-medium text-[var(--text-primary)]">{c.title}</td>
+                    <td className="text-xs font-mono text-[var(--text-tertiary)]">{c.acts_sections}</td>
+                    <td className="text-xs text-[var(--text-tertiary)]">{c.court_jurisdiction}</td>
                     <td><span className="badge badge-warn">{c.status}</span></td>
                     <td>
                       <Link to={`/cases/${c.id}`} className="btn btn-secondary text-xs px-3 py-1">
@@ -527,13 +527,13 @@ export const Dashboard = () => {
                 <div
                   key={d.id}
                   onClick={() => setSelectedDocForView(d)}
-                  className="py-3 border-b border-slate-800 last:border-0 cursor-pointer"
+                  className="py-3 border-b border-[var(--border-subtle)] last:border-0 cursor-pointer"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm font-medium text-slate-100 truncate">{d.filename}</span>
+                    <span className="text-sm font-medium text-[var(--text-primary)] truncate">{d.filename}</span>
                     <span className="badge badge-accent shrink-0">{d.document_type}</span>
                   </div>
-                  <p className="text-xs text-slate-500 font-mono mt-1">
+                  <p className="text-xs text-[var(--text-tertiary)] font-mono mt-1">
                     SHA-256 {d.sha256_hash?.substring(0, 16)}… · v{d.current_version || 1}
                   </p>
                 </div>
@@ -547,7 +547,7 @@ export const Dashboard = () => {
                 <h3 className="panel-title">
                   <Clock size={17} className="text-teal-400" /> Chronology
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">CR-2026-0891</p>
+                <p className="text-xs text-[var(--text-tertiary)] mt-1">CR-2026-0891</p>
               </div>
             </div>
             <div className="panel-body">
@@ -621,7 +621,7 @@ export const Dashboard = () => {
           <h3 className="panel-title">
             <Scale size={17} className="text-amber-400" /> Hearing docket
           </h3>
-          <span className="text-sm text-slate-400">4 scheduled</span>
+          <span className="text-sm text-[var(--text-secondary)]">4 scheduled</span>
         </div>
         <div className="p-0 overflow-x-auto">
           <table className="table">
@@ -640,14 +640,14 @@ export const Dashboard = () => {
                 <tr key={c.id}>
                   <td><span className="badge badge-warn font-mono">{c.case_number}</span></td>
                   <td>
-                    <div className="font-medium text-slate-100 truncate max-w-sm">{c.title}</div>
-                    <div className="text-xs text-slate-500 mt-1">{c.acts_sections}</div>
+                    <div className="font-medium text-[var(--text-primary)] truncate max-w-sm">{c.title}</div>
+                    <div className="text-xs text-[var(--text-tertiary)] mt-1">{c.acts_sections}</div>
                   </td>
                   <td className="text-xs font-mono text-teal-400 font-semibold">
                     {c.hearing_date ? new Date(c.hearing_date).toLocaleDateString() : '2026-09-18'}
                   </td>
-                  <td className="text-xs text-zinc-300 font-mono">{c.assigned_io_name}</td>
-                  <td className="text-xs text-zinc-400">{c.court_jurisdiction}</td>
+                  <td className="text-xs text-[var(--text-secondary)] font-mono">{c.assigned_io_name}</td>
+                  <td className="text-xs text-[var(--text-tertiary)]">{c.court_jurisdiction}</td>
                   <td>
                     <Link to={`/cases/${c.id}`} className="btn btn-secondary text-xs px-2.5 py-1">
                       Inspect Documents
@@ -673,14 +673,14 @@ export const Dashboard = () => {
           </div>
           <div className="panel-body space-y-4">
             {courtRequests.map(cr => (
-              <div key={cr.id} className="py-3 border-b border-slate-800 last:border-0 last:pb-0 first:pt-0">
+              <div key={cr.id} className="py-3 border-b border-[var(--border-subtle)] last:border-0 last:pb-0 first:pt-0">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-sm font-medium text-slate-100">
+                  <span className="text-sm font-medium text-[var(--text-primary)]">
                     {cr.case_number}: {cr.request_type}
                   </span>
                   <span className="badge badge-danger shrink-0">{cr.priority}</span>
                 </div>
-                <p className="text-sm text-slate-400 mt-1.5">
+                <p className="text-sm text-[var(--text-secondary)] mt-1.5">
                   To {cr.requested_to} · Due {cr.due_date}
                 </p>
                 <p className="text-xs text-teal-400 mt-1">{cr.status}</p>
@@ -701,12 +701,12 @@ export const Dashboard = () => {
           <div className="panel-body">
             <div>
               <div className="flex items-start justify-between gap-3">
-                <span className="text-sm font-medium text-slate-100">
+                <span className="text-sm font-medium text-[var(--text-primary)]">
                   CR-2026-0891 · Bail rejection (Manish Rawat)
                 </span>
                 <span className="badge badge-accent shrink-0">Sealed</span>
               </div>
-              <p className="text-sm text-slate-400 mt-1.5">
+              <p className="text-sm text-[var(--text-secondary)] mt-1.5">
                 Pronounced 28 Aug 2026
               </p>
             </div>
@@ -761,7 +761,7 @@ export const Dashboard = () => {
           <h3 className="panel-title">
             <HardDrive size={17} className="text-purple-400" /> Lab custody
           </h3>
-          <span className="text-sm text-slate-400">{assets.length} items</span>
+          <span className="text-sm text-[var(--text-secondary)]">{assets.length} items</span>
         </div>
         <div className="p-0 overflow-x-auto">
           <table className="table">
@@ -780,16 +780,16 @@ export const Dashboard = () => {
                 <tr key={a.id}>
                   <td><span className="badge badge-info font-mono">{a.asset_number}</span></td>
                   <td>
-                    <div className="font-medium text-slate-100">{a.name}</div>
-                    <div className="text-xs text-slate-500 mt-1">Case {a.case_number || 'CR-2026-0891'}</div>
+                    <div className="font-medium text-[var(--text-primary)]">{a.name}</div>
+                    <div className="text-xs text-[var(--text-tertiary)] mt-1">Case {a.case_number || 'CR-2026-0891'}</div>
                   </td>
-                  <td className="text-xs font-mono text-zinc-300">{a.asset_type}</td>
+                  <td className="text-xs font-mono text-[var(--text-secondary)]">{a.asset_type}</td>
                   <td>
                     <span className="text-xs font-mono text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
                       {a.seal_number || 'SEAL-INTACT'}
                     </span>
                   </td>
-                  <td className="text-xs text-zinc-400">{a.location}</td>
+                  <td className="text-xs text-[var(--text-tertiary)]">{a.location}</td>
                   <td>
                     <button
                       onClick={() => setSelectedAssetForCustody(a)}

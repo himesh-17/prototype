@@ -89,7 +89,7 @@ export const DocumentSearch = () => {
 
       <form onSubmit={handleSearch} className="toolbar">
         <div className="relative flex-1 min-w-[240px]">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
           <input
             type="search"
             className="pl-10"
@@ -120,7 +120,7 @@ export const DocumentSearch = () => {
         {loading ? (
           <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
             <div className="spinner" style={{ width: 24, height: 24 }} />
-            <span className="text-xs font-sans text-slate-400">Executing cryptographic search...</span>
+            <span className="text-xs font-sans text-[var(--text-tertiary)]">Executing cryptographic search...</span>
           </div>
         ) : filteredResults.length === 0 ? (
           <div className="p-8">
@@ -151,17 +151,17 @@ export const DocumentSearch = () => {
               </thead>
               <tbody>
                 {filteredResults.map(doc => {
-                  const typeClass = docTypeStyles[doc.document_type] || 'bg-slate-700/30 text-slate-300 border-slate-600/30';
+                  const typeClass = docTypeStyles[doc.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
                   const classClass = classificationStyles[doc.classification] || classificationStyles['Confidential'];
 
                   return (
                     <tr
                       key={doc.id}
                       onClick={() => setSelectedDoc(doc)}
-                      className="hover:bg-slate-800/40 cursor-pointer transition-colors"
+                      className="hover:bg-[var(--bg-overlay)] cursor-pointer transition-colors"
                     >
                       <td>
-                        <div className="font-medium text-slate-100 truncate max-w-sm">
+                        <div className="font-medium text-[var(--text-primary)] truncate max-w-sm">
                           {doc.filename}
                         </div>
                         <div className="row-sub truncate max-w-sm">
@@ -184,7 +184,7 @@ export const DocumentSearch = () => {
                         </span>
                       </td>
                       <td>
-                        <span className="font-sans text-xs text-slate-300">
+                        <span className="font-sans text-xs text-[var(--text-secondary)]">
                           v{doc.current_version || 1}
                         </span>
                       </td>

@@ -107,15 +107,15 @@ const UserManagement = () => {
   const renderUserRows = (u) => {
     const isEditing = editingId === u.id;
     return [
-      <tr key={u.id} className="hover:bg-slate-800/40 transition-colors">
+      <tr key={u.id} className="hover:bg-[var(--bg-overlay)] transition-colors">
         <td>
           <div className="flex items-center gap-3">
-            <div className="avatar bg-slate-700/50 text-teal-400 border border-slate-600/50 font-sans font-semibold text-xs" style={{ width: 34, height: 34 }}>
+            <div className="avatar bg-[var(--bg-card)] text-teal-400 border-[var(--border-subtle)] font-sans font-semibold text-xs" style={{ width: 34, height: 34 }}>
               {u.name?.charAt(0).toUpperCase() || '?'}
             </div>
             <div>
               <div className="row-meta">{u.name}</div>
-              <div className="text-xs text-slate-400">{u.id === user.id ? 'Current session' : ''}</div>
+              <div className="text-xs text-[var(--text-secondary)]">{u.id === user.id ? 'Current session' : ''}</div>
             </div>
           </div>
         </td>
@@ -124,10 +124,10 @@ const UserManagement = () => {
             {u.role.replace('_', ' ')}
           </span>
         </td>
-        <td className="text-slate-400">{u.badge_number || '—'}</td>
-        <td className="text-slate-300 truncate max-w-[200px]">{u.department || '—'}</td>
-        <td className="text-slate-400">{u.email}</td>
-        <td className="text-slate-400 whitespace-nowrap">{formatSafeDate(u.created_at)}</td>
+        <td className="text-[var(--text-secondary)]">{u.badge_number || '—'}</td>
+        <td className="text-[var(--text-secondary)] truncate max-w-[200px]">{u.department || '—'}</td>
+        <td className="text-[var(--text-secondary)]">{u.email}</td>
+        <td className="text-[var(--text-secondary)] whitespace-nowrap">{formatSafeDate(u.created_at)}</td>
         <td className="row-actions">
           {isEditing ? (
             <div className="flex gap-2">
@@ -136,7 +136,7 @@ const UserManagement = () => {
             </div>
           ) : (
             <div className="flex gap-2">
-              <button className="btn btn-ghost btn-sm text-slate-400 hover:text-slate-100" onClick={() => startEdit(u)}><Edit2 size={14} strokeWidth={1.8} /></button>
+              <button className="btn btn-ghost btn-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]" onClick={() => startEdit(u)}><Edit2 size={14} strokeWidth={1.8} /></button>
               {u.id !== user.id && (
                 <button className="btn btn-ghost btn-sm btn-danger text-rose-400 hover:bg-rose-500/10" onClick={() => handleDelete(u.id)}><Trash2 size={14} strokeWidth={1.8} /></button>
               )}
@@ -249,7 +249,7 @@ const UserManagement = () => {
 
       <div className="toolbar">
         <div className="relative flex-1 min-w-[240px]">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
           <input
             id="user-search"
             type="search"

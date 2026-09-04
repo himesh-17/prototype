@@ -84,7 +84,7 @@ export const Layout = () => {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <div className="brand-mark" aria-hidden>
+          <div className="brand-mark" aria-hidden="true">
             NS
           </div>
           <div className="brand-text">
@@ -113,7 +113,7 @@ export const Layout = () => {
           ))}
 
           {activeRole === 'ADMIN' && (
-            <div className="mt-5 pt-4 border-t border-slate-800">
+            <div className="mt-5 pt-4 border-t border-[var(--border-subtle)]">
               <span className="nav-label">Administration</span>
               <NavLink
                 to="/audit"
@@ -135,7 +135,7 @@ export const Layout = () => {
 
         <div className="sidebar-footer">
           <div className="user-chip">
-            <div className="avatar" aria-hidden>
+            <div className="avatar" aria-hidden="true">
               {initials(user?.name).toUpperCase()}
             </div>
             <div className="user-meta min-w-0">

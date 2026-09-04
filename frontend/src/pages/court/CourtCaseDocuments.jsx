@@ -109,10 +109,10 @@ export const CourtCaseDocuments = () => {
       {/* Elevated Filter Bar */}
       <div className="toolbar">
         <div className="relative flex-1 min-w-[260px]">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
           <input
             type="search"
-            className="input bg-slate-950/60 border-slate-700 text-xs pl-9 py-2 rounded-xl text-slate-100 placeholder:text-slate-500 focus:border-teal-400 focus:ring-1 focus:ring-teal-400/30"
+            className="input bg-[var(--bg-overlay)] border-[var(--border-subtle)] text-xs pl-9 py-2 rounded-lg text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-teal-400 focus:ring-1 focus:ring-teal-400/30"
             placeholder="Search document title, SHA-256 hash, or OCR extracted text..."
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -121,12 +121,12 @@ export const CourtCaseDocuments = () => {
 
         <div className="flex items-center gap-3 flex-wrap">
           {/* Document Type Filter */}
-          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400">
+          <div className="flex items-center gap-1.5 text-xs font-sans text-[var(--text-tertiary)]">
             <Filter size={13} />
             <span>Type:</span>
           </div>
           <select
-            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl text-slate-200"
+            className="input bg-[var(--bg-overlay)] border-[var(--border-subtle)] text-xs py-1.5 px-3 rounded-lg text-[var(--text-primary)]"
             value={typeFilter}
             onChange={e => setTypeFilter(e.target.value)}
           >
@@ -139,11 +139,11 @@ export const CourtCaseDocuments = () => {
           </select>
 
           {/* Case Filter */}
-          <div className="flex items-center gap-1.5 text-xs font-sans text-slate-400 ml-2">
+          <div className="flex items-center gap-1.5 text-xs font-sans text-[var(--text-tertiary)] ml-2">
             <span>Case:</span>
           </div>
           <select
-            className="input bg-slate-950/60 border-slate-700 text-xs py-1.5 px-3 rounded-xl max-w-[180px] text-slate-200"
+            className="input bg-[var(--bg-overlay)] border-[var(--border-subtle)] text-xs py-1.5 px-3 rounded-lg max-w-[180px] text-[var(--text-primary)]"
             value={caseFilter}
             onChange={e => setCaseFilter(e.target.value)}
           >
@@ -156,11 +156,11 @@ export const CourtCaseDocuments = () => {
       </div>
 
       {/* Read-Only Document Table */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden shadow-lg backdrop-blur-sm">
+      <div className="rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] overflow-hidden shadow-lg backdrop-blur-sm">
         {loading ? (
           <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
             <div className="spinner" style={{ width: 24, height: 24 }} />
-            <span className="text-xs font-sans text-slate-400">Loading court documents...</span>
+            <span className="text-xs font-sans text-[var(--text-tertiary)]">Loading court documents...</span>
           </div>
         ) : filteredDocs.length === 0 ? (
           <div className="p-8">
@@ -191,20 +191,20 @@ export const CourtCaseDocuments = () => {
               </thead>
               <tbody>
                 {filteredDocs.map(d => {
-                  const typeClass = docTypeStyles[d.document_type] || 'bg-slate-700/30 text-slate-300 border-slate-600/30';
+                  const typeClass = docTypeStyles[d.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
                   const classClass = classificationStyles[d.classification] || classificationStyles['Confidential'];
 
                   return (
                     <tr
                       key={d.id}
                       onClick={() => setSelectedDoc(d)}
-                      className="hover:bg-slate-800/40 cursor-pointer transition-colors"
+                      className="hover:bg-[var(--bg-overlay)] cursor-pointer transition-colors"
                     >
                       <td>
-                        <div className="font-sans font-medium text-xs text-slate-100 truncate max-w-sm">
+                        <div className="font-sans font-medium text-xs text-[var(--text-primary)] truncate max-w-sm">
                           {d.filename}
                         </div>
-                        <div className="text-[11px] font-mono text-slate-400 truncate max-w-xs mt-0.5">
+                        <div className="text-[11px] font-mono text-[var(--text-tertiary)] truncate max-w-xs mt-0.5">
                           SHA256: {d.sha256_hash?.substring(0, 16)}...{d.sha256_hash?.substring(d.sha256_hash.length - 4)}
                         </div>
                       </td>
@@ -228,7 +228,7 @@ export const CourtCaseDocuments = () => {
                           <ShieldCheck size={14} /> CERTIFIED
                         </span>
                       </td>
-                      <td className="font-sans text-xs text-slate-400 whitespace-nowrap">
+                      <td className="font-sans text-xs text-[var(--text-tertiary)] whitespace-nowrap">
                         {new Date(d.created_at || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </td>
                       <td>

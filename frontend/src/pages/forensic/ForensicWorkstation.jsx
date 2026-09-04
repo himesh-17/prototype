@@ -120,15 +120,15 @@ export const ForensicWorkstation = () => {
       </div>
 
       {/* Assigned Evidence Items with Chain of Custody Tracker */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden shadow-lg backdrop-blur-sm">
-        <div className="px-6 py-4 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between">
+      <div className="rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] overflow-hidden shadow-lg backdrop-blur-sm">
+        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-overlay)] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <HardDrive size={16} className="text-purple-400" />
-            <h3 className="text-sm font-semibold text-slate-100 font-sans">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] font-sans">
               Assigned Physical & Digital Evidence Exhibits
             </h3>
           </div>
-          <span className="text-xs font-sans text-slate-400">{assets.length} In Lab Custody</span>
+          <span className="text-xs font-sans text-[var(--text-tertiary)]">{assets.length} In Lab Custody</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -146,30 +146,30 @@ export const ForensicWorkstation = () => {
             </thead>
             <tbody>
               {assets.map(a => (
-                <tr key={a.id} className="hover:bg-slate-800/40 transition-colors">
+                <tr key={a.id} className="hover:bg-[var(--bg-overlay)] transition-colors">
                   <td>
                     <span className="badge badge-info font-mono text-xs font-semibold">
                       {a.asset_number}
                     </span>
                   </td>
                   <td>
-                    <div className="font-sans font-medium text-xs text-slate-100 truncate max-w-[280px]">
+                    <div className="font-sans font-medium text-xs text-[var(--text-primary)] truncate max-w-[280px]">
                       {a.name}
                     </div>
-                    <div className="text-[11px] font-sans text-slate-400 truncate max-w-[280px] mt-0.5">
+                    <div className="text-[11px] font-sans text-[var(--text-tertiary)] truncate max-w-[280px] mt-0.5">
                       Case Docket: {a.case_number || 'CR-2026-0891'}
                     </div>
                   </td>
                   <td>
-                    <span className="text-xs font-sans text-slate-300">{a.asset_type}</span>
+                    <span className="text-xs font-sans text-[var(--text-secondary)]">{a.asset_type}</span>
                   </td>
                   <td>
                     <span className="text-xs font-sans text-teal-400 bg-teal-500/10 px-2.5 py-0.5 rounded-full border border-teal-500/20 font-medium">
                       {a.seal_number || 'SEAL-INTACT'}
                     </span>
                   </td>
-                  <td className="text-xs font-sans text-slate-400">{a.location}</td>
-                  <td className="text-xs font-sans font-medium text-slate-300">
+                  <td className="text-xs font-sans text-[var(--text-tertiary)]">{a.location}</td>
+                  <td className="text-xs font-sans font-medium text-[var(--text-secondary)]">
                     {a.current_custodian_name || 'Dr. Aarav Nambiar (CFSL)'}
                   </td>
                   <td>
@@ -189,11 +189,11 @@ export const ForensicWorkstation = () => {
       </div>
 
       {/* Sealed Forensic Reports with Digital Signatures */}
-      <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden shadow-lg backdrop-blur-sm">
-        <div className="px-6 py-4 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between">
+      <div className="rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] overflow-hidden shadow-lg backdrop-blur-sm">
+        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-overlay)] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText size={16} className="text-teal-400" />
-            <h3 className="text-sm font-semibold text-slate-100 font-sans">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] font-sans">
               Sealed Forensic Examination Reports
             </h3>
           </div>
@@ -219,10 +219,10 @@ export const ForensicWorkstation = () => {
             </thead>
             <tbody>
               {reports.map(r => (
-                <tr key={r.id} className="hover:bg-slate-800/40 transition-colors">
+                <tr key={r.id} className="hover:bg-[var(--bg-overlay)] transition-colors">
                   <td>
-                    <div className="font-sans font-medium text-xs text-slate-100 truncate max-w-sm">{r.filename}</div>
-                    <div className="text-[11px] font-mono text-slate-400 truncate max-w-xs mt-0.5">
+                    <div className="font-sans font-medium text-xs text-[var(--text-primary)] truncate max-w-sm">{r.filename}</div>
+                    <div className="text-[11px] font-mono text-[var(--text-tertiary)] truncate max-w-xs mt-0.5">
                       SHA256: {r.sha256_hash?.substring(0, 16)}...{r.sha256_hash?.substring(r.sha256_hash.length - 4)}
                     </div>
                   </td>
@@ -239,7 +239,7 @@ export const ForensicWorkstation = () => {
                       {r.digital_signature?.key_id || 'ECDSA-P384-CFSL-0091'}
                     </span>
                   </td>
-                  <td className="text-xs font-sans text-slate-400 whitespace-nowrap">
+                  <td className="text-xs font-sans text-[var(--text-tertiary)] whitespace-nowrap">
                     {new Date(r.created_at).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </td>
                   <td>

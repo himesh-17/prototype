@@ -120,7 +120,7 @@ export const CaseDetail = () => {
     return (
       <div className="page flex flex-col items-center justify-center min-h-[60vh]">
         <div className="spinner" style={{ width: 28, height: 28 }} />
-        <span className="text-xs font-mono text-zinc-400 mt-4">
+        <span className="text-xs font-mono text-[var(--text-tertiary)] mt-4">
           Loading case docket and cryptographic documents...
         </span>
       </div>
@@ -130,7 +130,7 @@ export const CaseDetail = () => {
   if (!caseData) {
     return (
       <div className="page text-center py-20">
-        <h3 className="text-base font-semibold text-zinc-200">Case record not found</h3>
+        <h3 className="text-base font-semibold text-[var(--text-primary)]">Case record not found</h3>
         <Link to="/cases" className="btn btn-primary mt-4 inline-flex items-center gap-2">
           <ArrowLeft size={16} /> Back to Cases
         </Link>
@@ -144,7 +144,7 @@ export const CaseDetail = () => {
     <div className="page">
       <div className="page-header">
         <div className="page-heading">
-          <Link to="/cases" className="page-eyebrow inline-flex items-center gap-1.5 hover:text-slate-300">
+          <Link to="/cases" className="page-eyebrow inline-flex items-center gap-1.5 hover:text-[var(--text-primary)]">
             <ArrowLeft size={14} />
             Cases
           </Link>
@@ -184,21 +184,21 @@ export const CaseDetail = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <span className="page-eyebrow">Sections</span>
-          <p className="text-sm text-slate-200 mt-1.5">{caseData.acts_sections || 'BNS / IT Act'}</p>
+          <p className="text-sm text-[var(--text-primary)] mt-1.5">{caseData.acts_sections || 'BNS / IT Act'}</p>
         </div>
         <div>
           <span className="page-eyebrow">Investigating officer</span>
-          <p className="text-sm text-slate-200 mt-1.5">
+          <p className="text-sm text-[var(--text-primary)] mt-1.5">
             {caseData.assigned_io_name || assignedIO?.name || 'Inspector Rajesh Deshmukh'}
           </p>
         </div>
         <div>
           <span className="page-eyebrow">Police station</span>
-          <p className="text-sm text-slate-200 mt-1.5">{caseData.police_station || 'Cyber Crime PS, Delhi'}</p>
+          <p className="text-sm text-[var(--text-primary)] mt-1.5">{caseData.police_station || 'Cyber Crime PS, Delhi'}</p>
         </div>
         <div>
           <span className="page-eyebrow">Court</span>
-          <p className="text-sm text-slate-200 mt-1.5">{caseData.court_jurisdiction || 'Special Cyber Court'}</p>
+          <p className="text-sm text-[var(--text-primary)] mt-1.5">{caseData.court_jurisdiction || 'Special Cyber Court'}</p>
         </div>
       </div>
 
@@ -210,7 +210,7 @@ export const CaseDetail = () => {
               <FileText size={17} className="text-teal-400" />
               Documents
             </h3>
-            <span className="text-sm text-slate-400">{documents.length} files</span>
+            <span className="text-sm text-[var(--text-tertiary)]">{documents.length} files</span>
           </div>
 
           <div className="overflow-x-auto flex-1">
@@ -227,20 +227,20 @@ export const CaseDetail = () => {
               </thead>
               <tbody>
                 {documents.map(d => {
-                  const typeBadgeClass = docTypeStyles[d.document_type] || 'bg-zinc-800 text-zinc-300 border-zinc-700';
+                  const typeBadgeClass = docTypeStyles[d.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
                   const classBadgeClass = classificationStyles[d.classification] || classificationStyles['Confidential'];
 
                   return (
                     <tr
                       key={d.id}
                       onClick={() => setSelectedDoc(d)}
-                      className="hover:bg-slate-800/40 cursor-pointer transition-colors"
+                      className="hover:bg-[var(--bg-overlay)] cursor-pointer transition-colors"
                     >
                       <td>
-                        <div className="font-medium text-slate-100">
+                        <div className="font-medium text-[var(--text-primary)]">
                           {d.filename}
                         </div>
-                        <div className="text-xs text-slate-500 truncate max-w-xs mt-1 font-mono">
+                        <div className="text-xs text-[var(--text-tertiary)] truncate max-w-xs mt-1 font-mono">
                           SHA256: {d.sha256_hash?.substring(0, 18)}...
                         </div>
                       </td>
@@ -255,7 +255,7 @@ export const CaseDetail = () => {
                         </span>
                       </td>
                       <td>
-                        <span className="font-mono text-xs text-zinc-300">
+                        <span className="font-mono text-xs text-[var(--text-secondary)]">
                           v{d.current_version || 1}
                         </span>
                       </td>
@@ -291,20 +291,20 @@ export const CaseDetail = () => {
               <Box size={17} className="text-teal-400" />
               Physical assets
             </h3>
-            <span className="text-sm text-slate-400">{assets.length}</span>
+            <span className="text-sm text-[var(--text-tertiary)]">{assets.length}</span>
           </div>
           <div className="panel-body space-y-4">
 
             <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
               {assets.length === 0 ? (
-                <p className="text-xs text-zinc-500 font-mono text-center py-6">
+                <p className="text-xs text-[var(--text-tertiary)] font-mono text-center py-6">
                   No physical evidence logged for this case.
                 </p>
               ) : (
                 assets.map(a => (
                   <div
                     key={a.id}
-                    className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-[#00d4aa]/30 transition-all space-y-2"
+                    className="p-3.5 rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] hover:border-[#00d4aa]/30 transition-all space-y-2"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="badge badge-info font-mono text-xs">{a.asset_number}</span>
@@ -312,12 +312,12 @@ export const CaseDetail = () => {
                         {a.status}
                       </span>
                     </div>
-                    <h4 className="text-xs font-semibold text-zinc-200">{a.name}</h4>
-                    <p className="text-[11px] font-mono text-zinc-500">
+                    <h4 className="text-xs font-semibold text-[var(--text-primary)]">{a.name}</h4>
+                    <p className="text-[11px] font-mono text-[var(--text-tertiary)]">
                       Custodian: {a.current_custodian_name || 'Dr. Aarav Nambiar (CFSL)'}
                     </p>
                     <div className="pt-1 flex items-center justify-between text-[11px] font-mono">
-                      <span className="text-zinc-400">Seal: {a.seal_number || 'INTACT'}</span>
+                      <span className="text-[var(--text-tertiary)]">Seal: {a.seal_number || 'INTACT'}</span>
                       <button
                         onClick={() => setSelectedAsset(a)}
                         className="text-[#00d4aa] hover:underline flex items-center gap-1 font-semibold"
@@ -332,7 +332,7 @@ export const CaseDetail = () => {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 text-xs font-mono text-zinc-500 text-center">
+          <div className="pt-3 border-t border-[var(--border-subtle)] text-xs font-mono text-[var(--text-tertiary)] text-center">
             Every evidence handover is cryptographically signed
           </div>
         </div>
@@ -345,7 +345,7 @@ export const CaseDetail = () => {
             <Clock size={17} className="text-teal-400" />
             Timeline
           </h3>
-          <span className="text-sm text-slate-400">{timeline.length} events</span>
+          <span className="text-sm text-[var(--text-tertiary)]">{timeline.length} events</span>
         </div>
         <div className="panel-body">
 
@@ -357,21 +357,21 @@ export const CaseDetail = () => {
                 <div className="h-1 w-1 rounded-full bg-[#00d4aa]" />
               </div>
 
-              <div className="rounded-xl bg-slate-900/60 p-4 border border-slate-800 hover:border-white/[0.12] transition-colors space-y-1.5">
+              <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-[var(--border-subtle)] hover:border-white/[0.12] transition-colors space-y-1.5">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-xs font-semibold text-zinc-100">
+                    <h4 className="text-xs font-semibold text-[var(--text-primary)]">
                       {item.title}
                     </h4>
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
                       {item.badge || item.type}
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono text-zinc-400">
+                  <span className="text-[11px] font-mono text-[var(--text-tertiary)]">
                     {item.date}
                   </span>
                 </div>
-                <p className="text-xs text-zinc-300 leading-relaxed">
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {item.detail}
                 </p>
               </div>
@@ -433,18 +433,18 @@ export const CaseDetail = () => {
       {showEditModal && (
         <div className="modal-backdrop" onClick={() => setShowEditModal(false)} role="dialog" aria-modal="true">
           <div
-            className="modal max-w-lg bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in"
+            className="modal max-w-lg bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/60 px-6 py-4">
-              <h3 className="text-sm font-semibold text-zinc-100">Edit Case Details</h3>
-              <button onClick={() => setShowEditModal(false)} className="text-zinc-400 hover:text-white p-1 rounded">
+            <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-overlay)] px-6 py-4">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">Edit Case Details</h3>
+              <button onClick={() => setShowEditModal(false)} className="text-[var(--text-tertiary)] hover:text-white p-1 rounded">
                 <X size={16} />
               </button>
             </div>
             <form onSubmit={handleUpdateCase} className="p-6 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">Title</label>
+                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Title</label>
                 <input
                   className="input bg-[#0e0e13] border-white/10 text-xs py-2"
                   value={editForm.title}
@@ -453,7 +453,7 @@ export const CaseDetail = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">Status</label>
+                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Status</label>
                 <select
                   className="input bg-[#0e0e13] border-white/10 text-xs py-2"
                   value={editForm.status}
@@ -465,7 +465,7 @@ export const CaseDetail = () => {
                 </select>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">Acts & Penal Sections</label>
+                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Acts & Penal Sections</label>
                 <input
                   className="input bg-[#0e0e13] border-white/10 text-xs py-2 font-mono"
                   value={editForm.acts_sections}
@@ -473,7 +473,7 @@ export const CaseDetail = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">Case Facts / Description</label>
+                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Case Facts / Description</label>
                 <textarea
                   className="input bg-[#0e0e13] border-white/10 text-xs py-2 min-h-[70px]"
                   value={editForm.description}
@@ -481,7 +481,7 @@ export const CaseDetail = () => {
                   rows={3}
                 />
               </div>
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-[var(--border-subtle)]">
                 <button type="button" onClick={() => setShowEditModal(false)} className="btn btn-secondary text-xs px-4 py-2">
                   Cancel
                 </button>

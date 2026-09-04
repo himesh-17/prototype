@@ -44,7 +44,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-2xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in"
+        className="modal max-w-2xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -54,17 +54,17 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
               <FileText size={18} strokeWidth={2} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-100">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                 Submit Expert Forensic Examination Report
               </h3>
-              <p className="text-xs text-zinc-400 font-mono">
+              <p className="text-xs text-[var(--text-tertiary)] font-mono">
                 Central Forensic Science Laboratory • Section 39 BSA Compliance
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5"
+            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -81,7 +81,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Target Case Reference
               </label>
               <select
@@ -98,7 +98,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Lab Examination Reference #
               </label>
               <input
@@ -111,7 +111,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Report Title
             </label>
             <input
@@ -123,11 +123,11 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Forensic Tools & ISO/IEC 17025 Methodology Used
             </label>
             <input
-              className="input bg-[#0e0e13] border-white/10 text-xs py-2 font-mono text-zinc-300"
+              className="input bg-[#0e0e13] border-white/10 text-xs py-2 font-mono text-[var(--text-secondary)]"
               value={methodology}
               onChange={e => setMethodology(e.target.value)}
               required
@@ -135,11 +135,11 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Detailed Examination Findings & Indicators of Compromise (IoC)
             </label>
             <textarea
-              className="input bg-[#0e0e13] border-white/10 text-xs py-2 min-h-[70px] font-mono text-zinc-300"
+              className="input bg-[#0e0e13] border-white/10 text-xs py-2 min-h-[70px] font-mono text-[var(--text-secondary)]"
               value={findings}
               onChange={e => setFindings(e.target.value)}
               rows={3}
@@ -148,7 +148,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Formal Forensic Opinion & Conclusion (Sec 39 BSA / Sec 45 IEA)
             </label>
             <textarea
@@ -161,7 +161,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
           </div>
 
           {/* Digital Signature Panel */}
-          <div className="rounded-xl bg-[#16161d] p-4 border border-teal-500/30 space-y-3">
+           <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-teal-500/30 space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
               <span className="text-xs font-mono uppercase tracking-wider text-[#00d4aa] flex items-center gap-1.5 font-semibold">
                 <Key size={14} /> Cryptographic Digital Signature Authorization
@@ -173,7 +173,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
               <div>
-                <label className="text-zinc-500 block text-[11px] mb-1">Hardware Certificate Key</label>
+                <label className="text-[var(--text-tertiary)] block text-[11px] mb-1">Hardware Certificate Key</label>
                 <select
                   className="input bg-[#0e0e13] border-white/10 text-xs py-1.5"
                   value={digitalSignatureKey}
@@ -185,7 +185,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
               </div>
 
               <div>
-                <label className="text-zinc-500 block text-[11px] mb-1">Crypto Token PIN / Passphrase</label>
+                <label className="text-[var(--text-tertiary)] block text-[11px] mb-1">Crypto Token PIN / Passphrase</label>
                 <input
                   type="password"
                   value={pin}
@@ -196,7 +196,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
               </div>
             </div>
 
-            <p className="text-[11px] text-zinc-400 pt-1">
+            <p className="text-[11px] text-[var(--text-tertiary)] pt-1">
               Upon signing, an immutable SHA-256 hash tree entry is committed to the Nyaya Setu blockchain ledger, preventing any repudiation or subsequent tampering.
             </p>
           </div>

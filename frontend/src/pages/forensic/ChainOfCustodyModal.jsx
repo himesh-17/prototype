@@ -49,25 +49,25 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal modal-wide max-w-3xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in max-h-[90vh] flex flex-col"
+        className="modal modal-wide max-w-3xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in max-h-[90vh] flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#16161d] px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
               <Box size={20} strokeWidth={1.8} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-semibold text-zinc-100">
+                <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                   Chain of Custody Ledger: {asset.asset_number}
                 </h3>
                 <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
                   SEAL INTACT
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 font-mono mt-0.5">
+              <p className="text-xs text-[var(--text-tertiary)] font-mono mt-0.5">
                 {asset.name} • Location: {asset.location}
               </p>
             </div>
@@ -81,7 +81,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
             </button>
             <button
               onClick={onClose}
-              className="modal-close p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5"
+              className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
               aria-label="Close modal"
             >
               <X size={18} />
@@ -93,20 +93,20 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
-            <div className="bg-[#16161d] p-3 rounded-xl border border-white/[0.06]">
-              <span className="text-zinc-500 block mb-1">Current Custodian</span>
-              <span className="text-zinc-100 font-semibold">
+            <div className="bg-[var(--bg-overlay)] p-3 rounded-lg border border-white/[0.06]">
+              <span className="text-[var(--text-tertiary)] block mb-1">Current Custodian</span>
+              <span className="text-[var(--text-primary)] font-semibold">
                 {asset.current_custodian_name || 'Dr. Aarav Nambiar (CFSL)'}
               </span>
             </div>
-            <div className="bg-[#16161d] p-3 rounded-xl border border-white/[0.06]">
-              <span className="text-zinc-500 block mb-1">Physical Seal #</span>
+            <div className="bg-[var(--bg-overlay)] p-3 rounded-lg border border-white/[0.06]">
+              <span className="text-[var(--text-tertiary)] block mb-1">Physical Seal #</span>
               <span className="text-[#00d4aa] font-semibold">
                 {asset.seal_number || 'LACQUER-SEAL-#DL-9912'}
               </span>
             </div>
-            <div className="bg-[#16161d] p-3 rounded-xl border border-white/[0.06]">
-              <span className="text-zinc-500 block mb-1">Tamper Evidence</span>
+            <div className="bg-[var(--bg-overlay)] p-3 rounded-lg border border-white/[0.06]">
+              <span className="text-[var(--text-tertiary)] block mb-1">Tamper Evidence</span>
               <span className="text-emerald-400 font-semibold flex items-center gap-1">
                 <ShieldCheck size={14} /> Cryptographically Verified
               </span>
@@ -114,13 +114,13 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
           </div>
 
           {showTransferForm ? (
-            <form onSubmit={handleTransfer} className="rounded-xl bg-[#16161d] p-5 border border-white/[0.08] space-y-4">
-              <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold">
+            <form onSubmit={handleTransfer} className="rounded-lg bg-[var(--bg-overlay)] p-5 border border-white/[0.08] space-y-4">
+              <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-secondary)] font-semibold">
                 Record New Custody Transfer Event
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">Recipient Custodian Name & Badge #</label>
+                  <label className="text-xs font-mono text-[var(--text-tertiary)]">Recipient Custodian Name & Badge #</label>
                   <input
                     className="input bg-[#0e0e13] border-white/10 text-xs py-2"
                     placeholder="e.g. Inspector Rajesh Deshmukh (DL-CR-4402)"
@@ -130,7 +130,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">New Location / Facility</label>
+                  <label className="text-xs font-mono text-[var(--text-tertiary)]">New Location / Facility</label>
                   <input
                     className="input bg-[#0e0e13] border-white/10 text-xs py-2"
                     placeholder="e.g. Patiala House Court Room 4"
@@ -140,7 +140,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-mono text-zinc-400">Transfer Remarks & Official Purpose</label>
+                <label className="text-xs font-mono text-[var(--text-tertiary)]">Transfer Remarks & Official Purpose</label>
                 <textarea
                   className="input bg-[#0e0e13] border-white/10 text-xs py-2 min-h-[60px]"
                   placeholder="Reason for physical handover, transport escort details..."
@@ -161,13 +161,13 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
             </form>
           ) : (
             <div className="space-y-4">
-              <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center justify-between">
+              <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center justify-between">
                 <span>Chronological Chain of Custody (Immutable Ledger)</span>
-                <span className="text-zinc-500 font-normal">{events.length} Recorded Transfer Events</span>
+                <span className="text-[var(--text-tertiary)] font-normal">{events.length} Recorded Transfer Events</span>
               </h4>
 
               {events.length === 0 ? (
-                <p className="text-xs text-zinc-500">No events recorded yet.</p>
+                <p className="text-xs text-[var(--text-tertiary)]">No events recorded yet.</p>
               ) : (
                 <div className="relative border-l-2 border-teal-500/30 ml-4 space-y-6 pl-6 py-2">
                   {events.map((evt, idx) => (
@@ -177,27 +177,27 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
                         <div className="h-1.5 w-1.5 rounded-full bg-[#00d4aa]" />
                       </div>
 
-                      <div className="rounded-xl bg-[#16161d] p-4 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-2">
+                       <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-2">
                         <div className="flex items-center justify-between gap-2 flex-wrap">
-                          <span className="text-xs font-mono font-semibold text-zinc-100">
+                          <span className="text-xs font-mono font-semibold text-[var(--text-primary)]">
                             {evt.action?.replace(/_/g, ' ')}
                           </span>
-                          <span className="text-[11px] font-mono text-zinc-400">
+                          <span className="text-[11px] font-mono text-[var(--text-tertiary)]">
                             {new Date(evt.timestamp).toLocaleString()}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2 text-xs font-mono text-zinc-300 flex-wrap">
-                          <span className="text-zinc-400">From:</span>
-                          <span className="text-zinc-100 font-medium">{evt.from_name}</span>
+                        <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-secondary)] flex-wrap">
+                          <span className="text-[var(--text-tertiary)]">From:</span>
+                          <span className="text-[var(--text-primary)] font-medium">{evt.from_name}</span>
                           <ArrowRight size={12} className="text-[#00d4aa]" />
-                          <span className="text-zinc-400">To:</span>
+                          <span className="text-[var(--text-tertiary)]">To:</span>
                           <span className="text-[#00d4aa] font-medium">{evt.to_name}</span>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono pt-2 border-t border-white/[0.04]">
-                          <div className="text-zinc-400 flex items-center gap-1.5">
-                            <MapPin size={12} className="text-zinc-500" /> {evt.location}
+                          <div className="text-[var(--text-tertiary)] flex items-center gap-1.5">
+                            <MapPin size={12} className="text-[var(--text-tertiary)]" /> {evt.location}
                           </div>
                           <div className="text-emerald-400 flex items-center gap-1.5">
                             <ShieldCheck size={12} /> {evt.seal_status}
@@ -205,7 +205,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
                         </div>
 
                         {evt.remarks && (
-                          <p className="text-xs text-zinc-400 mt-1 italic">
+                          <p className="text-xs text-[var(--text-tertiary)] mt-1 italic">
                             "{evt.remarks}"
                           </p>
                         )}
@@ -219,7 +219,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
         </div>
 
         {/* Footer */}
-        <div className="border-t border-white/[0.08] bg-[#141419] px-6 py-3 flex items-center justify-between text-xs font-mono text-zinc-500">
+        <div className="border-t border-white/[0.08] bg-[#141419] px-6 py-3 flex items-center justify-between text-xs font-mono text-[var(--text-tertiary)]">
           <span>Sec 65B Indian Evidence Act / Section 63 BSA Certified Chain</span>
           <button onClick={onClose} className="btn btn-secondary text-xs px-4 py-1">
             Close

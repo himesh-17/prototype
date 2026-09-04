@@ -155,7 +155,7 @@ export const AuditTrail = () => {
       {/* Verification Result Banner */}
       {verificationResult && (
         <div
-          className={`rounded-xl p-4 border flex items-center justify-between gap-4 animate-fade-in ${
+          className={`rounded-lg p-4 border flex items-center justify-between gap-4 animate-fade-in ${
             verificationResult.valid
               ? 'bg-teal-500/10 border-teal-500/30 text-teal-300'
               : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
@@ -169,14 +169,14 @@ export const AuditTrail = () => {
                   ? 'Hash chain verified'
                   : 'Hash mismatch detected'}
               </div>
-              <div className="text-slate-400 mt-1">
+              <div className="text-[var(--text-secondary)] mt-1">
                 Checked {verificationResult.checked_versions} blocks.
               </div>
             </div>
           </div>
           <button
             onClick={() => setVerificationResult(null)}
-            className="text-zinc-400 hover:text-white p-1 rounded"
+            className="text-[var(--text-tertiary)] hover:text-white p-1 rounded"
             aria-label="Dismiss verification notice"
           >
             <X size={16} />
@@ -187,7 +187,7 @@ export const AuditTrail = () => {
       {/* Filter & Search Bar */}
       <div className="toolbar">
         <div className="relative flex-1 min-w-[240px]">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
           <input
             type="search"
             className="pl-10"
@@ -218,7 +218,7 @@ export const AuditTrail = () => {
         {loading ? (
           <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
             <div className="spinner" style={{ width: 24, height: 24 }} />
-            <span className="text-xs font-mono text-zinc-400">Verifying cryptographic logs...</span>
+            <span className="text-xs font-mono text-[var(--text-tertiary)]">Verifying cryptographic logs...</span>
           </div>
         ) : filteredLogs.length === 0 ? (
           <div className="p-8">
@@ -250,14 +250,14 @@ export const AuditTrail = () => {
               <tbody>
                 {filteredLogs.map(log => (
                   <tr key={log.id} className="is-clickable" onClick={() => setSelectedLog(log)}>
-                    <td className="text-slate-400 whitespace-nowrap">
+                    <td className="text-[var(--text-secondary)] whitespace-nowrap">
                       {formatDate(log.timestamp)}
                     </td>
                     <td>
                       <ActionBadge action={log.action} />
                     </td>
                     <td>
-                      <span className="text-slate-200">
+                      <span className="text-[var(--text-primary)]">
                         {log.entity_type} #{log.entity_id}
                       </span>
                     </td>
@@ -275,7 +275,7 @@ export const AuditTrail = () => {
                       </div>
                     </td>
                     <td>
-                      <div className="inline-flex items-center gap-2 font-mono text-xs text-slate-300">
+                      <div className="inline-flex items-center gap-2 font-mono text-xs text-[var(--text-secondary)]">
                         <span>
                           {log.entry_hash?.substring(0, 10)}…
                         </span>
@@ -284,7 +284,7 @@ export const AuditTrail = () => {
                             e.stopPropagation();
                             handleCopyHash(log.entry_hash, log.id);
                           }}
-                          className="text-slate-500 hover:text-teal-400"
+                          className="text-[var(--text-tertiary)] hover:text-teal-400"
                           title="Copy hash"
                         >
                           {copiedHash === log.id ? <Check size={14} /> : <Copy size={14} />}

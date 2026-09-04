@@ -54,7 +54,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in"
+        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -64,17 +64,17 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
               <Microscope size={18} strokeWidth={2} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-100">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                 CFSL Evidence Intake Registration
               </h3>
-              <p className="text-xs text-zinc-400 font-mono">
+              <p className="text-xs text-[var(--text-tertiary)] font-mono">
                 Central Forensic Science Laboratory • Inward Malkhana Registry
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5"
+            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -91,7 +91,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Case Reference
               </label>
               <select
@@ -108,7 +108,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Evidence Category
               </label>
               <select
@@ -124,7 +124,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Evidence Exhibit Item Name & Model / Serial No.
             </label>
             <input
@@ -138,7 +138,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Packaging Seal Number & Integrity
               </label>
               <input
@@ -150,7 +150,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Handing-Over Escort Officer
               </label>
               <input
@@ -163,7 +163,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Laboratory Storage Vault / Examination Station
             </label>
             <input
@@ -175,7 +175,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
               Initial Physical Inspection Notes
             </label>
             <textarea
@@ -188,7 +188,7 @@ export const EvidenceIntakeModal = ({ availableCases = [], onClose, onSuccess })
           </div>
 
           {/* Chain of Custody Notice */}
-          <div className="rounded-xl bg-[#16161d] p-3 text-xs font-mono text-zinc-300 border border-white/[0.06] flex items-center gap-2">
+          <div className="rounded-lg bg-[var(--bg-overlay)] p-3 text-xs font-mono text-[var(--text-secondary)] border border-white/[0.06] flex items-center gap-2">
             <Shield size={16} className="text-[#00d4aa] shrink-0" />
             <span>Digital barcode & SHA-256 genesis block will be generated automatically for this evidence exhibit.</span>
           </div>

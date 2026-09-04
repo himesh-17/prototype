@@ -67,16 +67,16 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-5 py-12 text-slate-100">
+    <div className="min-h-dvh bg-[var(--bg-base)] flex flex-col items-center justify-center px-5 py-12 text-[var(--text-primary)]">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-3">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/20">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20">
             <Shield size={24} strokeWidth={1.8} />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-50">
+          <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
             Nyaya Setu
           </h1>
-          <p className="text-sm text-slate-400 leading-relaxed">
+          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
             NCRB secure document portal
           </p>
         </div>
@@ -93,17 +93,17 @@ export const Login = () => {
                   key={preset.role}
                   type="button"
                   onClick={() => handleQuickLogin(preset)}
-                  className="flex items-start gap-3 p-3.5 rounded-lg bg-slate-950/50 border border-slate-800 hover:border-slate-600 transition-colors text-left"
+                  className="flex items-start gap-3 p-3.5 rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] hover:border-teal-400/40 transition-colors text-left"
                 >
                   <div
-                    className="h-8 w-8 rounded-md flex items-center justify-center shrink-0"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg shrink-0"
                     style={{ backgroundColor: `${preset.color}18`, color: preset.color }}
                   >
                     <Icon size={16} strokeWidth={1.8} />
                   </div>
                   <div className="min-w-0">
-                    <span className="block text-sm font-medium text-slate-100">{preset.title}</span>
-                    <span className="block text-xs text-slate-400 mt-0.5 truncate">{preset.name}</span>
+                    <span className="block text-sm font-medium text-[var(--text-primary)]">{preset.title}</span>
+                    <span className="block text-xs text-[var(--text-secondary)] mt-0.5 truncate">{preset.name}</span>
                   </div>
                 </button>
               );
@@ -117,7 +117,7 @@ export const Login = () => {
           </div>
           <form onSubmit={handleSubmit} className="panel-body space-y-5">
             {error && (
-              <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 px-3 py-2.5 text-sm text-rose-400">
+              <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-base)]/20 px-3 py-2.5 text-sm text-[var(--danger-base)]">
                 {error}
               </div>
             )}
@@ -160,7 +160,7 @@ export const Login = () => {
           </form>
         </div>
 
-        <p className="text-center text-xs text-slate-500 leading-relaxed">
+        <p className="text-center text-xs text-[var(--text-tertiary)] leading-relaxed">
           Ministry of Home Affairs · NCRB
         </p>
       </div>

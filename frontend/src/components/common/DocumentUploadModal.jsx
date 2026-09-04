@@ -87,7 +87,7 @@ export const DocumentUploadModal = ({
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-2xl overflow-hidden p-0 animate-modal-in"
+        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -97,17 +97,17 @@ export const DocumentUploadModal = ({
               <Upload size={18} strokeWidth={2} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-100">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                 Upload Secure Document
               </h3>
-              <p className="text-xs text-zinc-400 font-mono">
+              <p className="text-xs text-[var(--text-tertiary)] font-mono">
                 Target Case: {caseNumber || `Case #${selectedCaseId}`}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5"
+            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
             aria-label="Close upload modal"
           >
             <X size={18} />
@@ -126,7 +126,7 @@ export const DocumentUploadModal = ({
           {/* Case Selection if not pre-provided */}
           {!caseId && availableCases.length > 0 && (
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Assign To Case
               </label>
               <select
@@ -149,7 +149,7 @@ export const DocumentUploadModal = ({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`relative cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-all ${
+            className={`relative cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-all ${
               isDragging
                 ? 'border-[#00d4aa] bg-teal-500/10'
                 : file
@@ -172,10 +172,10 @@ export const DocumentUploadModal = ({
                     <CheckCircle size={20} />
                   </div>
                   <div>
-                    <span className="text-xs font-medium text-zinc-200 block">
+                    <span className="text-xs font-medium text-[var(--text-primary)] block">
                       {file.name}
                     </span>
-                    <span className="text-[11px] font-mono text-zinc-500">
+                    <span className="text-[11px] font-mono text-[var(--text-tertiary)]">
                       {(file.size / (1024 * 1024)).toFixed(2)} MB • Ready for cryptographic hashing
                     </span>
                   </div>
@@ -185,14 +185,14 @@ export const DocumentUploadModal = ({
                 </>
               ) : (
                 <>
-                  <div className="h-10 w-10 rounded-full bg-white/5 text-zinc-400 flex items-center justify-center border border-white/10">
+                  <div className="h-10 w-10 rounded-full bg-white/5 text-[var(--text-tertiary)] flex items-center justify-center border border-white/10">
                     <Upload size={18} />
                   </div>
                   <div>
-                    <span className="text-xs font-medium text-zinc-200 block">
+                    <span className="text-xs font-medium text-[var(--text-primary)] block">
                       Click to upload or drag & drop document
                     </span>
-                    <span className="text-[11px] text-zinc-500 block mt-0.5">
+                    <span className="text-[11px] text-[var(--text-tertiary)] block mt-0.5">
                       PDF, DOCX, Images, Scanned statements up to 50 MB
                     </span>
                   </div>
@@ -204,7 +204,7 @@ export const DocumentUploadModal = ({
           {/* Document Type & Classification Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Document Type
               </label>
               <select
@@ -221,7 +221,7 @@ export const DocumentUploadModal = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
                 Security Classification
               </label>
               <select
@@ -239,19 +239,19 @@ export const DocumentUploadModal = ({
           </div>
 
           {/* Digital Signature Option */}
-          <div className="rounded-xl bg-[#16161d] p-3.5 border border-white/[0.06] flex items-start gap-3">
+          <div className="rounded-lg bg-[var(--bg-overlay)] p-3.5 border border-white/[0.06] flex items-start gap-3">
             <input
               type="checkbox"
               id="sign-check"
               checked={signDigitally}
               onChange={(e) => setSignDigitally(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded bg-zinc-900 border-white/20 text-[#00d4aa] focus:ring-[#00d4aa]"
+              className="mt-1 h-4 w-4 rounded bg-[var(--bg-card)] border-white/20 text-[#00d4aa] focus:ring-[#00d4aa]"
             />
-            <label htmlFor="sign-check" className="text-xs text-zinc-300 cursor-pointer">
-              <span className="font-medium text-zinc-100 flex items-center gap-1.5">
+            <label htmlFor="sign-check" className="text-xs text-[var(--text-secondary)] cursor-pointer">
+              <span className="font-medium text-[var(--text-primary)] flex items-center gap-1.5">
                 <Shield size={13} className="text-[#00d4aa]" /> Digitally Sign with Officer PKI Token
               </span>
-              <span className="text-zinc-500 block text-[11px] mt-0.5">
+              <span className="text-[var(--text-tertiary)] block text-[11px] mt-0.5">
                 Generates a SHA-256 fingerprint anchored to your authenticated hardware credentials.
               </span>
             </label>

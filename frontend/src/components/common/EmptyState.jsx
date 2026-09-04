@@ -14,7 +14,7 @@ export const EmptyState = ({
 }) => {
   return (
     <div className={`empty-state ${className}`}>
-      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-800 text-slate-400">
+      <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[var(--bg-overlay)] text-[var(--text-secondary)]">
         <Icon size={22} strokeWidth={1.6} />
       </div>
       <h3>{title}</h3>
