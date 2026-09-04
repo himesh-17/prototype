@@ -36,13 +36,12 @@ const readError = async (response) => {
   return error;
 };
 
-const authHeaders = () => {
-  const token = localStorage.getItem('nyaya_token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
-
 export const fetchApi = async (endpoint, options = {}) => {
-  const headers = { ...options.headers, ...authHeaders() };
+  const token = localStorage.getItem('nyaya_token');
+  if (!token || token.startsWith('demo-token-')) {
+    throw new Error('No valid session — using local data');
+  }
+  const headers = { ...options.headers, Authorization: `Bearer ${token}` };
   if (options.body && typeof options.body === 'object' && !(options.body instanceof FormData)) {
     headers['Content-Type'] = 'application/json';
     options.body = JSON.stringify(options.body);
@@ -54,9 +53,13 @@ export const fetchApi = async (endpoint, options = {}) => {
 };
 
 export const uploadFile = async (endpoint, formData) => {
+  const token = localStorage.getItem('nyaya_token');
+  if (!token || token.startsWith('demo-token-')) {
+    throw new Error('No valid session — using local data');
+  }
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: 'POST',
-    headers: authHeaders(),
+    headers: { Authorization: `Bearer ${token}` },
     body: formData,
   });
   if (!response.ok) throw await readError(response);
@@ -64,7 +67,11 @@ export const uploadFile = async (endpoint, formData) => {
 };
 
 export const downloadFile = async (endpoint) => {
-  const response = await fetch(`${API_URL}${endpoint}`, { headers: authHeaders() });
+  const token = localStorage.getItem('nyaya_token');
+  if (!token || token.startsWith('demo-token-')) {
+    throw new Error('No valid session — using local data');
+  }
+  const response = await fetch(`${API_URL}${endpoint}`, { headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) throw await readError(response);
   const blob = await response.blob();
   const disposition = response.headers.get('Content-Disposition') || '';
@@ -82,6 +89,14 @@ export const downloadFile = async (endpoint) => {
 };
 
 export const login = async (username, password) => {
+  const token = localStorage.getItem('nyaya_token');
+  if (!token || token.startsWith('demo-token-')) {
+    const matched = MOCK_USERS.find(u => u.email.toLowerCase() === username.toLowerCase());
+    if (matched) {
+      return { access_token: `demo-jwt-token-${matched.role.toLowerCase()}`, user: matched };
+    }
+    return { access_token: 'demo-jwt-token-admin', user: MOCK_USERS[0] };
+  }
   try {
     const formData = new URLSearchParams();
     formData.append('username', username);
