@@ -50,15 +50,15 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-court-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-court-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#16161d] px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
               <FileSearch size={18} strokeWidth={2} />
             </div>
             <div>
@@ -72,7 +72,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
+            className="ns-court-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -80,9 +80,9 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="ns-court-body">
           {error && (
-            <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-400 flex items-center gap-2">
+            <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)] flex items-center gap-2">
               <AlertCircle size={14} className="shrink-0" />
               <span>{error}</span>
             </div>
@@ -94,7 +94,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
                 Case Reference
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={caseNumber}
                 onChange={e => setCaseNumber(e.target.value)}
               >
@@ -111,7 +111,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
                 Priority Level
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={priority}
                 onChange={e => setPriority(e.target.value)}
               >
@@ -127,7 +127,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
               Document / Evidence Requirement Description
             </label>
             <input
-              className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+              className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
               placeholder="e.g. Certified bitstream forensic image hash & decrypted transaction logs"
               value={requestType}
               onChange={e => setRequestType(e.target.value)}
@@ -141,7 +141,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
                 Direct To Agency / Officer
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={requestedTo}
                 onChange={e => setRequestedTo(e.target.value)}
               >
@@ -157,7 +157,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
               </label>
               <input
                 type="date"
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={dueDate}
                 onChange={e => setDueDate(e.target.value)}
                 required
@@ -170,7 +170,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
               Judicial Directions / Specific Points of Inquiry
             </label>
             <textarea
-              className="input bg-[#0e0e13] border-white/10 text-xs py-2 min-h-[80px]"
+              className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2 min-h-[80px]"
               placeholder="Explain why these materials are material to the ongoing hearing..."
               value={notes}
               onChange={e => setNotes(e.target.value)}
@@ -179,13 +179,13 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
           </div>
 
           {/* Legal Notice */}
-          <div className="rounded-lg bg-[var(--bg-overlay)] p-3 text-xs font-mono text-[var(--text-tertiary)] border border-white/[0.06] flex items-center gap-2">
-            <ShieldCheck size={16} className="text-[#00d4aa] shrink-0" />
+          <div className="rounded-lg bg-[var(--bg-overlay)] p-3 text-xs font-mono text-[var(--text-tertiary)] border border-[var(--border-subtle)] flex items-center gap-2">
+            <ShieldCheck size={16} className="text-[var(--accent-strong)] shrink-0" />
             <span>Issued under Section 91 CrPC / Section 94 BNSS. Formal notice will be transmitted via encrypted inter-agency bus.</span>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.08]">
+          <div className="ns-court-footer">
             <button
               type="button"
               onClick={onClose}

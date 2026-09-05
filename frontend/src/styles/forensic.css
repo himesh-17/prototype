@@ -1,0 +1,137 @@
+/* ═══════════════════════════════════════════
+   Forensic  –  Evidence Intake · Report · Chain of Custody
+   ═══════════════════════════════════════════ */
+
+/* ── Forensic Modals (Intake + Report) ────── */
+.ns-forensic-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 80;
+  animation: fadeIn 200ms ease forwards;
+  will-change: opacity;
+}
+
+.ns-forensic-modal {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  animation: modalIn 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.ns-forensic-close {
+  color: var(--text-tertiary);
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  transition: all 150ms ease;
+}
+
+.ns-forensic-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-overlay);
+}
+
+.ns-forensic-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ns-forensic-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* ── Chain of Custody Modal ──────────────── */
+.ns-custody-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 80;
+  animation: fadeIn 200ms ease forwards;
+  will-change: opacity;
+}
+
+.ns-custody-modal {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  width: 100%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  animation: modalIn 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.ns-custody-close {
+  color: var(--text-tertiary);
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  transition: all 150ms ease;
+}
+
+.ns-custody-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-overlay);
+}
+
+.ns-custody-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ns-custody-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* ── Responsive: Forensic ────────────────── */
+@media (max-width: 768px) {
+  .ns-forensic-backdrop,
+  .ns-custody-backdrop {
+    padding: 1rem;
+  }
+
+  .ns-forensic-modal {
+    max-width: calc(100vw - 48px);
+  }
+
+  .ns-custody-modal {
+    max-width: calc(100vw - 48px);
+  }
+}

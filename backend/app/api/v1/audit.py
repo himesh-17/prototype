@@ -27,7 +27,9 @@ def verify_audit_chain(db: Session = Depends(get_db), _: User = Depends(check_ro
     invalid = []
     entries = db.query(AuditLog).order_by(AuditLog.id).all()
     for entry in entries:
-        if entry.previous_hash != previous_hash or entry.entry_hash != audit_hash(entry):
+        is_genesis = entry.id == 1
+        expected_previous = None if is_genesis else previous_hash
+        if entry.previous_hash != expected_previous or entry.entry_hash != audit_hash(entry):
             invalid.append(entry.id)
         previous_hash = entry.entry_hash
     return IntegrityVerificationResponse(valid=not invalid, checked_versions=len(entries), invalid_version_ids=invalid)

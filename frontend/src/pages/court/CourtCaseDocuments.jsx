@@ -19,18 +19,18 @@ import {
 } from 'lucide-react';
 
 const docTypeStyles = {
-  'FIR': 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  'Witness Statement': 'bg-sky-500/10 text-sky-400 border-sky-500/20',
-  'Forensic Report': 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  'Evidence': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  'Judicial Order': 'bg-teal-500/10 text-teal-400 border-teal-500/20',
-  'Seizure Memo': 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+  'FIR': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-emerald-500/20',
+  'Witness Statement': 'bg-[var(--info-soft)] text-[var(--info-base)] border-sky-500/20',
+  'Forensic Report': 'bg-[var(--bg-inset)] text-[var(--text-secondary)] border-purple-500/20',
+  'Evidence': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]',
+  'Judicial Order': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-[var(--accent-faint)]',
+  'Seizure Memo': 'bg-[var(--info-soft)] text-[var(--info-base)] border-[var(--info-soft)]',
 };
 
 const classificationStyles = {
-  'Confidential': 'bg-sky-500/10 text-sky-400 border-sky-500/20',
-  'Secret': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  'Top Secret': 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+  'Confidential': 'bg-[var(--info-soft)] text-[var(--info-base)] border-sky-500/20',
+  'Secret': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]',
+  'Top Secret': 'bg-[var(--danger-soft)] text-[var(--danger-base)] border-[var(--danger-soft)]',
 };
 
 export const CourtCaseDocuments = () => {
@@ -224,7 +224,7 @@ export const CourtCaseDocuments = () => {
                         </span>
                       </td>
                       <td>
-                        <span className="text-teal-400 text-xs font-sans flex items-center gap-1 font-semibold">
+                        <span className="text-[var(--accent-strong)] text-xs font-sans flex items-center gap-1 font-semibold">
                           <ShieldCheck size={14} /> CERTIFIED
                         </span>
                       </td>

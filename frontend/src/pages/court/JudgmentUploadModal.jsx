@@ -50,15 +50,15 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-judgment-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-judgment-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#16161d] px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
               <Scale size={18} strokeWidth={2} />
             </div>
             <div>
@@ -72,7 +72,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
+            className="ns-judgment-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -80,9 +80,9 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="ns-judgment-body">
           {error && (
-            <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-400">
+            <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)]">
               {error}
             </div>
           )}
@@ -93,7 +93,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
                 Target Case
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={selectedCaseId}
                 onChange={e => setSelectedCaseId(e.target.value)}
               >
@@ -110,7 +110,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
                 Order Type
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={orderType}
                 onChange={e => setOrderType(e.target.value)}
               >
@@ -127,7 +127,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
                 Presiding Judge / Bench
               </label>
               <input
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={judgeName}
                 onChange={e => setJudgeName(e.target.value)}
                 required
@@ -140,7 +140,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
               </label>
               <input
                 type="date"
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={hearingDate}
                 onChange={e => setHearingDate(e.target.value)}
                 required
@@ -153,7 +153,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
               Operative Order Text / Judgment Summary
             </label>
             <textarea
-              className="input bg-[#0e0e13] border-white/10 text-xs py-2 min-h-[90px]"
+              className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2 min-h-[90px]"
               placeholder="State operative directions, bail conditions, or trial schedule..."
               value={remarks}
               onChange={e => setRemarks(e.target.value)}
@@ -170,7 +170,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
               type="file"
               accept=".pdf"
               onChange={e => setFile(e.target.files[0])}
-              className="input bg-[#0e0e13] border-white/10 text-xs py-1.5"
+              className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-1.5"
             />
             <p className="text-[11px] text-[var(--text-tertiary)]">
               If no file is attached, an official digital decree will be synthesized and cryptographically sealed.
@@ -178,13 +178,13 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
           </div>
 
           {/* Judicial Security Note */}
-          <div className="rounded-lg bg-teal-500/10 border border-teal-500/20 p-3 text-xs font-mono text-teal-300 flex items-center gap-2">
-            <Shield size={16} className="shrink-0 text-[#00d4aa]" />
+          <div className="rounded-lg bg-[var(--accent-faint)] border border-[var(--accent-faint)] p-3 text-xs font-mono text-[var(--accent-base)] flex items-center gap-2">
+            <Shield size={16} className="shrink-0 text-[var(--accent-strong)]" />
             <span>Cryptographic Judicial Seal [JUDICIAL-SEAL-PHC-2026] will be permanently affixed.</span>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.08]">
+          <div className="ns-judgment-footer">
             <button
               type="button"
               onClick={onClose}

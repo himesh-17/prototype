@@ -2,40 +2,40 @@ import React from 'react';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 
 const colorThemes = {
-  teal: {
-    iconBg: 'rgba(45, 212, 191, 0.12)',
-    iconColor: '#2dd4bf',
-    trendBg: 'rgba(45, 212, 191, 0.1)',
-    trendColor: '#2dd4bf',
-    trendBorder: 'rgba(45, 212, 191, 0.25)',
+  teal: { // Success
+    iconBg: '#DCFCE7',
+    iconColor: '#15803D',
+    trendBg: '#DCFCE7',
+    trendColor: '#15803D',
+    trendBorder: '#BBF7D0',
   },
-  sky: {
-    iconBg: 'rgba(56, 189, 248, 0.12)',
-    iconColor: '#38bdf8',
-    trendBg: 'rgba(56, 189, 248, 0.1)',
-    trendColor: '#38bdf8',
-    trendBorder: 'rgba(56, 189, 248, 0.25)',
+  sky: { // Primary
+    iconBg: '#E0F2FE',
+    iconColor: '#0369A1',
+    trendBg: '#E0F2FE',
+    trendColor: '#0369A1',
+    trendBorder: '#BAE6FD',
   },
-  amber: {
-    iconBg: 'rgba(245, 158, 11, 0.12)',
-    iconColor: '#f59e0b',
-    trendBg: 'rgba(245, 158, 11, 0.1)',
-    trendColor: '#f59e0b',
-    trendBorder: 'rgba(245, 158, 11, 0.25)',
+  amber: { // Warning
+    iconBg: '#FEF3C7',
+    iconColor: '#B45309',
+    trendBg: '#FEF3C7',
+    trendColor: '#B45309',
+    trendBorder: '#FDE68A',
   },
-  purple: {
-    iconBg: 'rgba(168, 85, 247, 0.12)',
-    iconColor: '#c084fc',
-    trendBg: 'rgba(168, 85, 247, 0.1)',
-    trendColor: '#c084fc',
-    trendBorder: 'rgba(168, 85, 247, 0.25)',
+  purple: { // Neutral
+    iconBg: '#F1F5F9',
+    iconColor: '#475569',
+    trendBg: '#F1F5F9',
+    trendColor: '#475569',
+    trendBorder: '#E2E8F0',
   },
-  rose: {
-    iconBg: 'rgba(244, 63, 94, 0.12)',
-    iconColor: '#fb7185',
-    trendBg: 'rgba(244, 63, 94, 0.1)',
-    trendColor: '#fb7185',
-    trendBorder: 'rgba(244, 63, 94, 0.25)',
+  rose: { // Danger
+    iconBg: '#FEE2E2',
+    iconColor: '#B91C1C',
+    trendBg: '#FEE2E2',
+    trendColor: '#B91C1C',
+    trendBorder: '#FECACA',
   },
 };
 
@@ -57,7 +57,7 @@ export const StatCard = ({
       role={onClick ? 'button' : 'region'}
       tabIndex={onClick ? 0 : undefined}
       aria-label={`${title}: ${value}`}
-      className="flex flex-col gap-4 rounded-lg bg-[var(--bg-overlay)] p-5 border border-[var(--border-subtle)]"
+      className="stat-card flex flex-col gap-4 rounded-lg bg-[var(--bg-overlay)] p-5 border border-[var(--border-subtle)]"
     >
       <div className="flex items-start justify-between gap-3">
         <span className="text-sm font-medium text-[var(--text-secondary)] leading-snug">{title}</span>

@@ -271,11 +271,11 @@ const AssetDetail = () => {
       </div>
 
       {showEditModal && (
-        <div className="modal-backdrop" onClick={() => setShowEditModal(false)} role="dialog" aria-modal="true">
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3 className="modal-title">Edit asset</h3>
-              <button onClick={() => setShowEditModal(false)} className="modal-close" aria-label="Close">
+        <div className="ns-cases-backdrop" onClick={() => setShowEditModal(false)} role="dialog" aria-modal="true">
+          <div className="ns-cases-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ns-cases-header">
+              <h3 className="ns-cases-title">Edit asset</h3>
+              <button onClick={() => setShowEditModal(false)} className="ns-cases-close" aria-label="Close">
                 <X size={18} />
               </button>
             </div>

@@ -1,0 +1,174 @@
+/* ═══════════════════════════════════════════
+   Cases  –  Timeline · Case Modals
+   ═══════════════════════════════════════════ */
+
+/* ── Timeline ────────────────────────────── */
+.timeline {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  border-left: 1px solid var(--border-subtle);
+  margin-left: 0.4rem;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 1rem 0.5rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 0.45rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-base);
+  border: 1px solid var(--accent-base);
+  box-shadow: 0 0 0 3px var(--bg-base);
+}
+
+.timeline-item.muted::before {
+  border-color: var(--border-strong);
+}
+
+.timeline-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-title {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.timeline-detail {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.timeline-enter {
+  animation: timelineIn 300ms ease-out forwards;
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+@keyframes timelineIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Case Modals (CaseList, CaseDetail, AssetDetail) ── */
+.ns-cases-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 80;
+  animation: fadeIn 200ms ease forwards;
+  will-change: opacity;
+}
+
+.ns-cases-modal {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  animation: modalIn 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.ns-cases-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-inset);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ns-cases-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.ns-cases-close {
+  color: var(--text-tertiary);
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  transition: all 150ms ease;
+}
+
+.ns-cases-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-overlay);
+}
+
+.ns-cases-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ns-cases-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .ns-cases-backdrop {
+    padding: 1rem;
+  }
+
+  .ns-cases-modal {
+    max-width: calc(100vw - 48px);
+  }
+}
+
+@media (max-width: 480px) {
+  .ns-cases-backdrop {
+    padding: 0.75rem;
+  }
+
+  .ns-cases-modal {
+    max-width: calc(100vw - 24px);
+  }
+}

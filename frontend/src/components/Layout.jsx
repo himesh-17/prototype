@@ -13,6 +13,8 @@ import {
   Microscope,
   HardDrive,
   FileText,
+  Menu,
+  X,
 } from 'lucide-react';
 
 const initials = (name = '') => {
@@ -37,6 +39,11 @@ export const Layout = () => {
   const { user, activeRole, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -81,8 +88,15 @@ export const Layout = () => {
   const pageMeta = PAGE_TITLES.find((item) => item.match(location.pathname));
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
+    <div className="app-shell page-enter-animation">
+      {isMobileMenuOpen && (
+        <div 
+          className="sidebar-overlay" 
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-label="Close menu"
+        />
+      )}
+      <aside className={`sidebar ${isMobileMenuOpen ? 'is-open' : ''}`}>
         <div className="brand">
           <div className="brand-mark" aria-hidden="true">
             NS
@@ -153,9 +167,18 @@ export const Layout = () => {
 
       <main className="workspace">
         <header className="topbar">
-          <div className="topbar-meta">
-            <span className="topbar-title">{pageMeta?.title || 'Workspace'}</span>
-            <span className="topbar-subtitle">National Crime Records Bureau</span>
+          <div className="topbar-meta flex items-center gap-3">
+            <button 
+              className="mobile-menu-btn" 
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu size={20} strokeWidth={1.5} className="text-[var(--text-secondary)]" />
+            </button>
+            <div className="flex flex-col">
+              <span className="topbar-title">{pageMeta?.title || 'Workspace'}</span>
+              <span className="topbar-subtitle hidden sm:block">National Crime Records Bureau</span>
+            </div>
           </div>
           <div className="topbar-actions">
             <span className="badge badge-accent">

@@ -238,9 +238,9 @@ export const CaseList = () => {
                       <span
                         className={`text-[11px] font-sans font-medium px-2.5 py-0.5 rounded-full border ${
                           c.priority === 'CRITICAL'
-                            ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                            ? 'bg-[var(--danger-soft)] text-[var(--danger-base)] border-[var(--danger-soft)]'
                             : c.priority === 'HIGH'
-                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                            ? 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]'
                             : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]'
                         }`}
                       >
@@ -269,7 +269,7 @@ export const CaseList = () => {
                         className="btn btn-secondary text-xs px-3 py-1 inline-flex items-center gap-1 hover:border-teal-400/40"
                       >
                         <span className="font-sans font-medium">Manage</span>
-                        <ArrowRight size={12} className="text-[var(--text-secondary)] group-hover:text-teal-400" />
+                        <ArrowRight size={12} className="text-[var(--text-secondary)] group-hover:text-[var(--accent-strong)]" />
                       </Link>
                     </td>
                   </tr>
@@ -282,15 +282,15 @@ export const CaseList = () => {
 
       {/* New Case Creation Modal */}
       {showModal && canCreateCase && (
-        <div className="modal-backdrop" onClick={() => setShowModal(false)} role="dialog" aria-modal="true">
+        <div className="ns-cases-backdrop" onClick={() => setShowModal(false)} role="dialog" aria-modal="true">
           <div
-            className="modal max-w-xl bg-[var(--bg-overlay)] border-[var(--border-subtle)] rounded-lg shadow-2xl overflow-hidden flex flex-col"
+            className="ns-cases-modal max-w-xl bg-[var(--bg-overlay)] border-[var(--border-subtle)] rounded-lg shadow-2xl overflow-hidden flex flex-col"
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-base)] px-6 py-4">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
                   <Briefcase size={18} strokeWidth={2} />
                 </div>
                 <div>
@@ -304,7 +304,7 @@ export const CaseList = () => {
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="modal-close p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-white hover:bg-white/5"
+                className="ns-cases-close p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
                 aria-label="Close modal"
               >
                 <X size={18} />
@@ -314,7 +314,7 @@ export const CaseList = () => {
             {/* Form */}
             <form onSubmit={handleCreateCase} className="p-6 space-y-4 overflow-y-auto flex-1">
               {error && (
-                <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-400">
+                <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)]">
                   {error}
                 </div>
               )}

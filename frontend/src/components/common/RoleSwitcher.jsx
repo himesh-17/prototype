@@ -80,9 +80,8 @@ export const RoleSwitcher = () => {
                 <button
                   key={roleKey}
                   onClick={() => handleSelect(roleKey)}
-                  className={`w-full flex items-center justify-between gap-3 p-2.5 rounded-lg text-left transition-colors ${
-                    isSelected ? 'bg-[var(--bg-card)]' : 'hover:bg-[var(--bg-card)]/60'
-                  }`}
+                  className={`w-full flex items-center justify-between gap-3 p-2.5 rounded-lg text-left transition-colors ${isSelected ? 'bg-[var(--bg-card)]' : 'hover:bg-[var(--bg-card)]/60'
+                    }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
@@ -96,7 +95,7 @@ export const RoleSwitcher = () => {
                       <span className="block text-xs text-[var(--text-tertiary)] truncate">{meta.agency}</span>
                     </div>
                   </div>
-                  {isSelected && <Check size={16} className="text-teal-400 shrink-0" />}
+                  {isSelected && <Check size={16} className="text-[var(--accent-strong)] shrink-0" />}
                 </button>
               );
             })}

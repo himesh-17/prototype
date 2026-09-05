@@ -16,17 +16,17 @@ import {
 } from 'lucide-react';
 
 const docTypeStyles = {
-  'FIR': 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  'Witness Statement': 'bg-sky-500/10 text-sky-400 border-sky-500/20',
-  'Forensic Report': 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  'Evidence': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  'Judicial Order': 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+  'FIR': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-emerald-500/20',
+  'Witness Statement': 'bg-[var(--info-soft)] text-[var(--info-base)] border-sky-500/20',
+  'Forensic Report': 'bg-[var(--bg-inset)] text-[var(--text-secondary)] border-purple-500/20',
+  'Evidence': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]',
+  'Judicial Order': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-[var(--accent-faint)]',
 };
 
 const classificationStyles = {
-  'Confidential': 'bg-sky-500/10 text-sky-400 border-sky-500/20',
-  'Secret': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  'Top Secret': 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+  'Confidential': 'bg-[var(--info-soft)] text-[var(--info-base)] border-sky-500/20',
+  'Secret': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]',
+  'Top Secret': 'bg-[var(--danger-soft)] text-[var(--danger-base)] border-[var(--danger-soft)]',
 };
 
 export const DocumentSearch = () => {
@@ -189,7 +189,7 @@ export const DocumentSearch = () => {
                         </span>
                       </td>
                       <td>
-                        <span className="text-xs font-sans text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20 font-medium">
+                        <span className="text-xs font-sans text-[var(--accent-strong)] bg-[var(--accent-faint)] px-2 py-0.5 rounded-full border border-[var(--accent-faint)] font-medium">
                           {doc.ocr_text ? 'Indexed' : 'Queued'}
                         </span>
                       </td>

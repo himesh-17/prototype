@@ -157,8 +157,8 @@ export const AuditTrail = () => {
         <div
           className={`rounded-lg p-4 border flex items-center justify-between gap-4 animate-fade-in ${
             verificationResult.valid
-              ? 'bg-teal-500/10 border-teal-500/30 text-teal-300'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              ? 'bg-[var(--accent-faint)] border-[var(--accent-soft)] text-[var(--accent-base)]'
+              : 'bg-[var(--danger-soft)] border-rose-500/30 text-rose-300'
           }`}
         >
           <div className="flex items-center gap-3">
@@ -176,7 +176,7 @@ export const AuditTrail = () => {
           </div>
           <button
             onClick={() => setVerificationResult(null)}
-            className="text-[var(--text-tertiary)] hover:text-white p-1 rounded"
+            className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] p-1 rounded"
             aria-label="Dismiss verification notice"
           >
             <X size={16} />
@@ -248,8 +248,13 @@ export const AuditTrail = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredLogs.map(log => (
-                  <tr key={log.id} className="is-clickable" onClick={() => setSelectedLog(log)}>
+                {filteredLogs.map((log, index) => (
+                  <tr 
+                    key={log.id} 
+                    className="is-clickable timeline-enter" 
+                    onClick={() => setSelectedLog(log)}
+                    style={{ animationDelay: `${index * 40}ms` }}
+                  >
                     <td className="text-[var(--text-secondary)] whitespace-nowrap">
                       {formatDate(log.timestamp)}
                     </td>
@@ -284,7 +289,7 @@ export const AuditTrail = () => {
                             e.stopPropagation();
                             handleCopyHash(log.entry_hash, log.id);
                           }}
-                          className="text-[var(--text-tertiary)] hover:text-teal-400"
+                          className="text-[var(--text-tertiary)] hover:text-[var(--accent-strong)]"
                           title="Copy hash"
                         >
                           {copiedHash === log.id ? <Check size={14} /> : <Copy size={14} />}

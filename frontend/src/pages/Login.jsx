@@ -70,7 +70,7 @@ export const Login = () => {
     <div className="min-h-dvh bg-[var(--bg-base)] flex flex-col items-center justify-center px-5 py-12 text-[var(--text-primary)]">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-3">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
             <Shield size={24} strokeWidth={1.8} />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
