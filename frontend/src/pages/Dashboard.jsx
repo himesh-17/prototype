@@ -117,7 +117,7 @@ export const Dashboard = () => {
   // ADMIN DASHBOARD VIEW
   // -------------------------------------------------------------
   const renderAdminDashboard = () => (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-12">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Cases"
@@ -158,30 +158,87 @@ export const Dashboard = () => {
       </div>
 
       {chainVerified && (
-        <div className="rounded-lg bg-teal-500/10 border border-teal-500/30 px-4 py-3 text-sm text-teal-300 flex items-center justify-between">
+        <div className="rounded-lg bg-[var(--accent-faint)] border border-[var(--accent-soft)] px-4 py-3 text-sm text-[var(--accent-base)] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShieldCheck size={18} className="text-[#00d4aa]" />
+            <ShieldCheck size={18} className="text-[var(--accent-strong)]" />
             <span>Cryptographic Merkle tree audit verified. 100% block integrity intact across all national nodes.</span>
           </div>
-          <span className="px-2 py-0.5 rounded bg-teal-500/20 text-[#00d4aa] font-semibold text-[11px]">
+          <span className="px-2 py-0.5 rounded bg-teal-500/20 text-[var(--accent-strong)] font-semibold text-[11px]">
             PASS
           </span>
         </div>
       )}
 
-      {/* Main Grid: Recent Cases + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 panel flex flex-col">
-          <div className="panel-head">
-            <h3 className="panel-title">
-              <Briefcase size={17} className="text-teal-400" />
-              Recent cases
-            </h3>
-            <Link to="/cases" className="panel-link">
-              View all
-              <ChevronRight size={14} />
-            </Link>
+      {/* Administrative Operations */}
+      <h2 className="text-lg font-semibold text-[var(--text-primary)] mt-4">Administrative Operations</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link to="/cases" className="action-tile group">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded bg-[var(--accent-faint)] text-[var(--accent-strong)] flex items-center justify-center">
+              <Plus size={18} />
+            </div>
+            <div>
+              <span className="text-sm font-medium text-[var(--text-primary)] block">Register Case</span>
+              <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Open a new file</span>
+            </div>
           </div>
+          <ChevronRight size={16} className="text-[var(--text-tertiary)] transition-transform group-hover:translate-x-1" />
+        </Link>
+
+        <button type="button" onClick={() => setShowDocUpload(true)} className="action-tile group">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded bg-[var(--info-soft)] text-[var(--info-base)] flex items-center justify-center">
+              <FileText size={18} />
+            </div>
+            <div>
+              <span className="text-sm font-medium text-[var(--text-primary)] block">Upload Document</span>
+              <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Hash and seal file</span>
+            </div>
+          </div>
+          <ChevronRight size={16} className="text-[var(--text-tertiary)] transition-transform group-hover:translate-x-1" />
+        </button>
+
+        <button type="button" onClick={handleVerifyChain} disabled={verifyingChain} className="action-tile group">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded bg-[var(--accent-faint)] text-[var(--accent-strong)] flex items-center justify-center">
+              <ShieldCheck size={18} />
+            </div>
+            <div>
+              <span className="text-sm font-medium text-[var(--text-primary)] block">Verify Ledger</span>
+              <span className="text-xs text-[var(--text-secondary)] block mt-0.5">
+                {verifyingChain ? 'Checking integrity…' : 'Scan hash chain'}
+              </span>
+            </div>
+          </div>
+          <ChevronRight size={16} className="text-[var(--text-tertiary)] transition-transform group-hover:translate-x-1" />
+        </button>
+
+        <Link to="/users" className="action-tile group">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded bg-[var(--bg-inset)] text-[var(--text-secondary)] flex items-center justify-center">
+              <Users size={18} />
+            </div>
+            <div>
+              <span className="text-sm font-medium text-[var(--text-primary)] block">User Access</span>
+              <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Manage roles</span>
+            </div>
+          </div>
+          <ChevronRight size={16} className="text-[var(--text-tertiary)] transition-transform group-hover:translate-x-1" />
+        </Link>
+      </div>
+
+      {/* Main Registry Container */}
+      <div className="panel flex flex-col">
+        <div className="panel-head">
+          <h3 className="panel-title">
+            <Briefcase size={18} className="text-[var(--accent-strong)]" />
+            National Case Registry
+          </h3>
+          <Link to="/cases" className="panel-link">
+            View all
+            <ChevronRight size={14} />
+          </Link>
+        </div>
 
           <div className="p-0 overflow-x-auto flex-1">
             {cases.length === 0 ? (
@@ -206,7 +263,7 @@ export const Dashboard = () => {
                 </thead>
                 <tbody>
                   {cases.slice(0, 5).map(c => (
-                    <tr key={c.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={c.id} className="hover:bg-[var(--bg-inset)] transition-colors">
                       <td>
                         <span className="badge badge-info font-mono text-xs">
                           {c.case_number}
@@ -224,9 +281,9 @@ export const Dashboard = () => {
                         <span
                           className={`text-[10px] font-mono font-medium px-2 py-0.5 rounded-full border ${
                             c.priority === 'CRITICAL'
-                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                              ? 'bg-[var(--danger-soft)] text-[var(--danger-base)] border-[var(--danger-soft)]'
                               : c.priority === 'HIGH'
-                              ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                              ? 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]'
                               : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]'
                           }`}
                         >
@@ -260,71 +317,6 @@ export const Dashboard = () => {
               </table>
             )}
           </div>
-        </div>
-
-        <div className="panel flex flex-col">
-          <div className="panel-head">
-            <h3 className="panel-title">
-              <Sparkles size={17} className="text-teal-400" />
-              Quick actions
-            </h3>
-          </div>
-          <div className="panel-body flex flex-col gap-3 flex-1">
-              <Link to="/cases" className="action-tile group">
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
-                    <Plus size={16} />
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-[var(--text-primary)] block">Register case</span>
-                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Open a new investigation file</span>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
-              </Link>
-
-              <button type="button" onClick={() => setShowDocUpload(true)} className="action-tile">
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
-                    <FileText size={16} />
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-[var(--text-primary)] block">Upload document</span>
-                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Hash and seal the file</span>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
-              </button>
-
-              <button type="button" onClick={handleVerifyChain} disabled={verifyingChain} className="action-tile">
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                    <ShieldCheck size={16} />
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-[var(--text-primary)] block">Verify ledger</span>
-                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">
-                      {verifyingChain ? 'Checking integrity…' : 'Scan hash chain'}
-                    </span>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
-              </button>
-
-              <Link to="/users" className="action-tile">
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                    <Users size={16} />
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-[var(--text-primary)] block">User access</span>
-                    <span className="text-xs text-[var(--text-secondary)] block mt-0.5">Officers, judges, experts</span>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-[var(--text-tertiary)]" />
-              </Link>
-          </div>
-        </div>
       </div>
 
       {/* 4. Bottom Grid: System Status + Recent Activity Feed (Fills Whitespace) */}
@@ -332,7 +324,7 @@ export const Dashboard = () => {
         <div className="panel">
           <div className="panel-head">
             <h3 className="panel-title">
-              <Server size={17} className="text-teal-400" />
+              <Server size={17} className="text-[var(--accent-strong)]" />
               System status
             </h3>
           </div>
@@ -341,7 +333,7 @@ export const Dashboard = () => {
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <span className="text-[var(--text-secondary)]">Merkle integrity</span>
-                <span className="text-emerald-400 font-medium flex items-center gap-1.5">
+                <span className="text-[var(--accent-strong)] font-medium flex items-center gap-1.5">
                   <CheckCircle2 size={15} /> Valid
                 </span>
               </div>
@@ -384,7 +376,7 @@ export const Dashboard = () => {
         <div className="lg:col-span-2 panel flex flex-col">
           <div className="panel-head">
             <h3 className="panel-title">
-              <Activity size={17} className="text-teal-400" />
+              <Activity size={17} className="text-[var(--accent-strong)]" />
               Recent activity
             </h3>
             <Link to="/audit" className="panel-link">
@@ -396,7 +388,7 @@ export const Dashboard = () => {
           <div className="panel-body">
             {auditLogs.slice(0, 6).map((log, index) => (
               <div key={log.id || index} className="feed-item">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] text-teal-400 text-xs font-semibold">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] text-[var(--accent-strong)] text-xs font-semibold">
                   {log.user_role?.substring(0, 2) || 'AD'}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -429,7 +421,7 @@ export const Dashboard = () => {
     const myDocs = documents.filter(d => d.uploader_id === 2 || d.case_id === 1);
 
     return (
-      <div className="space-y-8">
+      <div className="flex flex-col gap-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="My Assigned Cases"
@@ -472,7 +464,7 @@ export const Dashboard = () => {
         <div className="panel overflow-hidden">
           <div className="panel-head">
             <h3 className="panel-title">
-              <Briefcase size={17} className="text-teal-400" /> Active cases
+              <Briefcase size={17} className="text-[var(--accent-strong)]" /> Active cases
             </h3>
             <span className="text-sm text-[var(--text-secondary)]">{myCases.length} assigned</span>
           </div>
@@ -513,7 +505,7 @@ export const Dashboard = () => {
           <div className="panel">
             <div className="panel-head">
               <h3 className="panel-title">
-                <FileText size={17} className="text-teal-400" /> Documents
+                <FileText size={17} className="text-[var(--accent-strong)]" /> Documents
               </h3>
               <button
                 onClick={() => setShowDocUpload(true)}
@@ -545,7 +537,7 @@ export const Dashboard = () => {
             <div className="panel-head">
               <div>
                 <h3 className="panel-title">
-                  <Clock size={17} className="text-teal-400" /> Chronology
+                  <Clock size={17} className="text-[var(--accent-strong)]" /> Chronology
                 </h3>
                 <p className="text-xs text-[var(--text-tertiary)] mt-1">CR-2026-0891</p>
               </div>
@@ -579,7 +571,7 @@ export const Dashboard = () => {
   // COURT (JUDGE) DASHBOARD VIEW
   // -------------------------------------------------------------
   const renderCourtDashboard = () => (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-12">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Cases Under Hearing"
@@ -619,7 +611,7 @@ export const Dashboard = () => {
       <div className="panel overflow-hidden">
         <div className="panel-head">
           <h3 className="panel-title">
-            <Scale size={17} className="text-amber-400" /> Hearing docket
+            <Scale size={17} className="text-[var(--warn-base)]" /> Hearing docket
           </h3>
           <span className="text-sm text-[var(--text-secondary)]">4 scheduled</span>
         </div>
@@ -643,7 +635,7 @@ export const Dashboard = () => {
                     <div className="font-medium text-[var(--text-primary)] truncate max-w-sm">{c.title}</div>
                     <div className="text-xs text-[var(--text-tertiary)] mt-1">{c.acts_sections}</div>
                   </td>
-                  <td className="text-xs font-mono text-teal-400 font-semibold">
+                  <td className="text-xs font-mono text-[var(--accent-strong)] font-semibold">
                     {c.hearing_date ? new Date(c.hearing_date).toLocaleDateString() : '2026-09-18'}
                   </td>
                   <td className="text-xs text-[var(--text-secondary)] font-mono">{c.assigned_io_name}</td>
@@ -665,7 +657,7 @@ export const Dashboard = () => {
         <div className="panel">
           <div className="panel-head">
             <h3 className="panel-title">
-              <Send size={17} className="text-teal-400" /> Requisitions
+              <Send size={17} className="text-[var(--accent-strong)]" /> Requisitions
             </h3>
             <button onClick={() => setShowRequestModal(true)} className="panel-link">
               Issue
@@ -683,7 +675,7 @@ export const Dashboard = () => {
                 <p className="text-sm text-[var(--text-secondary)] mt-1.5">
                   To {cr.requested_to} · Due {cr.due_date}
                 </p>
-                <p className="text-xs text-teal-400 mt-1">{cr.status}</p>
+                <p className="text-xs text-[var(--accent-strong)] mt-1">{cr.status}</p>
               </div>
             ))}
           </div>
@@ -692,7 +684,7 @@ export const Dashboard = () => {
         <div className="panel">
           <div className="panel-head">
             <h3 className="panel-title">
-              <ShieldCheck size={17} className="text-amber-400" /> Orders
+              <ShieldCheck size={17} className="text-[var(--warn-base)]" /> Orders
             </h3>
             <button onClick={() => setShowJudgmentModal(true)} className="panel-link">
               Upload
@@ -720,7 +712,7 @@ export const Dashboard = () => {
   // FORENSIC ANALYST VIEW
   // -------------------------------------------------------------
   const renderForensicDashboard = () => (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-12">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Assigned Evidence Items"
@@ -759,7 +751,7 @@ export const Dashboard = () => {
       <div className="panel overflow-hidden">
         <div className="panel-head">
           <h3 className="panel-title">
-            <HardDrive size={17} className="text-purple-400" /> Lab custody
+            <HardDrive size={17} className="text-[var(--text-secondary)]" /> Lab custody
           </h3>
           <span className="text-sm text-[var(--text-secondary)]">{assets.length} items</span>
         </div>
@@ -785,7 +777,7 @@ export const Dashboard = () => {
                   </td>
                   <td className="text-xs font-mono text-[var(--text-secondary)]">{a.asset_type}</td>
                   <td>
-                    <span className="text-xs font-mono text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
+                    <span className="text-xs font-mono text-[var(--accent-strong)] bg-[var(--accent-faint)] px-2 py-0.5 rounded border border-[var(--accent-faint)]">
                       {a.seal_number || 'SEAL-INTACT'}
                     </span>
                   </td>
@@ -795,7 +787,7 @@ export const Dashboard = () => {
                       onClick={() => setSelectedAssetForCustody(a)}
                       className="btn btn-secondary text-xs px-2.5 py-1 inline-flex items-center gap-1"
                     >
-                      <ShieldCheck size={12} className="text-[#00d4aa]" />
+                      <ShieldCheck size={12} className="text-[var(--accent-strong)]" />
                       <span>Track Custody</span>
                     </button>
                   </td>
@@ -813,14 +805,22 @@ export const Dashboard = () => {
       <div className="page-header">
         <div className="page-heading">
           <span className="page-eyebrow">
-            {activeRole === 'ADMIN' && 'Administrator'}
-            {activeRole === 'IO' && 'Investigating officer'}
-            {activeRole === 'JUDGE' && 'Court docket'}
-            {activeRole === 'FORENSIC_EXPERT' && 'Forensic laboratory'}
+            {activeRole === 'ADMIN' && 'Administrator · Overview'}
+            {activeRole === 'IO' && 'Investigating Officer · Overview'}
+            {activeRole === 'JUDGE' && 'Court Docket · Overview'}
+            {activeRole === 'FORENSIC_EXPERT' && 'Forensic Laboratory · Overview'}
           </span>
-          <h1 className="page-title">Overview</h1>
+          <h1 className="page-title">
+            {activeRole === 'ADMIN' && 'National Digital Evidence & Asset Management Registry'}
+            {activeRole === 'IO' && 'Active Case & Evidence Workstation'}
+            {activeRole === 'JUDGE' && 'Judicial Review & Court Submissions'}
+            {activeRole === 'FORENSIC_EXPERT' && 'Forensic Analysis & Custody Operations'}
+          </h1>
           <p className="page-description">
-            Cases, documents, and chain of custody for your current role.
+            {activeRole === 'ADMIN' && 'Monitor registered criminal cases, evidentiary documents, authorized personnel, and chain-of-custody activity.'}
+            {activeRole === 'IO' && 'Manage your active investigations, upload new evidence, and track chain-of-custody transfers.'}
+            {activeRole === 'JUDGE' && 'Review case files, verify cryptographic evidence integrity, and record official court judgments.'}
+            {activeRole === 'FORENSIC_EXPERT' && 'Receive evidence, log analytical findings, and submit digitally signed examination reports.'}
           </p>
         </div>
 
@@ -948,3 +948,4 @@ export const Dashboard = () => {
 };
 
 export default Dashboard;
+

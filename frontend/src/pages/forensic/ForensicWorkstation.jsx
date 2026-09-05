@@ -123,7 +123,7 @@ export const ForensicWorkstation = () => {
       <div className="rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] overflow-hidden shadow-lg backdrop-blur-sm">
         <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-overlay)] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <HardDrive size={16} className="text-purple-400" />
+            <HardDrive size={16} className="text-[var(--text-secondary)]" />
             <h3 className="text-sm font-semibold text-[var(--text-primary)] font-sans">
               Assigned Physical & Digital Evidence Exhibits
             </h3>
@@ -164,7 +164,7 @@ export const ForensicWorkstation = () => {
                     <span className="text-xs font-sans text-[var(--text-secondary)]">{a.asset_type}</span>
                   </td>
                   <td>
-                    <span className="text-xs font-sans text-teal-400 bg-teal-500/10 px-2.5 py-0.5 rounded-full border border-teal-500/20 font-medium">
+                    <span className="text-xs font-sans text-[var(--accent-strong)] bg-[var(--accent-faint)] px-2.5 py-0.5 rounded-full border border-[var(--accent-faint)] font-medium">
                       {a.seal_number || 'SEAL-INTACT'}
                     </span>
                   </td>
@@ -177,7 +177,7 @@ export const ForensicWorkstation = () => {
                       onClick={() => setSelectedAssetForCustody(a)}
                       className="btn btn-secondary text-xs px-3 py-1 inline-flex items-center gap-1.5 hover:border-teal-400/40 font-sans"
                     >
-                      <ShieldCheck size={13} className="text-teal-400" />
+                      <ShieldCheck size={13} className="text-[var(--accent-strong)]" />
                       <span>Track Custody</span>
                     </button>
                   </td>
@@ -192,14 +192,14 @@ export const ForensicWorkstation = () => {
       <div className="rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] overflow-hidden shadow-lg backdrop-blur-sm">
         <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-overlay)] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileText size={16} className="text-teal-400" />
+            <FileText size={16} className="text-[var(--accent-strong)]" />
             <h3 className="text-sm font-semibold text-[var(--text-primary)] font-sans">
               Sealed Forensic Examination Reports
             </h3>
           </div>
           <button
             onClick={() => setShowReportModal(true)}
-            className="text-xs font-sans text-teal-400 hover:underline font-medium"
+            className="text-xs font-sans text-[var(--accent-strong)] hover:underline font-medium"
           >
             + Submit New Report
           </button>
@@ -230,12 +230,12 @@ export const ForensicWorkstation = () => {
                     <span className="badge badge-info font-mono text-xs">{r.case_number || 'CR-2026-0891'}</span>
                   </td>
                   <td>
-                    <span className="text-[10px] font-sans uppercase tracking-wider text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded-full border border-rose-500/20 font-semibold">
+                    <span className="text-[10px] font-sans uppercase tracking-wider text-[var(--danger-base)] bg-[var(--danger-soft)] px-2.5 py-0.5 rounded-full border border-[var(--danger-soft)] font-semibold">
                       {r.classification || 'Top Secret'}
                     </span>
                   </td>
                   <td>
-                    <span className="text-xs font-mono text-teal-400">
+                    <span className="text-xs font-mono text-[var(--accent-strong)]">
                       {r.digital_signature?.key_id || 'ECDSA-P384-CFSL-0091'}
                     </span>
                   </td>

@@ -87,13 +87,13 @@ export const DocumentUploadModal = ({
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[#121217] border border-white/[0.12] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/[0.08] bg-[#16161d] px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/10 text-[#00d4aa] border border-teal-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-soft)]">
               <Upload size={18} strokeWidth={2} />
             </div>
             <div>
@@ -107,7 +107,7 @@ export const DocumentUploadModal = ({
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-white/5"
+            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close upload modal"
           >
             <X size={18} />
@@ -115,9 +115,9 @@ export const DocumentUploadModal = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="modal-body">
           {error && (
-            <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-400 flex items-center gap-2">
+            <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)] flex items-center gap-2">
               <AlertCircle size={14} className="shrink-0" />
               <span>{error}</span>
             </div>
@@ -130,7 +130,7 @@ export const DocumentUploadModal = ({
                 Assign To Case
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={selectedCaseId}
                 onChange={(e) => setSelectedCaseId(e.target.value)}
               >
@@ -151,10 +151,10 @@ export const DocumentUploadModal = ({
             onClick={() => fileInputRef.current?.click()}
             className={`relative cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-all ${
               isDragging
-                ? 'border-[#00d4aa] bg-teal-500/10'
+                ? 'border-[#00d4aa] bg-[var(--accent-faint)]'
                 : file
-                ? 'border-emerald-500/40 bg-emerald-500/5'
-                : 'border-white/10 bg-[#0d0d12] hover:border-white/20'
+                ? 'border-[var(--success-base)] bg-[var(--success-soft)]'
+                : 'border-[var(--border-default)] bg-[var(--bg-base)] hover:border-[var(--border-focus)]'
             }`}
           >
             <input
@@ -168,7 +168,7 @@ export const DocumentUploadModal = ({
             <div className="flex flex-col items-center justify-center gap-2">
               {file ? (
                 <>
-                  <div className="h-10 w-10 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+                  <div className="h-10 w-10 rounded-full bg-[var(--success-soft)] text-[var(--success-strong)] flex items-center justify-center border border-[var(--success-soft)]">
                     <CheckCircle size={20} />
                   </div>
                   <div>
@@ -179,13 +179,13 @@ export const DocumentUploadModal = ({
                       {(file.size / (1024 * 1024)).toFixed(2)} MB • Ready for cryptographic hashing
                     </span>
                   </div>
-                  <span className="text-[11px] text-[#00d4aa] hover:underline mt-1">
+                  <span className="text-[11px] text-[var(--accent-strong)] hover:underline mt-1">
                     Click to choose a different file
                   </span>
                 </>
               ) : (
                 <>
-                  <div className="h-10 w-10 rounded-full bg-white/5 text-[var(--text-tertiary)] flex items-center justify-center border border-white/10">
+                  <div className="h-10 w-10 rounded-full bg-[var(--bg-overlay)] text-[var(--text-tertiary)] flex items-center justify-center border border-[var(--border-default)]">
                     <Upload size={18} />
                   </div>
                   <div>
@@ -208,7 +208,7 @@ export const DocumentUploadModal = ({
                 Document Type
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={documentType}
                 onChange={(e) => setDocumentType(e.target.value)}
               >
@@ -225,7 +225,7 @@ export const DocumentUploadModal = ({
                 Security Classification
               </label>
               <select
-                className="input bg-[#0e0e13] border-white/10 text-xs py-2"
+                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                 value={classification}
                 onChange={(e) => setClassification(e.target.value)}
               >
@@ -239,17 +239,17 @@ export const DocumentUploadModal = ({
           </div>
 
           {/* Digital Signature Option */}
-          <div className="rounded-lg bg-[var(--bg-overlay)] p-3.5 border border-white/[0.06] flex items-start gap-3">
+          <div className="rounded-lg bg-[var(--bg-overlay)] p-3.5 border border-[var(--border-subtle)] flex items-start gap-3">
             <input
               type="checkbox"
               id="sign-check"
               checked={signDigitally}
               onChange={(e) => setSignDigitally(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded bg-[var(--bg-card)] border-white/20 text-[#00d4aa] focus:ring-[#00d4aa]"
+              className="mt-1 h-4 w-4 rounded bg-[var(--bg-card)] border-[var(--border-focus)] text-[var(--accent-strong)] focus:ring-[#00d4aa]"
             />
             <label htmlFor="sign-check" className="text-xs text-[var(--text-secondary)] cursor-pointer">
               <span className="font-medium text-[var(--text-primary)] flex items-center gap-1.5">
-                <Shield size={13} className="text-[#00d4aa]" /> Digitally Sign with Officer PKI Token
+                <Shield size={13} className="text-[var(--accent-strong)]" /> Digitally Sign with Officer PKI Token
               </span>
               <span className="text-[var(--text-tertiary)] block text-[11px] mt-0.5">
                 Generates a SHA-256 fingerprint anchored to your authenticated hardware credentials.
@@ -258,7 +258,7 @@ export const DocumentUploadModal = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.08]">
+          <div className="modal-footer">
             <button
               type="button"
               onClick={onClose}

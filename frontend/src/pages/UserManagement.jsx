@@ -110,7 +110,7 @@ const UserManagement = () => {
       <tr key={u.id} className="hover:bg-[var(--bg-overlay)] transition-colors">
         <td>
           <div className="flex items-center gap-3">
-            <div className="avatar bg-[var(--bg-card)] text-teal-400 border-[var(--border-subtle)] font-sans font-semibold text-xs" style={{ width: 34, height: 34 }}>
+            <div className="avatar bg-[var(--bg-card)] text-[var(--accent-strong)] border-[var(--border-subtle)] font-sans font-semibold text-xs" style={{ width: 34, height: 34 }}>
               {u.name?.charAt(0).toUpperCase() || '?'}
             </div>
             <div>
@@ -138,7 +138,7 @@ const UserManagement = () => {
             <div className="flex gap-2">
               <button className="btn btn-ghost btn-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]" onClick={() => startEdit(u)}><Edit2 size={14} strokeWidth={1.8} /></button>
               {u.id !== user.id && (
-                <button className="btn btn-ghost btn-sm btn-danger text-rose-400 hover:bg-rose-500/10" onClick={() => handleDelete(u.id)}><Trash2 size={14} strokeWidth={1.8} /></button>
+                <button className="btn btn-ghost btn-sm btn-danger text-[var(--danger-base)] hover:bg-[var(--danger-soft)]" onClick={() => handleDelete(u.id)}><Trash2 size={14} strokeWidth={1.8} /></button>
               )}
             </div>
           )}
