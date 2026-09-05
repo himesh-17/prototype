@@ -1,6 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { Upload, X, File, CheckCircle, AlertCircle, Shield, Lock } from 'lucide-react';
+import {
+  Upload,
+  X,
+  CheckCircle,
+  AlertCircle,
+  Shield,
+  Lock,
+  FileText,
+  ChevronDown,
+} from 'lucide-react';
 import { uploadDocument } from '../../services/api';
+import '../../styles/document.css';
 
 const DOCUMENT_TYPES = [
   'FIR',
@@ -21,7 +31,10 @@ export const DocumentUploadModal = ({
   onClose,
   onSuccess,
 }) => {
-  const [selectedCaseId, setSelectedCaseId] = useState(caseId || (availableCases[0]?.id || 1));
+  const [selectedCaseId, setSelectedCaseId] = useState(
+    caseId || availableCases[0]?.id || 1
+  );
+
   const [documentType, setDocumentType] = useState('FIR');
   const [classification, setClassification] = useState('Confidential');
   const [file, setFile] = useState(null);
@@ -29,6 +42,7 @@ export const DocumentUploadModal = ({
   const [signDigitally, setSignDigitally] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+
   const fileInputRef = useRef(null);
 
   const handleDragOver = (e) => {
@@ -44,19 +58,23 @@ export const DocumentUploadModal = ({
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       setFile(e.dataTransfer.files[0]);
+      setError('');
     }
   };
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
+      setError('');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!file) {
       setError('Please select or drop a file to upload.');
       return;
@@ -67,15 +85,23 @@ export const DocumentUploadModal = ({
 
     try {
       const formData = new FormData();
+
       formData.append('file', file);
       formData.append('document_type', documentType);
       formData.append('classification', classification);
-      formData.append('sign_digitally', signDigitally ? 'true' : 'false');
+      formData.append(
+        'sign_digitally',
+        signDigitally ? 'true' : 'false'
+      );
 
       const targetId = caseId || selectedCaseId;
+
       await uploadDocument(targetId, formData);
 
-      if (onSuccess) onSuccess();
+      if (onSuccess) {
+        onSuccess();
+      }
+
       onClose();
     } catch (err) {
       setError(err.message || 'Failed to upload document');
@@ -85,205 +111,382 @@ export const DocumentUploadModal = ({
   };
 
   return (
-    <div className="ns-upload-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div
+      className="ns-upload-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="upload-document-title"
+    >
       <div
-        className="ns-upload-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-upload-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] px-6 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-soft)]">
-              <Upload size={18} strokeWidth={2} />
+        {/* =====================================================
+            HEADER
+        ====================================================== */}
+        <header className="ns-upload-header">
+          <div className="ns-upload-header-left">
+            <div className="ns-upload-header-icon">
+              <FileText size={20} strokeWidth={1.8} />
             </div>
+
             <div>
-              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-                Upload Secure Document
-              </h3>
-              <p className="text-xs text-[var(--text-tertiary)] font-mono">
-                Target Case: {caseNumber || `Case #${selectedCaseId}`}
-              </p>
+              <div className="ns-upload-eyebrow">
+                Secure Document Registry
+              </div>
+
+              <h2
+                id="upload-document-title"
+                className="ns-upload-title"
+              >
+                Upload Document
+              </h2>
+
+              <div className="ns-upload-case-reference">
+                Case Reference:
+                <strong>
+                  {caseNumber || `CR-${selectedCaseId}`}
+                </strong>
+              </div>
             </div>
           </div>
+
           <button
+            type="button"
+            className="ns-upload-close"
             onClick={onClose}
-            className="ns-upload-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
-            aria-label="Close upload modal"
+            aria-label="Close upload dialog"
           >
-            <X size={18} />
+            <X size={19} strokeWidth={1.8} />
           </button>
-        </div>
+        </header>
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="ns-upload-body">
+        {/* =====================================================
+            FORM
+        ====================================================== */}
+        <form
+          onSubmit={handleSubmit}
+          className="ns-upload-form"
+        >
+          {/* Error */}
           {error && (
-            <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)] flex items-center gap-2">
-              <AlertCircle size={14} className="shrink-0" />
-              <span>{error}</span>
+            <div className="ns-upload-error">
+              <AlertCircle size={17} />
+
+              <div>
+                <strong>Upload failed</strong>
+                <span>{error}</span>
+              </div>
             </div>
           )}
 
-          {/* Case Selection if not pre-provided */}
+          {/* =================================================
+              CASE SELECTION
+          ================================================== */}
           {!caseId && availableCases.length > 0 && (
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-                Assign To Case
-              </label>
-              <select
-                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-                value={selectedCaseId}
-                onChange={(e) => setSelectedCaseId(e.target.value)}
-              >
-                {availableCases.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.case_number} — {c.title}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <section className="ns-upload-section">
+              <div className="ns-upload-field">
+                <label htmlFor="upload-case">
+                  Assign to Case
+                </label>
+
+                <div className="ns-upload-select-wrap">
+                  <select
+                    id="upload-case"
+                    className="ns-upload-select"
+                    value={selectedCaseId}
+                    onChange={(e) =>
+                      setSelectedCaseId(e.target.value)
+                    }
+                  >
+                    {availableCases.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.case_number} — {c.title}
+                      </option>
+                    ))}
+                  </select>
+
+                  <ChevronDown
+                    className="ns-upload-select-icon"
+                    size={17}
+                  />
+                </div>
+              </div>
+            </section>
           )}
 
-          {/* Drag and Drop Zone */}
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={`relative cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-all ${
-              isDragging
-                ? 'border-[#00d4aa] bg-[var(--accent-faint)]'
-                : file
-                ? 'border-[var(--success-base)] bg-[var(--success-soft)]'
-                : 'border-[var(--border-default)] bg-[var(--bg-base)] hover:border-[var(--border-focus)]'
+          {/* =================================================
+              FILE UPLOAD
+          ================================================== */}
+          <section className="ns-upload-section">
+            <div className="ns-upload-section-heading">
+              <div>
+                <h3>Document File</h3>
+                <p>
+                  Add the original evidence document to the
+                  secure registry.
+                </p>
+              </div>
+
+              <span className="ns-upload-required">
+                Required
+              </span>
+            </div>
+
+            <div
+              className={`ns-upload-dropzone ${
+                isDragging
+                  ? 'is-dragging'
+                  : file
+                  ? 'has-file'
+                  : ''
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() =>
+                fileInputRef.current?.click()
+              }
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="ns-upload-hidden-input"
+                onChange={handleFileChange}
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.bin"
+              />
+
+              {file ? (
+                <div className="ns-upload-selected-file">
+                  <div className="ns-upload-file-icon">
+                    <CheckCircle
+                      size={21}
+                      strokeWidth={1.8}
+                    />
+                  </div>
+
+                  <div className="ns-upload-file-details">
+                    <strong>{file.name}</strong>
+
+                    <span>
+                      {(file.size / (1024 * 1024)).toFixed(2)} MB
+                      <span className="ns-upload-dot">•</span>
+                      Ready for SHA-256 hashing
+                    </span>
+                  </div>
+
+                  <span className="ns-upload-change">
+                    Change file
+                  </span>
+                </div>
+              ) : (
+                <div className="ns-upload-empty">
+                  <div className="ns-upload-upload-icon">
+                    <Upload
+                      size={22}
+                      strokeWidth={1.7}
+                    />
+                  </div>
+
+                  <div>
+                    <strong>
+                      Select a document or drag it here
+                    </strong>
+
+                    <span>
+                      PDF, DOCX, images or scanned statements
+                    </span>
+
+                    <small>
+                      Maximum file size: 50 MB
+                    </small>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="ns-upload-browse"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    Browse files
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* =================================================
+              DOCUMENT DETAILS
+          ================================================== */}
+          <section className="ns-upload-section">
+            <div className="ns-upload-section-heading">
+              <div>
+                <h3>Document Classification</h3>
+                <p>
+                  Specify how this document should be registered.
+                </p>
+              </div>
+            </div>
+
+            <div className="ns-upload-fields-grid">
+              {/* Document Type */}
+              <div className="ns-upload-field">
+                <label htmlFor="document-type">
+                  Document Type
+                </label>
+
+                <div className="ns-upload-select-wrap">
+                  <select
+                    id="document-type"
+                    className="ns-upload-select"
+                    value={documentType}
+                    onChange={(e) =>
+                      setDocumentType(e.target.value)
+                    }
+                  >
+                    {DOCUMENT_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+
+                  <ChevronDown
+                    className="ns-upload-select-icon"
+                    size={17}
+                  />
+                </div>
+              </div>
+
+              {/* Classification */}
+              <div className="ns-upload-field">
+                <label htmlFor="classification">
+                  Security Classification
+                </label>
+
+                <div className="ns-upload-select-wrap">
+                  <select
+                    id="classification"
+                    className="ns-upload-select"
+                    value={classification}
+                    onChange={(e) =>
+                      setClassification(e.target.value)
+                    }
+                  >
+                    {CLASSIFICATIONS.map((level) => (
+                      <option key={level} value={level}>
+                        {level}
+                      </option>
+                    ))}
+                  </select>
+
+                  <ChevronDown
+                    className="ns-upload-select-icon"
+                    size={17}
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* =================================================
+              DIGITAL SIGNATURE
+          ================================================== */}
+          <section
+            className={`ns-upload-signature ${
+              signDigitally ? 'is-enabled' : ''
             }`}
           >
-            <input
-              ref={fileInputRef}
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.bin"
-            />
-
-            <div className="flex flex-col items-center justify-center gap-2">
-              {file ? (
-                <>
-                  <div className="h-10 w-10 rounded-full bg-[var(--success-soft)] text-[var(--success-strong)] flex items-center justify-center border border-[var(--success-soft)]">
-                    <CheckCircle size={20} />
-                  </div>
-                  <div>
-                    <span className="text-xs font-medium text-[var(--text-primary)] block">
-                      {file.name}
-                    </span>
-                    <span className="text-[11px] font-mono text-[var(--text-tertiary)]">
-                      {(file.size / (1024 * 1024)).toFixed(2)} MB • Ready for cryptographic hashing
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-[var(--accent-strong)] hover:underline mt-1">
-                    Click to choose a different file
-                  </span>
-                </>
-              ) : (
-                <>
-                  <div className="h-10 w-10 rounded-full bg-[var(--bg-overlay)] text-[var(--text-tertiary)] flex items-center justify-center border border-[var(--border-default)]">
-                    <Upload size={18} />
-                  </div>
-                  <div>
-                    <span className="text-xs font-medium text-[var(--text-primary)] block">
-                      Click to upload or drag & drop document
-                    </span>
-                    <span className="text-[11px] text-[var(--text-tertiary)] block mt-0.5">
-                      PDF, DOCX, Images, Scanned statements up to 50 MB
-                    </span>
-                  </div>
-                </>
-              )}
+            <div className="ns-upload-signature-icon">
+              <Shield
+                size={19}
+                strokeWidth={1.8}
+              />
             </div>
-          </div>
 
-          {/* Document Type & Classification Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-                Document Type
-              </label>
-              <select
-                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-                value={documentType}
-                onChange={(e) => setDocumentType(e.target.value)}
+            <div className="ns-upload-signature-content">
+              <label
+                htmlFor="sign-check"
+                className="ns-upload-signature-title"
               >
-                {DOCUMENT_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <span>
+                  Digital Signature
+                </span>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-                Security Classification
+                <span className="ns-upload-recommended">
+                  Recommended
+                </span>
               </label>
-              <select
-                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-                value={classification}
-                onChange={(e) => setClassification(e.target.value)}
-              >
-                {CLASSIFICATIONS.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
 
-          {/* Digital Signature Option */}
-          <div className="rounded-lg bg-[var(--bg-overlay)] p-3.5 border border-[var(--border-subtle)] flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="sign-check"
-              checked={signDigitally}
-              onChange={(e) => setSignDigitally(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded bg-[var(--bg-card)] border-[var(--border-focus)] text-[var(--accent-strong)] focus:ring-[#00d4aa]"
-            />
-            <label htmlFor="sign-check" className="text-xs text-[var(--text-secondary)] cursor-pointer">
-              <span className="font-medium text-[var(--text-primary)] flex items-center gap-1.5">
-                <Shield size={13} className="text-[var(--accent-strong)]" /> Digitally Sign with Officer PKI Token
-              </span>
-              <span className="text-[var(--text-tertiary)] block text-[11px] mt-0.5">
-                Generates a SHA-256 fingerprint anchored to your authenticated hardware credentials.
+              <p>
+                Sign this document using the authenticated
+                officer PKI token and anchor its SHA-256
+                fingerprint to the secure ledger.
+              </p>
+            </div>
+
+            <label className="ns-upload-switch">
+              <input
+                id="sign-check"
+                type="checkbox"
+                checked={signDigitally}
+                onChange={(e) =>
+                  setSignDigitally(e.target.checked)
+                }
+              />
+
+              <span className="ns-upload-switch-track">
+                <span className="ns-upload-switch-thumb" />
               </span>
             </label>
-          </div>
+          </section>
 
-          {/* Actions */}
-          <div className="ns-upload-footer">
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn btn-secondary text-xs px-4 py-2"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={uploading || !file}
-              className="btn btn-primary text-xs px-5 py-2 inline-flex items-center gap-1.5"
-            >
-              {uploading ? (
-                <>
-                  <span className="spinner" />
-                  <span>Computing SHA-256...</span>
-                </>
-              ) : (
-                <>
-                  <Lock size={13} />
-                  <span>Upload & Seal to Ledger</span>
-                </>
-              )}
-            </button>
-          </div>
+          {/* =================================================
+              FOOTER
+          ================================================== */}
+          <footer className="ns-upload-footer">
+            <div className="ns-upload-footer-note">
+              <Lock size={14} />
+              <span>
+                Document integrity will be verified after upload.
+              </span>
+            </div>
+
+            <div className="ns-upload-actions">
+              <button
+                type="button"
+                className="ns-upload-btn ns-upload-btn-secondary"
+                onClick={onClose}
+                disabled={uploading}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="submit"
+                className="ns-upload-btn ns-upload-btn-primary"
+                disabled={uploading || !file}
+              >
+                {uploading ? (
+                  <>
+                    <span className="ns-upload-spinner" />
+                    Computing SHA-256...
+                  </>
+                ) : (
+                  <>
+                    <Lock
+                      size={15}
+                      strokeWidth={1.8}
+                    />
+                    Upload & Seal
+                  </>
+                )}
+              </button>
+            </div>
+          </footer>
         </form>
       </div>
     </div>

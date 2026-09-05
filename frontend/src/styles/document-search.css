@@ -1,0 +1,601 @@
+/* =========================================================
+   NYAYA SETU — DOCUMENT SEARCH
+   Institutional / Government Portal UI
+   Page-specific styles only
+   ========================================================= */
+
+.ns-docsearch {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.ns-docsearch .page-header {
+  margin-bottom: 1.75rem;
+}
+
+.ns-docsearch .page-title {
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------
+   Search toolbar
+   --------------------------------------------------------- */
+
+.ns-docsearch-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 12px rgba(15, 23, 42, 0.03);
+}
+
+.ns-docsearch-search {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+
+.ns-docsearch-search-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.ns-docsearch-input {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 1rem 0 2.65rem;
+
+  border: 1px solid var(--border-default);
+  border-radius: 7px;
+
+  background: var(--bg-base);
+  color: var(--text-primary);
+
+  font-size: 0.82rem;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
+}
+
+.ns-docsearch-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.ns-docsearch-input:hover {
+  background: var(--bg-raised);
+  border-color: var(--border-strong);
+}
+
+.ns-docsearch-input:focus {
+  outline: none;
+  background: var(--bg-raised);
+  border-color: var(--accent-base);
+
+  box-shadow:
+    0 0 0 3px var(--accent-soft);
+}
+
+.ns-docsearch-filter {
+  width: 190px;
+  min-width: 170px;
+  height: 42px;
+
+  padding: 0 2.25rem 0 0.9rem;
+
+  border: 1px solid var(--border-default);
+  border-radius: 7px;
+
+  background: var(--bg-base);
+  color: var(--text-primary);
+
+  font-size: 0.8rem;
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.ns-docsearch-filter:hover {
+  background: var(--bg-raised);
+  border-color: var(--border-strong);
+}
+
+.ns-docsearch-filter:focus {
+  outline: none;
+  border-color: var(--accent-base);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.ns-docsearch-button {
+  height: 42px;
+  padding: 0 1.15rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   Results container
+   --------------------------------------------------------- */
+
+.ns-docsearch-results {
+  overflow: hidden;
+
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 14px rgba(15, 23, 42, 0.025);
+}
+
+/* ---------------------------------------------------------
+   Results header
+   --------------------------------------------------------- */
+
+.ns-docsearch-results-head {
+  min-height: 58px;
+
+  padding: 0 1.35rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ns-docsearch-results-title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  color: var(--text-primary);
+
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.ns-docsearch-results-count {
+  padding: 0.25rem 0.6rem;
+
+  border-radius: 999px;
+
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+
+  color: var(--text-secondary);
+
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------
+   Table
+   --------------------------------------------------------- */
+
+.ns-docsearch-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ns-docsearch-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+}
+
+.ns-docsearch-table thead {
+  background: var(--bg-inset);
+}
+
+.ns-docsearch-table th {
+  height: 42px;
+
+  padding: 0.65rem 1rem;
+
+  text-align: left;
+  vertical-align: middle;
+
+  color: var(--text-tertiary);
+
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ns-docsearch-table td {
+  padding: 0.95rem 1rem;
+
+  color: var(--text-secondary);
+
+  font-size: 0.78rem;
+
+  border-bottom: 1px solid var(--border-subtle);
+
+  vertical-align: middle;
+}
+
+.ns-docsearch-table tbody tr {
+  background: var(--bg-raised);
+
+  transition:
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.ns-docsearch-table tbody tr:hover {
+  background: #f8fafc;
+  box-shadow: inset 3px 0 0 var(--accent-base);
+}
+
+.ns-docsearch-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------------------------------------------------------
+   Document identity
+   --------------------------------------------------------- */
+
+.ns-docsearch-document {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  min-width: 240px;
+}
+
+.ns-docsearch-document-icon {
+  width: 36px;
+  height: 36px;
+
+  flex: 0 0 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: var(--accent-faint);
+  border: 1px solid var(--accent-soft);
+
+  color: var(--accent-strong);
+}
+
+.ns-docsearch-document-info {
+  min-width: 0;
+}
+
+.ns-docsearch-document-name {
+  max-width: 300px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: var(--text-primary);
+
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ns-docsearch-document-hash {
+  margin-top: 0.25rem;
+
+  max-width: 300px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: var(--text-tertiary);
+
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+/* ---------------------------------------------------------
+   Badges
+   --------------------------------------------------------- */
+
+.ns-docsearch-badge {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 25px;
+
+  padding: 0.2rem 0.55rem;
+
+  border-radius: 5px;
+
+  border: 1px solid var(--border-subtle);
+
+  font-size: 0.67rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.ns-docsearch-badge-type {
+  background: var(--accent-faint);
+  border-color: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.ns-docsearch-badge-case {
+  background: var(--bg-inset);
+  color: var(--text-secondary);
+}
+
+.ns-docsearch-badge-confidential {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.ns-docsearch-badge-secret {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.ns-docsearch-badge-topsecret {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+/* ---------------------------------------------------------
+   Version
+   --------------------------------------------------------- */
+
+.ns-docsearch-version {
+  color: var(--text-secondary);
+
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+/* ---------------------------------------------------------
+   OCR status
+   --------------------------------------------------------- */
+
+.ns-docsearch-ocr {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  min-height: 25px;
+
+  padding: 0.2rem 0.55rem;
+
+  border-radius: 5px;
+
+  font-size: 0.67rem;
+  font-weight: 600;
+}
+
+.ns-docsearch-ocr-indexed {
+  background: var(--success-soft);
+  border: 1px solid rgba(21, 128, 61, 0.18);
+  color: var(--success-strong);
+}
+
+.ns-docsearch-ocr-queued {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-tertiary);
+}
+
+/* ---------------------------------------------------------
+   View button
+   --------------------------------------------------------- */
+
+.ns-docsearch-view {
+  height: 32px;
+
+  padding: 0 0.7rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+
+  background: var(--bg-raised);
+  color: var(--text-secondary);
+
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.ns-docsearch-view:hover {
+  background: var(--bg-inset);
+  border-color: var(--accent-base);
+  color: var(--accent-strong);
+}
+
+.ns-docsearch-view:active {
+  transform: translateY(1px);
+}
+
+/* ---------------------------------------------------------
+   Loading
+   --------------------------------------------------------- */
+
+.ns-docsearch-loading {
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.8rem;
+
+  color: var(--text-tertiary);
+}
+
+.ns-docsearch-loading-text {
+  font-size: 0.72rem;
+}
+
+/* ---------------------------------------------------------
+   Empty state
+   --------------------------------------------------------- */
+
+.ns-docsearch-empty {
+  padding: 3rem 1.5rem;
+}
+
+/* ---------------------------------------------------------
+   Subtle entrance animation
+   --------------------------------------------------------- */
+
+.ns-docsearch-results {
+  animation: nsDocSearchEnter 260ms ease-out both;
+}
+
+@keyframes nsDocSearchEnter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ns-docsearch-table tbody tr {
+  animation: nsDocSearchRowEnter 220ms ease-out both;
+}
+
+.ns-docsearch-table tbody tr:nth-child(1) {
+  animation-delay: 20ms;
+}
+
+.ns-docsearch-table tbody tr:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.ns-docsearch-table tbody tr:nth-child(3) {
+  animation-delay: 60ms;
+}
+
+.ns-docsearch-table tbody tr:nth-child(4) {
+  animation-delay: 80ms;
+}
+
+.ns-docsearch-table tbody tr:nth-child(5) {
+  animation-delay: 100ms;
+}
+
+@keyframes nsDocSearchRowEnter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .ns-docsearch-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .ns-docsearch-search {
+    flex-basis: 100%;
+  }
+
+  .ns-docsearch-filter {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .ns-docsearch-toolbar {
+    padding: 0.85rem;
+  }
+
+  .ns-docsearch-filter,
+  .ns-docsearch-button {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .ns-docsearch-results-head {
+    padding: 0 1rem;
+  }
+
+  .ns-docsearch-table {
+    min-width: 850px;
+  }
+}
+
+/* ---------------------------------------------------------
+   Reduced motion
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ns-docsearch-results,
+  .ns-docsearch-table tbody tr {
+    animation: none;
+  }
+
+  .ns-docsearch-table tbody tr,
+  .ns-docsearch-input,
+  .ns-docsearch-filter,
+  .ns-docsearch-view {
+    transition: none;
+  }
+}
