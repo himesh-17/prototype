@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   getCases,
-  getDocuments,
+  getAllDocuments,
   getUsers,
   getAuditLogs,
   getAllAssets,
   getCourtRequests,
   verifyAuditChain
 } from '../services/api';
+
 
 import { StatCard } from '../components/common/StatCard';
 import { EmptyState } from '../components/common/EmptyState';
@@ -69,7 +70,7 @@ export const Dashboard = () => {
     try {
       const [c, d, u, a, ast, cr] = await Promise.all([
         getCases(),
-        getDocuments(),
+        getAllDocuments(),
         getUsers(),
         getAuditLogs(),
         getAllAssets(),

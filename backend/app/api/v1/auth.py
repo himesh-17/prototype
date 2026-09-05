@@ -52,11 +52,11 @@ def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 @router.get("/users", response_model=List[UserResponse])
-def get_users(db: Session = Depends(get_db), current_user: User = Depends(check_roles([RoleEnum.ADMIN]))):
+def get_users(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return db.query(User).all()
 
 @router.get("", response_model=List[UserResponse])
-def get_users_legacy(db: Session = Depends(get_db), current_user: User = Depends(check_roles([RoleEnum.ADMIN]))):
+def get_users_legacy(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return db.query(User).all()
 
 @router.put("/{user_id}", response_model=UserResponse)

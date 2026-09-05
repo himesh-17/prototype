@@ -1,128 +1,422 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, Copy, Check, ArrowDown, Key, Link2 } from 'lucide-react';
+import {
+  X,
+  ShieldCheck,
+  Copy,
+  Check,
+  ArrowDown,
+  Key,
+  Link2,
+  User,
+  FileText,
+  Clock3,
+} from 'lucide-react';
+import './HashChainModal.css';
 
 export const HashChainModal = ({ log, onClose }) => {
   const [copiedField, setCopiedField] = useState(null);
 
   if (!log) return null;
 
-  const copyToClipboard = (text, field) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
+  const previousHash =
+    log.previous_hash ||
+    '0000000000000000000000000000000000000000000000000000000000000000';
+
+  const entryHash = log.entry_hash || '—';
+
+  const actor = log.user_name || log.user?.name || 'System';
+  const role = log.user_role || 'ADMIN';
+
+  const formatDate = (value) => {
+    if (!value) return '—';
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return '—';
+
+    return date.toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const copyToClipboard = async (text, field) => {
+    try {
+      await navigator.clipboard.writeText(text);
+
+      setCopiedField(field);
+
+      setTimeout(() => {
+        setCopiedField(null);
+      }, 1800);
+    } catch (error) {
+      console.error('Unable to copy hash:', error);
+    }
   };
 
   return (
-    <div className="ns-audit-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div
+      className="ns-audit-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
       <div
-        className="ns-audit-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
-        onClick={e => e.stopPropagation()}
+        className="ns-audit-modal"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] px-6 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-soft)]">
-              <Link2 size={18} strokeWidth={2} />
+
+        {/* =====================================================
+            HEADER
+        ===================================================== */}
+
+        <div className="ns-audit-header">
+
+          <div className="ns-audit-header-left">
+
+            <div className="ns-audit-header-icon">
+              <Link2 size={19} />
             </div>
+
             <div>
-              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-                Audit Chain Block #{log.id}
-              </h3>
-              <p className="text-xs text-[var(--text-tertiary)] font-mono">
-                Action: {log.action} • {new Date(log.timestamp).toLocaleString()}
-              </p>
+              <div className="ns-audit-title">
+                Audit chain block #{log.id}
+              </div>
+
+              <div className="ns-audit-subtitle">
+                Cryptographic integrity record
+              </div>
             </div>
+
           </div>
+
           <button
+            type="button"
+            className="ns-audit-close"
             onClick={onClose}
-            className="ns-audit-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close hash inspector"
           >
             <X size={18} />
           </button>
+
         </div>
 
-        {/* Content */}
-        <div className="ns-audit-body">
-          <div className="rounded-lg bg-[var(--accent-faint)] border border-[var(--accent-soft)] p-3.5 flex items-center justify-between gap-3 text-xs font-mono text-[var(--accent-base)]">
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-[var(--accent-strong)] shrink-0" />
-              <span>Cryptographic Block Verified Against Root Merkle State</span>
-            </div>
-            <span className="px-2 py-0.5 rounded bg-teal-500/20 text-[var(--accent-strong)] font-semibold text-[11px]">
-              VALID
+
+        {/* =====================================================
+            VERIFIED STATUS
+        ===================================================== */}
+
+        <div className="ns-audit-status">
+
+          <div className="ns-audit-status-icon">
+            <ShieldCheck size={17} />
+          </div>
+
+          <div className="ns-audit-status-content">
+
+            <strong>
+              Cryptographic block verified
+            </strong>
+
+            <span>
+              This entry is linked to the previous audit block
+              through SHA-256 hashing.
             </span>
+
           </div>
 
-          {/* Previous Hash Block */}
-          <div className="rounded-lg bg-[var(--bg-inset)] border border-[var(--border-subtle)] p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-1">
-                <Key size={12} className="text-[var(--text-tertiary)]" /> Previous Block Hash (Parent)
+          <span className="ns-audit-valid">
+            VALID
+          </span>
+
+        </div>
+
+
+        {/* =====================================================
+            MAIN FORM
+        ===================================================== */}
+
+        <div className="ns-audit-content">
+
+          {/* Basic information */}
+
+          <section className="ns-audit-section">
+
+            <div className="ns-audit-section-heading">
+              <span>Event information</span>
+              <small>BLOCK #{log.id}</small>
+            </div>
+
+            <div className="ns-audit-info-grid">
+
+              <div className="ns-audit-field">
+
+                <span className="ns-audit-label">
+                  <User size={13} />
+                  Actor
+                </span>
+
+                <strong>{actor}</strong>
+
+              </div>
+
+
+              <div className="ns-audit-field">
+
+                <span className="ns-audit-label">
+                  Role
+                </span>
+
+                <strong>{role}</strong>
+
+              </div>
+
+
+              <div className="ns-audit-field">
+
+                <span className="ns-audit-label">
+                  <FileText size={13} />
+                  Action
+                </span>
+
+                <strong>
+                  {log.action || '—'}
+                </strong>
+
+              </div>
+
+
+              <div className="ns-audit-field">
+
+                <span className="ns-audit-label">
+                  Entity
+                </span>
+
+                <strong>
+                  {log.entity_type || '—'}
+                  {log.entity_id !== null &&
+                  log.entity_id !== undefined
+                    ? ` #${log.entity_id}`
+                    : ''}
+                </strong>
+
+              </div>
+
+
+              <div className="ns-audit-field ns-audit-field-wide">
+
+                <span className="ns-audit-label">
+                  <Clock3 size={13} />
+                  Recorded
+                </span>
+
+                <strong>
+                  {formatDate(log.timestamp)}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          {/* =================================================
+              HASH CHAIN
+          ================================================= */}
+
+          <section className="ns-audit-section">
+
+            <div className="ns-audit-section-heading">
+
+              <div>
+                <span>Hash chain</span>
+                <small>
+                  PREVIOUS → CURRENT
+                </small>
+              </div>
+
+              <span className="ns-audit-sha-label">
+                SHA-256
               </span>
-              <button
-                onClick={() => copyToClipboard(log.previous_hash || '0000000000000000000000000000000000000000000000000000000000000000', 'prev')}
-                className="btn btn-ghost text-[11px] py-0.5 px-2 text-[var(--text-tertiary)] hover:text-[var(--accent-strong)] flex items-center gap-1"
-              >
-                {copiedField === 'prev' ? <Check size={12} className="text-[var(--accent-strong)]" /> : <Copy size={12} />}
-                <span>{copiedField === 'prev' ? 'Copied' : 'Copy'}</span>
-              </button>
-            </div>
-            <div className="p-2.5 rounded-lg bg-black/50 font-mono text-xs text-[var(--text-secondary)] break-all select-all border border-white/[0.04]">
-              {log.previous_hash || '0000000000000000000000000000000000000000000000000000000000000000'}
-            </div>
-          </div>
 
-          {/* Chain Link Indicator */}
-          <div className="flex justify-center -my-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1c1c24] border border-[var(--border-default)] text-[var(--text-tertiary)]">
-              <ArrowDown size={14} />
             </div>
-          </div>
 
-          {/* Current Entry Hash Block */}
-          <div className="rounded-lg bg-[var(--bg-inset)] border border-[var(--accent-soft)] p-4 space-y-2 bg-gradient-to-b from-teal-500/[0.03] to-transparent">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase tracking-wider text-[var(--accent-strong)] flex items-center gap-1 font-semibold">
-                <Key size={12} className="text-[var(--accent-strong)]" /> Current Block SHA-256 Hash
-              </span>
-              <button
-                onClick={() => copyToClipboard(log.entry_hash, 'entry')}
-                className="btn btn-ghost text-[11px] py-0.5 px-2 text-[var(--text-tertiary)] hover:text-[var(--accent-strong)] flex items-center gap-1"
-              >
-                {copiedField === 'entry' ? <Check size={12} className="text-[var(--accent-strong)]" /> : <Copy size={12} />}
-                <span>{copiedField === 'entry' ? 'Copied' : 'Copy'}</span>
-              </button>
-            </div>
-            <div className="p-2.5 rounded-lg bg-black/60 font-mono text-xs text-[var(--accent-strong)] break-all select-all border border-[var(--accent-soft)]">
-              {log.entry_hash}
-            </div>
-          </div>
 
-          {/* Payload Details */}
-          <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-[var(--border-subtle)] space-y-2 text-xs font-mono">
-            <h4 className="text-[var(--text-tertiary)] uppercase tracking-wider text-[11px]">Block Payload Data</h4>
-            <div className="grid grid-cols-2 gap-2 text-[var(--text-secondary)]">
-              <div><span className="text-[var(--text-tertiary)]">Actor:</span> {log.user_name || log.user?.name || 'System'}</div>
-              <div><span className="text-[var(--text-tertiary)]">Role:</span> {log.user_role || 'ADMIN'}</div>
-              <div><span className="text-[var(--text-tertiary)]">Target:</span> {log.entity_type} #{log.entity_id}</div>
-              <div><span className="text-[var(--text-tertiary)]">Action:</span> {log.action}</div>
+            <div className="ns-audit-chain">
+
+              {/* Previous block */}
+
+              <div className="ns-audit-hash-row">
+
+                <div className="ns-audit-chain-marker">
+                  <div className="ns-audit-chain-dot" />
+                </div>
+
+                <div className="ns-audit-hash-content">
+
+                  <div className="ns-audit-hash-heading">
+
+                    <div>
+                      <span className="ns-audit-hash-label">
+                        Previous block
+                      </span>
+
+                      <small>
+                        Parent hash
+                      </small>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="ns-audit-copy"
+                      onClick={() =>
+                        copyToClipboard(previousHash, 'prev')
+                      }
+                    >
+                      {copiedField === 'prev' ? (
+                        <>
+                          <Check size={13} />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={13} />
+                          Copy
+                        </>
+                      )}
+                    </button>
+
+                  </div>
+
+                  <div className="ns-audit-hash-box">
+                    {previousHash}
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* Connector */}
+
+              <div className="ns-audit-chain-connector">
+
+                <div className="ns-audit-connector-line" />
+
+                <div className="ns-audit-connector-icon">
+                  <ArrowDown size={13} />
+                </div>
+
+                <div className="ns-audit-connector-line" />
+
+              </div>
+
+
+              {/* Current block */}
+
+              <div className="ns-audit-hash-row current">
+
+                <div className="ns-audit-chain-marker">
+                  <div className="ns-audit-chain-dot current" />
+                </div>
+
+                <div className="ns-audit-hash-content">
+
+                  <div className="ns-audit-hash-heading">
+
+                    <div>
+                      <span className="ns-audit-hash-label">
+                        Current block
+                      </span>
+
+                      <small>
+                        Entry SHA-256 hash
+                      </small>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="ns-audit-copy"
+                      onClick={() =>
+                        copyToClipboard(entryHash, 'entry')
+                      }
+                    >
+                      {copiedField === 'entry' ? (
+                        <>
+                          <Check size={13} />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={13} />
+                          Copy
+                        </>
+                      )}
+                    </button>
+
+                  </div>
+
+                  <div className="ns-audit-hash-box current">
+                    {entryHash}
+                  </div>
+
+                </div>
+
+              </div>
+
             </div>
-            {log.details && (
-              <div className="mt-2 pt-2 border-t border-white/[0.04] text-[var(--text-secondary)] text-xs">
-                <span className="text-[var(--text-tertiary)] block mb-0.5">Log Details:</span>
+
+          </section>
+
+
+          {/* =================================================
+              DETAILS
+          ================================================= */}
+
+          {log.details && (
+
+            <section className="ns-audit-section">
+
+              <div className="ns-audit-section-heading">
+                <span>Event details</span>
+              </div>
+
+              <div className="ns-audit-details">
                 {log.details}
               </div>
-            )}
-          </div>
+
+            </section>
+
+          )}
+
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-[var(--border-subtle)] bg-[#141419] px-6 py-3 flex justify-end">
-          <button onClick={onClose} className="btn btn-secondary text-xs px-4 py-1.5">
+
+        {/* =====================================================
+            FOOTER
+        ===================================================== */}
+
+        <div className="ns-audit-footer">
+
+          <div className="ns-audit-footer-security">
+            <ShieldCheck size={14} />
+            Integrity protected
+          </div>
+
+          <button
+            type="button"
+            className="ns-audit-done"
+            onClick={onClose}
+          >
             Close
           </button>
+
         </div>
+
       </div>
     </div>
   );

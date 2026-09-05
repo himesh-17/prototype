@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   getCase,
   getAssets,
   getDocuments,
   updateCase,
+  deleteCase,
   getUsers,
   getCaseTimeline,
 } from '../services/api';
+
 
 import { DocumentUploadModal } from '../components/common/DocumentUploadModal';
 import { DocumentViewerModal } from '../components/common/DocumentViewerModal';
@@ -20,6 +22,7 @@ import {
   Plus,
   X,
   Edit2,
+  Trash2,
   ShieldCheck,
   Eye,
   Calendar,
@@ -51,6 +54,7 @@ const classificationStyles = {
 
 export const CaseDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [caseData, setCaseData] = useState(null);
   const [assets, setAssets] = useState([]);
@@ -119,6 +123,17 @@ export const CaseDetail = () => {
       fetchData();
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleDeleteCase = async () => {
+    if (!window.confirm('Are you sure you want to delete this case? This cannot be undone.')) return;
+    try {
+      await deleteCase(id);
+      navigate('/cases');
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'Failed to delete case');
     }
   };
 
@@ -239,6 +254,14 @@ export const CaseDetail = () => {
           >
             <Edit2 size={15} />
             Edit Case
+          </button>
+
+          <button
+            onClick={handleDeleteCase}
+            className="btn btn-danger"
+          >
+            <Trash2 size={15} />
+            Delete Case
           </button>
 
         </div>

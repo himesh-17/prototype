@@ -1,9 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { getAllDocuments, getCases } from '../../services/api';
-import { DocumentViewerModal } from '../../components/common/DocumentViewerModal';
-import { JudgmentUploadModal } from './JudgmentUploadModal';
-import { DocumentRequestModal } from './DocumentRequestModal';
-import { EmptyState } from '../../components/common/EmptyState';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Scale,
   FileText,
@@ -11,273 +6,863 @@ import {
   Search,
   ShieldCheck,
   Eye,
-  Plus,
   Send,
-  Calendar,
   Lock,
-  Download
+  RefreshCw,
+  X,
 } from 'lucide-react';
 
-const docTypeStyles = {
-  'FIR': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-emerald-500/20',
-  'Witness Statement': 'bg-[var(--info-soft)] text-[var(--info-base)] border-sky-500/20',
-  'Forensic Report': 'bg-[var(--bg-inset)] text-[var(--text-secondary)] border-purple-500/20',
-  'Evidence': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]',
-  'Judicial Order': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-[var(--accent-faint)]',
-  'Seizure Memo': 'bg-[var(--info-soft)] text-[var(--info-base)] border-[var(--info-soft)]',
+import { getAllDocuments, getCases } from '../../services/api';
+import { DocumentViewerModal } from '../../components/common/DocumentViewerModal';
+import { JudgmentUploadModal } from './JudgmentUploadModal';
+import { DocumentRequestModal } from './DocumentRequestModal';
+import { EmptyState } from '../../components/common/EmptyState';
+
+import '../../styles/CourtCaseDocuments.css';
+
+
+/* =========================================================
+   DOCUMENT TYPE CONFIG
+========================================================= */
+
+const documentTypeConfig = {
+  FIR: {
+    label: 'FIR',
+    className: 'document-type fir',
+  },
+
+  'Witness Statement': {
+    label: 'Witness Statement',
+    className: 'document-type witness',
+  },
+
+  'Forensic Report': {
+    label: 'Forensic Report',
+    className: 'document-type forensic',
+  },
+
+  Evidence: {
+    label: 'Evidence',
+    className: 'document-type evidence',
+  },
+
+  'Judicial Order': {
+    label: 'Judicial Order',
+    className: 'document-type order',
+  },
+
+  'Seizure Memo': {
+    label: 'Seizure Memo',
+    className: 'document-type seizure',
+  },
 };
 
-const classificationStyles = {
-  'Confidential': 'bg-[var(--info-soft)] text-[var(--info-base)] border-sky-500/20',
-  'Secret': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]',
-  'Top Secret': 'bg-[var(--danger-soft)] text-[var(--danger-base)] border-[var(--danger-soft)]',
+
+/* =========================================================
+   CLASSIFICATION CONFIG
+========================================================= */
+
+const classificationConfig = {
+  Confidential: {
+    label: 'Confidential',
+    className: 'classification confidential',
+  },
+
+  Secret: {
+    label: 'Secret',
+    className: 'classification secret',
+  },
+
+  'Top Secret': {
+    label: 'Top Secret',
+    className: 'classification top-secret',
+  },
 };
+
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 export const CourtCaseDocuments = () => {
+
   const [documents, setDocuments] = useState([]);
   const [cases, setCases] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
-  // Filters
+  /* Filters */
   const [typeFilter, setTypeFilter] = useState('ALL');
   const [caseFilter, setCaseFilter] = useState('ALL');
   const [search, setSearch] = useState('');
 
-  // Modals
+  /* Modals */
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [showJudgmentModal, setShowJudgmentModal] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
 
+
+  /* =========================================================
+     FETCH DATA
+  ========================================================= */
+
   const fetchData = async () => {
     setLoading(true);
+
     try {
-      const [d, c] = await Promise.all([getAllDocuments(), getCases()]);
-      setDocuments(d || []);
-      setCases(c || []);
+      const [documentsData, casesData] = await Promise.all([
+        getAllDocuments(),
+        getCases(),
+      ]);
+
+      setDocuments(documentsData || []);
+      setCases(casesData || []);
+
     } catch (err) {
-      console.error(err);
+      console.error('Failed to fetch court documents:', err);
+
     } finally {
       setLoading(false);
     }
   };
 
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  const filteredDocs = documents.filter(doc => {
-    const matchesType = typeFilter === 'ALL' || doc.document_type === typeFilter;
-    const matchesCase = caseFilter === 'ALL' || doc.case_id?.toString() === caseFilter;
-    const matchesSearch =
-      !search ||
-      doc.filename.toLowerCase().includes(search.toLowerCase()) ||
-      (doc.ocr_text && doc.ocr_text.toLowerCase().includes(search.toLowerCase())) ||
-      (doc.sha256_hash && doc.sha256_hash.toLowerCase().includes(search.toLowerCase()));
 
-    return matchesType && matchesCase && matchesSearch;
-  });
+  /* =========================================================
+     FILTER DOCUMENTS
+  ========================================================= */
+
+  const filteredDocs = useMemo(() => {
+
+    const query = search.trim().toLowerCase();
+
+    return documents.filter((doc) => {
+
+      const matchesType =
+        typeFilter === 'ALL' ||
+        doc.document_type === typeFilter;
+
+      const matchesCase =
+        caseFilter === 'ALL' ||
+        doc.case_id?.toString() === caseFilter;
+
+      const matchesSearch =
+        !query ||
+        doc.filename?.toLowerCase().includes(query) ||
+        doc.ocr_text?.toLowerCase().includes(query) ||
+        doc.sha256_hash?.toLowerCase().includes(query) ||
+        doc.case_number?.toLowerCase().includes(query);
+
+      return (
+        matchesType &&
+        matchesCase &&
+        matchesSearch
+      );
+    });
+
+  }, [
+    documents,
+    typeFilter,
+    caseFilter,
+    search,
+  ]);
+
+
+  /* =========================================================
+     RESET FILTERS
+  ========================================================= */
+
+  const resetFilters = () => {
+    setSearch('');
+    setTypeFilter('ALL');
+    setCaseFilter('ALL');
+  };
+
+
+  /* =========================================================
+     FORMAT DATE
+  ========================================================= */
+
+  const formatDate = (dateValue) => {
+
+    if (!dateValue) return '—';
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return '—';
+    }
+
+    return date.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  };
+
+
+  /* =========================================================
+     FORMAT HASH
+  ========================================================= */
+
+  const formatHash = (hash) => {
+
+    if (!hash) {
+      return 'SHA-256 unavailable';
+    }
+
+    if (hash.length <= 24) {
+      return hash;
+    }
+
+    return `${hash.substring(0, 16)}...${hash.substring(
+      hash.length - 4
+    )}`;
+  };
+
+
+  /* =========================================================
+     CASE NUMBER
+  ========================================================= */
+
+  const getCaseNumber = (document) => {
+
+    if (document.case_number) {
+      return document.case_number;
+    }
+
+    if (document.case_id) {
+      return `CR-2026-${String(
+        document.case_id
+      ).padStart(3, '0')}`;
+    }
+
+    return 'Unassigned';
+  };
+
+
+  /* =========================================================
+     DOCUMENT TYPE
+  ========================================================= */
+
+  const getDocumentType = (type) => {
+
+    return (
+      documentTypeConfig[type] || {
+        label: type || 'Document',
+        className: 'document-type default',
+      }
+    );
+  };
+
+
+  /* =========================================================
+     CLASSIFICATION
+  ========================================================= */
+
+  const getClassification = (classification) => {
+
+    return (
+      classificationConfig[classification] ||
+      classificationConfig.Confidential
+    );
+  };
+
+
+  /* =========================================================
+     RENDER
+  ========================================================= */
 
   return (
-    <div className="page">
-      <div className="page-header">
+    <div className="page court-documents-page">
+
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+
+      <div className="page-header court-documents-header">
+
         <div className="page-heading">
-          <span className="page-eyebrow">Court</span>
-          <h1 className="page-title">Case documents</h1>
+
+          <span className="page-eyebrow">
+            Court
+          </span>
+
+          <h1 className="page-title">
+            Case Documents
+          </h1>
+
           <p className="page-description">
-            Read-only docket with signature and seal status.
+            Review court records with verified signatures
+            and document integrity status.
+          </p>
+
+        </div>
+
+
+        <div className="court-header-actions">
+
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setShowRequestModal(true)}
+          >
+            <Send size={15} />
+            Document Request
+          </button>
+
+
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowJudgmentModal(true)}
+          >
+            <Scale size={15} />
+            Upload Order
+          </button>
+
+        </div>
+
+      </div>
+
+
+      {/* =====================================================
+          SUMMARY
+      ===================================================== */}
+
+      <div className="court-summary">
+
+        <div className="court-summary-item">
+
+          <div className="court-summary-icon">
+            <FileText size={17} />
+          </div>
+
+          <div>
+            <span>
+              Available Documents
+            </span>
+
+            <strong>
+              {documents.length}
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div className="court-summary-divider" />
+
+
+        <div className="court-summary-item">
+
+          <div className="court-summary-icon">
+            <ShieldCheck size={17} />
+          </div>
+
+          <div>
+            <span>
+              Verified Records
+            </span>
+
+            <strong>
+              {documents.length}
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div className="court-summary-divider" />
+
+
+        <div className="court-summary-item">
+
+          <div className="court-summary-icon">
+            <Lock size={17} />
+          </div>
+
+          <div>
+            <span>
+              Read Only
+            </span>
+
+            <strong>
+              Active
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      {/* =====================================================
+          FILTER BAR
+      ===================================================== */}
+
+      <div className="court-filter-bar">
+
+        <div className="court-search">
+
+          <Search size={15} />
+
+          <input
+            type="search"
+            placeholder="Search documents, case numbers or SHA-256..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
+
+          {search && (
+            <button
+              type="button"
+              className="court-search-clear"
+              onClick={() => setSearch('')}
+              aria-label="Clear search"
+            >
+              <X size={14} />
+            </button>
+          )}
+
+        </div>
+
+
+        <div className="court-filter-divider" />
+
+
+        <div className="court-filter">
+
+          <Filter size={14} />
+
+          <label htmlFor="document-type-filter">
+            Type
+          </label>
+
+          <select
+            id="document-type-filter"
+            value={typeFilter}
+            onChange={(e) =>
+              setTypeFilter(e.target.value)
+            }
+          >
+            <option value="ALL">
+              All Types
+            </option>
+
+            <option value="FIR">
+              FIR
+            </option>
+
+            <option value="Witness Statement">
+              Witness Statement
+            </option>
+
+            <option value="Forensic Report">
+              Forensic Report
+            </option>
+
+            <option value="Evidence">
+              Evidence
+            </option>
+
+            <option value="Judicial Order">
+              Judicial Order
+            </option>
+
+            <option value="Seizure Memo">
+              Seizure Memo
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div className="court-filter">
+
+          <label htmlFor="case-filter">
+            Case
+          </label>
+
+          <select
+            id="case-filter"
+            value={caseFilter}
+            onChange={(e) =>
+              setCaseFilter(e.target.value)
+            }
+          >
+
+            <option value="ALL">
+              All Cases
+            </option>
+
+            {cases.map((item) => (
+              <option
+                key={item.id}
+                value={item.id.toString()}
+              >
+                {item.case_number}
+              </option>
+            ))}
+
+          </select>
+
+        </div>
+
+
+        {(search ||
+          typeFilter !== 'ALL' ||
+          caseFilter !== 'ALL') && (
+
+          <button
+            type="button"
+            className="court-reset-btn"
+            onClick={resetFilters}
+          >
+            Reset
+          </button>
+
+        )}
+
+      </div>
+
+
+      {/* =====================================================
+          RESULTS HEADER
+      ===================================================== */}
+
+      <div className="court-results-header">
+
+        <div>
+          <h2>
+            Document Docket
+          </h2>
+
+          <p>
+            {loading
+              ? 'Loading records...'
+              : `${filteredDocs.length} record${
+                  filteredDocs.length !== 1
+                    ? 's'
+                    : ''
+                }`}
           </p>
         </div>
 
-        <div className="page-actions">
-          <button
-            onClick={() => setShowRequestModal(true)}
-            className="btn btn-secondary"
-          >
-            <Send size={14} />
-            <span>Document Request Form</span>
-          </button>
-          <button
-            onClick={() => setShowJudgmentModal(true)}
-            className="btn btn-primary"
-          >
-            <Scale size={15} />
-            Upload order
-          </button>
-        </div>
-      </div>
-
-      {/* Elevated Filter Bar */}
-      <div className="toolbar">
-        <div className="relative flex-1 min-w-[260px]">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
-          <input
-            type="search"
-            className="input bg-[var(--bg-overlay)] border-[var(--border-subtle)] text-xs pl-9 py-2 rounded-lg text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:border-teal-400 focus:ring-1 focus:ring-teal-400/30"
-            placeholder="Search document title, SHA-256 hash, or OCR extracted text..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
+        <button
+          type="button"
+          className="court-refresh-btn"
+          onClick={fetchData}
+          disabled={loading}
+          title="Refresh documents"
+        >
+          <RefreshCw
+            size={14}
+            className={
+              loading
+                ? 'court-refresh-spin'
+                : ''
+            }
           />
-        </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
-          {/* Document Type Filter */}
-          <div className="flex items-center gap-1.5 text-xs font-sans text-[var(--text-tertiary)]">
-            <Filter size={13} />
-            <span>Type:</span>
-          </div>
-          <select
-            className="input bg-[var(--bg-overlay)] border-[var(--border-subtle)] text-xs py-1.5 px-3 rounded-lg text-[var(--text-primary)]"
-            value={typeFilter}
-            onChange={e => setTypeFilter(e.target.value)}
-          >
-            <option value="ALL">All Document Types</option>
-            <option value="FIR">FIR</option>
-            <option value="Witness Statement">Witness Statement</option>
-            <option value="Forensic Report">Forensic Report</option>
-            <option value="Evidence">Evidence</option>
-            <option value="Judicial Order">Judicial Order</option>
-          </select>
+          Refresh
+        </button>
 
-          {/* Case Filter */}
-          <div className="flex items-center gap-1.5 text-xs font-sans text-[var(--text-tertiary)] ml-2">
-            <span>Case:</span>
-          </div>
-          <select
-            className="input bg-[var(--bg-overlay)] border-[var(--border-subtle)] text-xs py-1.5 px-3 rounded-lg max-w-[180px] text-[var(--text-primary)]"
-            value={caseFilter}
-            onChange={e => setCaseFilter(e.target.value)}
-          >
-            <option value="ALL">All Cases</option>
-            {cases.map(c => (
-              <option key={c.id} value={c.id.toString()}>{c.case_number}</option>
-            ))}
-          </select>
-        </div>
       </div>
 
-      {/* Read-Only Document Table */}
-      <div className="rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] overflow-hidden shadow-lg backdrop-blur-sm">
+
+      {/* =====================================================
+          DOCUMENT TABLE
+      ===================================================== */}
+
+      <div className="court-documents-panel">
+
         {loading ? (
-          <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
-            <div className="spinner" style={{ width: 24, height: 24 }} />
-            <span className="text-xs font-sans text-[var(--text-tertiary)]">Loading court documents...</span>
+
+          <div className="court-loading">
+
+            <div className="spinner" />
+
+            <span>
+              Loading court documents...
+            </span>
+
           </div>
+
         ) : filteredDocs.length === 0 ? (
-          <div className="p-8">
-            <EmptyState
-              title="No court documents found"
-              description="No documents matched the active search or type filter."
-              secondaryLabel="Reset Filters"
-              onSecondaryAction={() => {
-                setSearch('');
-                setTypeFilter('ALL');
-                setCaseFilter('ALL');
-              }}
-            />
-          </div>
+
+          <EmptyState
+            icon={FileText}
+            title="No court documents found"
+            description="No documents matched the active search or filter criteria."
+            secondaryLabel="Reset Filters"
+            onSecondaryAction={resetFilters}
+          />
+
         ) : (
-          <div className="overflow-x-auto">
-            <table className="table">
+
+          <div className="court-table-wrapper">
+
+            <table className="court-documents-table">
+
               <thead>
+
                 <tr>
-                  <th>Document Exhibit</th>
-                  <th style={{ width: '160px' }}>Type</th>
-                  <th style={{ width: '140px' }}>Case Reference</th>
-                  <th style={{ width: '130px' }}>Classification</th>
-                  <th style={{ width: '120px' }}>Digital Sig</th>
-                  <th style={{ width: '110px' }}>Date Lodged</th>
-                  <th style={{ width: '90px' }}>Action</th>
+
+                  <th>
+                    Document
+                  </th>
+
+                  <th>
+                    Type
+                  </th>
+
+                  <th>
+                    Case
+                  </th>
+
+                  <th>
+                    Classification
+                  </th>
+
+                  <th>
+                    Integrity
+                  </th>
+
+                  <th>
+                    Lodged
+                  </th>
+
+                  <th>
+                    Action
+                  </th>
+
                 </tr>
+
               </thead>
+
+
               <tbody>
-                {filteredDocs.map(d => {
-                  const typeClass = docTypeStyles[d.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
-                  const classClass = classificationStyles[d.classification] || classificationStyles['Confidential'];
+
+                {filteredDocs.map((document) => {
+
+                  const type =
+                    getDocumentType(
+                      document.document_type
+                    );
+
+                  const classification =
+                    getClassification(
+                      document.classification
+                    );
 
                   return (
+
                     <tr
-                      key={d.id}
-                      onClick={() => setSelectedDoc(d)}
-                      className="hover:bg-[var(--bg-overlay)] cursor-pointer transition-colors"
+                      key={document.id}
+                      onClick={() =>
+                        setSelectedDoc(document)
+                      }
                     >
+
+                      {/* DOCUMENT */}
+
                       <td>
-                        <div className="font-sans font-medium text-xs text-[var(--text-primary)] truncate max-w-sm">
-                          {d.filename}
+
+                        <div className="court-document-cell">
+
+                          <div className="court-document-icon">
+                            <FileText size={17} />
+                          </div>
+
+                          <div className="court-document-info">
+
+                            <div className="court-document-name">
+                              {document.filename}
+                            </div>
+
+                            <div className="court-document-hash">
+                              SHA-256&nbsp;
+                              {formatHash(
+                                document.sha256_hash
+                              )}
+                            </div>
+
+                          </div>
+
                         </div>
-                        <div className="text-[11px] font-mono text-[var(--text-tertiary)] truncate max-w-xs mt-0.5">
-                          SHA256: {d.sha256_hash?.substring(0, 16)}...{d.sha256_hash?.substring(d.sha256_hash.length - 4)}
-                        </div>
+
                       </td>
+
+
+                      {/* TYPE */}
+
                       <td>
-                        <span className={`text-[11px] font-sans font-medium px-2.5 py-0.5 rounded-full border ${typeClass}`}>
-                          {d.document_type}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="badge badge-info font-mono text-xs">
-                          {d.case_number || `CR-2026-00${d.case_id || 1}`}
-                        </span>
-                      </td>
-                      <td>
-                        <span className={`text-[10px] font-sans uppercase tracking-wider px-2.5 py-0.5 rounded-full border font-semibold ${classClass}`}>
-                          {d.classification || 'Confidential'}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="text-[var(--accent-strong)] text-xs font-sans flex items-center gap-1 font-semibold">
-                          <ShieldCheck size={14} /> CERTIFIED
-                        </span>
-                      </td>
-                      <td className="font-sans text-xs text-[var(--text-tertiary)] whitespace-nowrap">
-                        {new Date(d.created_at || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                      </td>
-                      <td>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedDoc(d);
-                          }}
-                          className="btn btn-secondary text-xs px-2.5 py-1 inline-flex items-center gap-1 hover:border-teal-400/40 font-sans"
+
+                        <span
+                          className={
+                            type.className
+                          }
                         >
-                          <Eye size={12} />
-                          <span>Inspect</span>
-                        </button>
+                          {type.label}
+                        </span>
+
                       </td>
+
+
+                      {/* CASE */}
+
+                      <td>
+
+                        <span className="court-case-number">
+                          {getCaseNumber(document)}
+                        </span>
+
+                      </td>
+
+
+                      {/* CLASSIFICATION */}
+
+                      <td>
+
+                        <span
+                          className={
+                            classification.className
+                          }
+                        >
+                          {classification.label}
+                        </span>
+
+                      </td>
+
+
+                      {/* INTEGRITY */}
+
+                      <td>
+
+                        <div className="court-integrity">
+
+                          <span className="court-integrity-icon">
+                            <ShieldCheck size={14} />
+                          </span>
+
+                          <div>
+
+                            <strong>
+                              Verified
+                            </strong>
+
+                            <span>
+                              Digital signature
+                            </span>
+
+                          </div>
+
+                        </div>
+
+                      </td>
+
+
+                      {/* DATE */}
+
+                      <td>
+
+                        <span className="court-date">
+                          {formatDate(
+                            document.created_at
+                          )}
+                        </span>
+
+                      </td>
+
+
+                      {/* ACTION */}
+
+                      <td>
+
+                        <button
+                          type="button"
+                          className="court-inspect-btn"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setSelectedDoc(document);
+                          }}
+                        >
+                          <Eye size={13} />
+                          Inspect
+                        </button>
+
+                      </td>
+
                     </tr>
+
                   );
+
                 })}
+
               </tbody>
+
             </table>
+
           </div>
+
         )}
+
       </div>
 
-      {/* Modals */}
+
+      {/* =====================================================
+          MODALS
+      ===================================================== */}
+
       {selectedDoc && (
+
         <DocumentViewerModal
           document={selectedDoc}
-          onClose={() => setSelectedDoc(null)}
-          onRefresh={() => fetchData()}
+          onClose={() =>
+            setSelectedDoc(null)
+          }
+          onRefresh={fetchData}
         />
+
       )}
+
 
       {showJudgmentModal && (
+
         <JudgmentUploadModal
           availableCases={cases}
-          onClose={() => setShowJudgmentModal(false)}
-          onSuccess={() => fetchData()}
+          onClose={() =>
+            setShowJudgmentModal(false)
+          }
+          onSuccess={fetchData}
         />
+
       )}
 
+
       {showRequestModal && (
+
         <DocumentRequestModal
           availableCases={cases}
-          onClose={() => setShowRequestModal(false)}
-          onSuccess={() => fetchData()}
+          onClose={() =>
+            setShowRequestModal(false)
+          }
+          onSuccess={fetchData}
         />
+
       )}
+
     </div>
   );
 };
+
 
 export default CourtCaseDocuments;

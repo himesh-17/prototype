@@ -43,6 +43,15 @@ def seed_data():
         {"case_number": "CR-2026-0891", "title": "Phishing Attack on State Bank Servers", "assigned_io_id": io_deshmukh_id},
         {"case_number": "CR-2026-0923", "title": "Cryptocurrency Fraud Ring — Delhi NCR", "assigned_io_id": io_menon_id},
         {"case_number": "CR-2026-1001", "title": "Ransomware Attack on Hospital Network", "assigned_io_id": io_deshmukh_id},
+        {"case_number": "CR-2026-1045", "title": "Corporate Espionage via Spear Phishing", "assigned_io_id": io_menon_id},
+        {"case_number": "CR-2026-1050", "title": "Dark Web Narcotics Distribution", "assigned_io_id": io_deshmukh_id},
+        {"case_number": "CR-2026-1102", "title": "Unauthorized Access to Gov Portals", "assigned_io_id": io_menon_id},
+        {"case_number": "CR-2026-1133", "title": "Identity Theft & Credit Card Fraud", "assigned_io_id": io_deshmukh_id},
+        {"case_number": "CR-2026-1210", "title": "IoT Botnet DDoS Attack Investigation", "assigned_io_id": io_menon_id},
+        {"case_number": "CR-2026-1255", "title": "Fake Tech Support Call Center Bust", "assigned_io_id": io_deshmukh_id},
+        {"case_number": "CR-2026-1300", "title": "Insider Data Exfiltration (Tech Corp)", "assigned_io_id": io_menon_id},
+        {"case_number": "CR-2026-1342", "title": "Malware Injected in E-Commerce Checkout", "assigned_io_id": io_deshmukh_id},
+        {"case_number": "CR-2026-1399", "title": "Cyberbullying and Doxxing Incident", "assigned_io_id": io_menon_id},
     ]
 
     case_ids = []

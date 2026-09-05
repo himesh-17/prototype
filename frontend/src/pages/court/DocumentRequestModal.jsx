@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
-import { X, Send, AlertCircle, FileSearch, ShieldCheck } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import {
+  X,
+  Send,
+  AlertCircle,
+  FileSearch,
+  ShieldCheck,
+  ChevronDown,
+} from 'lucide-react';
 import { createCourtRequest } from '../../services/api';
 
 const RECIPIENTS = [
@@ -9,203 +16,426 @@ const RECIPIENTS = [
   'Telecom Service Provider Nodal Officer',
   'Joint Commissioner of Police (Crime Branch)',
 ];
+import '../../styles/DocumentRequestModal.css';
 
-export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }) => {
-  const [caseNumber, setCaseNumber] = useState(availableCases[0]?.case_number || 'CR-2026-0891');
+const DocumentRequestModal = ({
+  availableCases = [],
+  onClose,
+  onSuccess,
+}) => {
+  const [caseNumber, setCaseNumber] = useState('');
   const [requestType, setRequestType] = useState('');
   const [priority, setPriority] = useState('URGENT');
   const [requestedTo, setRequestedTo] = useState(RECIPIENTS[0]);
+
   const [dueDate, setDueDate] = useState(
-    new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0]
+    new Date(Date.now() + 5 * 86400000)
+      .toISOString()
+      .split('T')[0]
   );
+
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if (availableCases.length > 0 && !caseNumber) {
+      setCaseNumber(availableCases[0].case_number);
+    }
+  }, [availableCases, caseNumber]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!requestType.trim()) {
-      setError('Please specify the document or evidence requirement.');
+
+    setError('');
+
+    if (!caseNumber) {
+      setError('Select a case reference before continuing.');
       return;
     }
+
+    if (!requestType.trim()) {
+      setError('Enter the document or evidence required.');
+      return;
+    }
+
+    if (!dueDate) {
+      setError('Select a submission deadline.');
+      return;
+    }
+
     setSubmitting(true);
-    setError('');
+
     try {
       await createCourtRequest({
         case_number: caseNumber,
-        request_type: requestType,
-        priority: priority,
+        request_type: requestType.trim(),
+        priority,
         requested_to: requestedTo,
         due_date: dueDate,
-        notes: notes,
+        notes: notes.trim(),
         requested_by: "Hon'ble Justice Meenakshi Sundaram",
       });
-      if (onSuccess) onSuccess();
+
+      if (onSuccess) {
+        await onSuccess();
+      }
+
       onClose();
     } catch (err) {
-      setError(err.message || 'Failed to submit court document request');
+      setError(
+        err?.message || 'Unable to submit the document requisition.'
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="ns-court-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div
+      className="court-request-overlay"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="court-request-title"
+    >
       <div
-        className="ns-court-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
-        onClick={e => e.stopPropagation()}
+        className="court-request-modal"
+        onClick={(e) => e.stopPropagation()}
       >
+
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] px-6 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
-              <FileSearch size={18} strokeWidth={2} />
+        <header className="court-request-header">
+          <div className="court-request-title-wrap">
+            <div className="court-request-title-icon">
+              <FileSearch size={17} strokeWidth={1.8} />
             </div>
+
             <div>
-              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-                Issue Judicial Document Requisition
-              </h3>
-              <p className="text-xs text-[var(--text-tertiary)] font-mono">
-                Direct Investigation / Forensic Team to Furnish Records
+              <h2 id="court-request-title">
+                Document Requisition
+              </h2>
+
+              <p>
+                Request official records or evidence
               </p>
             </div>
           </div>
+
           <button
+            type="button"
+            className="court-request-close"
             onClick={onClose}
-            className="ns-court-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
-            aria-label="Close modal"
+            aria-label="Close"
           >
-            <X size={18} />
+            <X size={17} />
           </button>
-        </div>
+        </header>
+
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="ns-court-body">
+        <form
+          className="court-request-form"
+          onSubmit={handleSubmit}
+        >
+
           {error && (
-            <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)] flex items-center gap-2">
-              <AlertCircle size={14} className="shrink-0" />
+            <div className="court-request-error">
+              <AlertCircle size={15} />
               <span>{error}</span>
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-                Case Reference
-              </label>
-              <select
-                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-                value={caseNumber}
-                onChange={e => setCaseNumber(e.target.value)}
-              >
-                {availableCases.map(c => (
-                  <option key={c.id} value={c.case_number}>
-                    {c.case_number} — {c.title.substring(0, 25)}...
-                  </option>
-                ))}
-              </select>
+
+          {/* Section: Case */}
+          <section className="court-request-section">
+
+            <div className="court-request-section-heading">
+              <span className="court-request-section-number">
+                01
+              </span>
+
+              <div>
+                <h3>Request details</h3>
+                <p>
+                  Identify the proceeding and required material.
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-                Priority Level
-              </label>
-              <select
-                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-                value={priority}
-                onChange={e => setPriority(e.target.value)}
-              >
-                <option value="ROUTINE">Routine (Standard 14-day return)</option>
-                <option value="URGENT">Urgent (48-hour compliance)</option>
-                <option value="IMMEDIATE">Immediate Court Order (24-hour)</option>
-              </select>
+
+            <div className="court-request-grid">
+
+              <div className="court-request-field">
+
+                <label htmlFor="court-case">
+                  Case reference
+                </label>
+
+                <div className="court-select">
+                  <select
+                    id="court-case"
+                    value={caseNumber}
+                    onChange={(e) =>
+                      setCaseNumber(e.target.value)
+                    }
+                    disabled={availableCases.length === 0}
+                    required
+                  >
+                    {availableCases.length === 0 ? (
+                      <option value="">
+                        No cases available
+                      </option>
+                    ) : (
+                      availableCases.map((item) => (
+                        <option
+                          key={item.id}
+                          value={item.case_number}
+                        >
+                          {item.case_number}
+                          {item.title
+                            ? ` — ${item.title}`
+                            : ''}
+                        </option>
+                      ))
+                    )}
+                  </select>
+
+                  <ChevronDown size={14} />
+                </div>
+
+              </div>
+
+
+              <div className="court-request-field">
+
+                <label htmlFor="court-priority">
+                  Priority
+                </label>
+
+                <div className="court-select">
+                  <select
+                    id="court-priority"
+                    value={priority}
+                    onChange={(e) =>
+                      setPriority(e.target.value)
+                    }
+                  >
+                    <option value="ROUTINE">
+                      Routine
+                    </option>
+
+                    <option value="URGENT">
+                      Urgent
+                    </option>
+
+                    <option value="IMMEDIATE">
+                      Immediate
+                    </option>
+                  </select>
+
+                  <ChevronDown size={14} />
+                </div>
+
+              </div>
+
             </div>
-          </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-              Document / Evidence Requirement Description
-            </label>
-            <input
-              className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-              placeholder="e.g. Certified bitstream forensic image hash & decrypted transaction logs"
-              value={requestType}
-              onChange={e => setRequestType(e.target.value)}
-              required
-            />
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-                Direct To Agency / Officer
+            <div className="court-request-field">
+
+              <label htmlFor="court-requirement">
+                Document / evidence required
               </label>
-              <select
-                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-                value={requestedTo}
-                onChange={e => setRequestedTo(e.target.value)}
-              >
-                {RECIPIENTS.map(r => (
-                  <option key={r} value={r}>{r}</option>
-                ))}
-              </select>
-            </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-                Submission Deadline
-              </label>
               <input
-                type="date"
-                className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
-                value={dueDate}
-                onChange={e => setDueDate(e.target.value)}
+                id="court-requirement"
+                type="text"
+                value={requestType}
+                onChange={(e) =>
+                  setRequestType(e.target.value)
+                }
+                placeholder="Describe the record, report, evidence or material required"
                 required
               />
+
             </div>
+
+          </section>
+
+
+          {/* Section: Recipient */}
+          <section className="court-request-section">
+
+            <div className="court-request-section-heading">
+              <span className="court-request-section-number">
+                02
+              </span>
+
+              <div>
+                <h3>Recipient & deadline</h3>
+                <p>
+                  Specify who must furnish the requested material.
+                </p>
+              </div>
+            </div>
+
+
+            <div className="court-request-grid">
+
+              <div className="court-request-field">
+
+                <label htmlFor="court-recipient">
+                  Requested from
+                </label>
+
+                <div className="court-select">
+                  <select
+                    id="court-recipient"
+                    value={requestedTo}
+                    onChange={(e) =>
+                      setRequestedTo(e.target.value)
+                    }
+                  >
+                    {RECIPIENTS.map((recipient) => (
+                      <option
+                        key={recipient}
+                        value={recipient}
+                      >
+                        {recipient}
+                      </option>
+                    ))}
+                  </select>
+
+                  <ChevronDown size={14} />
+                </div>
+
+              </div>
+
+
+              <div className="court-request-field">
+
+                <label htmlFor="court-deadline">
+                  Submission deadline
+                </label>
+
+                <input
+                  id="court-deadline"
+                  type="date"
+                  value={dueDate}
+                  min={
+                    new Date()
+                      .toISOString()
+                      .split('T')[0]
+                  }
+                  onChange={(e) =>
+                    setDueDate(e.target.value)
+                  }
+                  required
+                />
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          {/* Section: Directions */}
+          <section className="court-request-section">
+
+            <div className="court-request-section-heading">
+              <span className="court-request-section-number">
+                03
+              </span>
+
+              <div>
+                <h3>Judicial directions</h3>
+                <p>
+                  Add any specific instructions or points of inquiry.
+                </p>
+              </div>
+            </div>
+
+
+            <div className="court-request-field">
+
+              <textarea
+                id="court-notes"
+                rows={4}
+                value={notes}
+                maxLength={1000}
+                onChange={(e) =>
+                  setNotes(e.target.value)
+                }
+                placeholder="Enter relevant directions, scope of records required, or specific points of inquiry..."
+              />
+
+              <span className="court-request-counter">
+                {notes.length}/1000
+              </span>
+
+            </div>
+
+          </section>
+
+
+          {/* Security notice */}
+          <div className="court-request-security">
+
+            <ShieldCheck size={16} />
+
+            <div>
+              <strong>Secure court record</strong>
+
+              <span>
+                This requisition will be recorded against the
+                selected case and transmitted through the
+                authorized system workflow.
+              </span>
+            </div>
+
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">
-              Judicial Directions / Specific Points of Inquiry
-            </label>
-            <textarea
-              className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2 min-h-[80px]"
-              placeholder="Explain why these materials are material to the ongoing hearing..."
-              value={notes}
-              onChange={e => setNotes(e.target.value)}
-              rows={3}
-            />
-          </div>
 
-          {/* Legal Notice */}
-          <div className="rounded-lg bg-[var(--bg-overlay)] p-3 text-xs font-mono text-[var(--text-tertiary)] border border-[var(--border-subtle)] flex items-center gap-2">
-            <ShieldCheck size={16} className="text-[var(--accent-strong)] shrink-0" />
-            <span>Issued under Section 91 CrPC / Section 94 BNSS. Formal notice will be transmitted via encrypted inter-agency bus.</span>
-          </div>
+          {/* Footer */}
+          <footer className="court-request-footer">
 
-          {/* Actions */}
-          <div className="ns-court-footer">
             <button
               type="button"
+              className="btn btn-secondary"
               onClick={onClose}
-              className="btn btn-secondary text-xs px-4 py-2"
+              disabled={submitting}
             >
               Cancel
             </button>
+
             <button
               type="submit"
-              disabled={submitting}
-              className="btn btn-primary text-xs px-5 py-2 inline-flex items-center gap-1.5"
+              className="btn btn-primary court-request-submit"
+              disabled={
+                submitting ||
+                availableCases.length === 0
+              }
             >
-              {submitting ? <span className="spinner" /> : <Send size={14} />}
-              <span>Issue Formal Requisition</span>
+              {submitting ? (
+                <span className="spinner" />
+              ) : (
+                <Send size={14} />
+              )}
+
+              {submitting
+                ? 'Submitting...'
+                : 'Issue Requisition'}
             </button>
-          </div>
+
+          </footer>
+
         </form>
+
       </div>
     </div>
   );
 };
 
-export default DocumentRequestModal;
+export { DocumentRequestModal };

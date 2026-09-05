@@ -17,6 +17,8 @@ import {
   X,
 } from 'lucide-react';
 
+import "../styles/layout.css";
+
 const initials = (name = '') => {
   if (!name) return '·';
   const parts = name.trim().split(/\s+/);

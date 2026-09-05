@@ -67,3 +67,18 @@ def update_case(
     db.refresh(case)
     log_audit(db, current_user.id, "UPDATE_CASE", "Case", case.id)
     return case
+
+@router.delete("/{case_id}", status_code=204)
+def delete_case(
+    case_id: int, 
+    db: Session = Depends(get_db), 
+    current_user: User = Depends(check_roles([RoleEnum.ADMIN]))
+):
+    case = db.query(Case).filter(Case.id == case_id).first()
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+    
+    db.delete(case)
+    db.commit()
+    log_audit(db, current_user.id, "DELETE_CASE", "Case", case_id)
+    return None
