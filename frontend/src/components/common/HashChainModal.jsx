@@ -13,9 +13,9 @@ export const HashChainModal = ({ log, onClose }) => {
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-audit-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-audit-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -35,7 +35,7 @@ export const HashChainModal = ({ log, onClose }) => {
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+            className="ns-audit-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close hash inspector"
           >
             <X size={18} />
@@ -43,7 +43,7 @@ export const HashChainModal = ({ log, onClose }) => {
         </div>
 
         {/* Content */}
-        <div className="modal-body">
+        <div className="ns-audit-body">
           <div className="rounded-lg bg-[var(--accent-faint)] border border-[var(--accent-soft)] p-3.5 flex items-center justify-between gap-3 text-xs font-mono text-[var(--accent-base)]">
             <div className="flex items-center gap-2">
               <ShieldCheck size={16} className="text-[var(--accent-strong)] shrink-0" />

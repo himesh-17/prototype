@@ -50,9 +50,9 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-court-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-court-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -72,7 +72,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+            className="ns-court-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -80,7 +80,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="modal-body">
+        <form onSubmit={handleSubmit} className="ns-court-body">
           {error && (
             <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)] flex items-center gap-2">
               <AlertCircle size={14} className="shrink-0" />
@@ -185,7 +185,7 @@ export const DocumentRequestModal = ({ availableCases = [], onClose, onSuccess }
           </div>
 
           {/* Actions */}
-          <div className="modal-footer">
+          <div className="ns-court-footer">
             <button
               type="button"
               onClick={onClose}

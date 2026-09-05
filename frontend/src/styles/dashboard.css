@@ -1,1 +1,151 @@
-/* Namespaced styles for dashboard.css */
+/* ═══════════════════════════════════════════
+   Dashboard  –  Metrics · Grids · Tiles
+   ═══════════════════════════════════════════ */
+
+.action-tile {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-faint);
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.action-tile:hover {
+  border-color: rgba(45, 212, 191, 0.35);
+  background: var(--accent-faint);
+}
+
+.feed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.feed-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.feed-item:first-child {
+  padding-top: 0;
+}
+
+.bento {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.bento-triple {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1.1rem 1.2rem;
+}
+
+.metric-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
+.metric-value {
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  font-feature-settings: 'tnum';
+}
+
+.metric-hint {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.stat-card {
+  padding: 1.5rem;
+  min-height: 120px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border-color: var(--border-default);
+}
+
+.metric-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.metric-bar-fill {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-base);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.metric-bar-fill>span {
+  display: block;
+  height: 100%;
+  background: var(--accent-base);
+  border-radius: 999px;
+}
+
+.metric-bar-value {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.split>* {
+  min-width: 0;
+}
+
+/* ── Responsive: Dashboard ───────────────── */
+@media (max-width: 960px) {
+  .bento,
+  .bento-triple,
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .bento-triple {
+    grid-template-columns: 1fr;
+  }
+}

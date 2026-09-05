@@ -282,9 +282,9 @@ export const CaseList = () => {
 
       {/* New Case Creation Modal */}
       {showModal && canCreateCase && (
-        <div className="modal-backdrop" onClick={() => setShowModal(false)} role="dialog" aria-modal="true">
+        <div className="ns-cases-backdrop" onClick={() => setShowModal(false)} role="dialog" aria-modal="true">
           <div
-            className="modal max-w-xl bg-[var(--bg-overlay)] border-[var(--border-subtle)] rounded-lg shadow-2xl overflow-hidden flex flex-col"
+            className="ns-cases-modal max-w-xl bg-[var(--bg-overlay)] border-[var(--border-subtle)] rounded-lg shadow-2xl overflow-hidden flex flex-col"
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
@@ -304,7 +304,7 @@ export const CaseList = () => {
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="modal-close p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+                className="ns-cases-close p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
                 aria-label="Close modal"
               >
                 <X size={18} />

@@ -47,9 +47,9 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-custody-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal modal-wide max-w-3xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in max-h-[90vh] flex flex-col"
+        className="ns-custody-modal max-w-3xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in max-h-[90vh] flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -81,7 +81,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
             </button>
             <button
               onClick={onClose}
-              className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+              className="ns-custody-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
               aria-label="Close modal"
             >
               <X size={18} />
@@ -90,7 +90,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
         </div>
 
         {/* Content */}
-        <div className="modal-body overflow-y-auto flex-1">
+        <div className="ns-custody-body overflow-y-auto flex-1">
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
             <div className="bg-[var(--bg-overlay)] p-3 rounded-lg border border-[var(--border-subtle)]">
@@ -219,7 +219,7 @@ export const ChainOfCustodyModal = ({ asset, events = [], onClose, onRefresh }) 
         </div>
 
         {/* Footer */}
-        <div className="modal-footer text-xs font-mono text-[var(--text-tertiary)] justify-between">
+        <div className="ns-custody-footer text-xs font-mono text-[var(--text-tertiary)] justify-between">
           <span>Sec 65B Indian Evidence Act / Section 63 BSA Certified Chain</span>
           <button onClick={onClose} className="btn btn-secondary text-xs px-4 py-2">
             Close

@@ -1,1 +1,8 @@
-/* Namespaced styles for admin.css */
+/* ═══════════════════════════════════════════
+   Admin  –  User Management
+   ═══════════════════════════════════════════ */
+
+/* Currently UserManagement.jsx uses shared component
+   classes (toolbar, panel, table, badge, btn) and
+   Tailwind utilities. No admin-specific custom CSS
+   is needed at this time. */

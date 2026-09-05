@@ -50,9 +50,9 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-judgment-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-judgment-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -72,7 +72,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+            className="ns-judgment-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -80,7 +80,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="modal-body">
+        <form onSubmit={handleSubmit} className="ns-judgment-body">
           {error && (
             <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)]">
               {error}
@@ -184,7 +184,7 @@ export const JudgmentUploadModal = ({ caseId, caseNumber, availableCases = [], o
           </div>
 
           {/* Actions */}
-          <div className="modal-footer">
+          <div className="ns-judgment-footer">
             <button
               type="button"
               onClick={onClose}

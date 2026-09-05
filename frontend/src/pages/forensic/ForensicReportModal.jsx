@@ -42,9 +42,9 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-forensic-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-2xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-forensic-modal max-w-2xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -64,7 +64,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+            className="ns-forensic-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -202,7 +202,7 @@ export const ForensicReportModal = ({ availableCases = [], availableAssets = [],
           </div>
 
           {/* Actions */}
-          <div className="modal-footer">
+          <div className="ns-forensic-footer">
             <button
               type="button"
               onClick={onClose}

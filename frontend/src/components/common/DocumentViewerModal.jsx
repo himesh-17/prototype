@@ -70,9 +70,9 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
   const typeClass = docTypeStyles[document.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-docview-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal modal-wide max-w-4xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 flex flex-col max-h-[90vh]"
+        className="ns-docview-modal max-w-4xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 flex flex-col max-h-[90vh]"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -110,7 +110,7 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
             </button>
             <button
               onClick={onClose}
-              className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+              className="ns-docview-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
               aria-label="Close document viewer"
             >
               <X size={18} />

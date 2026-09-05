@@ -85,9 +85,9 @@ export const DocumentUploadModal = ({
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="ns-upload-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div
-        className="modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+        className="ns-upload-modal max-w-xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -107,7 +107,7 @@ export const DocumentUploadModal = ({
           </div>
           <button
             onClick={onClose}
-            className="modal-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+            className="ns-upload-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
             aria-label="Close upload modal"
           >
             <X size={18} />
@@ -115,7 +115,7 @@ export const DocumentUploadModal = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="modal-body">
+        <form onSubmit={handleSubmit} className="ns-upload-body">
           {error && (
             <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-soft)] p-3 text-xs text-[var(--danger-base)] flex items-center gap-2">
               <AlertCircle size={14} className="shrink-0" />
@@ -258,7 +258,7 @@ export const DocumentUploadModal = ({
           </div>
 
           {/* Actions */}
-          <div className="modal-footer">
+          <div className="ns-upload-footer">
             <button
               type="button"
               onClick={onClose}

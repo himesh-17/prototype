@@ -431,9 +431,9 @@ export const CaseDetail = () => {
 
       {/* Edit Case Modal */}
       {showEditModal && (
-        <div className="modal-backdrop" onClick={() => setShowEditModal(false)} role="dialog" aria-modal="true">
+        <div className="ns-cases-backdrop" onClick={() => setShowEditModal(false)} role="dialog" aria-modal="true">
           <div
-            className="modal max-w-lg bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
+            className="ns-cases-modal max-w-lg bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-overlay)] px-6 py-4">
