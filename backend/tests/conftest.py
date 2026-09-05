@@ -20,7 +20,7 @@ def client(tmp_path: Path):
     Base.metadata.create_all(bind=engine)
     original_storage_path = settings.DOCUMENT_STORAGE_PATH
     settings.DOCUMENT_STORAGE_PATH = str(tmp_path / "documents")
-    settings.ALLOW_SELF_REGISTRATION = TRUE
+    settings.ALLOW_SELF_REGISTRATION = True
 
     def override_get_db():
         db = session_local()

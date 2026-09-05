@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Shield, Briefcase, Scale, Microscope, ChevronDown, Check } from 'lucide-react';
 
@@ -34,14 +35,16 @@ const roleMeta = {
 };
 
 export const RoleSwitcher = () => {
-  const { activeRole, switchRole } = useAuth();
+  const { activeRole, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const currentRole = roleMeta[activeRole] || roleMeta.ADMIN;
   const CurrentIcon = currentRole.icon;
 
-  const handleSelect = (roleKey) => {
-    switchRole(roleKey);
+  const handleSelect = () => {
+    logout();
+    navigate('/login');
     setOpen(false);
   };
 
@@ -79,7 +82,7 @@ export const RoleSwitcher = () => {
               return (
                 <button
                   key={roleKey}
-                  onClick={() => handleSelect(roleKey)}
+                  onClick={() => handleSelect()}
                   className={`w-full flex items-center justify-between gap-3 p-2.5 rounded-lg text-left transition-colors ${isSelected ? 'bg-[var(--bg-card)]' : 'hover:bg-[var(--bg-card)]/60'
                     }`}
                 >

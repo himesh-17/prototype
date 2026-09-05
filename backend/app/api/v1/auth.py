@@ -54,3 +54,33 @@ def read_users_me(current_user: User = Depends(get_current_user)):
 @router.get("/users", response_model=List[UserResponse])
 def get_users(db: Session = Depends(get_db), current_user: User = Depends(check_roles([RoleEnum.ADMIN]))):
     return db.query(User).all()
+
+@router.get("", response_model=List[UserResponse])
+def get_users_legacy(db: Session = Depends(get_db), current_user: User = Depends(check_roles([RoleEnum.ADMIN]))):
+    return db.query(User).all()
+
+@router.put("/{user_id}", response_model=UserResponse)
+def update_user(user_id: int, user: UserCreate, db: Session = Depends(get_db), current_user: User = Depends(check_roles([RoleEnum.ADMIN]))):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db_user.name = user.name
+    db_user.email = user.email
+    db_user.role = user.role
+    db_user.badge_number = user.badge_number
+    db_user.department = user.department
+    if user.password:
+        db_user.password_hash = get_password_hash(user.password)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(check_roles([RoleEnum.ADMIN]))):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if db_user.id == current_user.id:
+        raise HTTPException(status_code=400, detail="Cannot delete yourself")
+    db.delete(db_user)
+    db.commit()

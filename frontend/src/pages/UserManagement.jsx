@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getUsers } from '../services/api';
+import { getUsers, fetchApi } from '../services/api';
 import {
   Users,
   Search,
@@ -241,33 +241,23 @@ const UserManagement = () => {
 
     try {
       const payload = {
-        ...formData,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
         badge_number: formData.badge_number || null,
         department: formData.department || null,
       };
 
-      const res = await fetch(
-        'http://localhost:8000/api/v1/auth/register',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem(
-              'nyaya_token'
-            )}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error(await res.text());
-      }
+      await fetchApi('/auth/register', {
+        method: 'POST',
+        body: payload,
+      });
 
       closeModal();
       await fetchUsers();
     } catch (err) {
-      alert('Create user: ' + err.message);
+      alert('Create user: ' + (err.detail || err.message));
     } finally {
       setSaving(false);
     }
@@ -286,36 +276,23 @@ const UserManagement = () => {
 
     try {
       const payload = {
-        id: editingId,
         name: formData.name,
         email: formData.email,
+        password: formData.password || '',
         role: formData.role,
         badge_number: formData.badge_number || null,
         department: formData.department || null,
       };
 
-      const res = await fetch(
-        'http://localhost:8000/api/v1/auth',
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem(
-              'nyaya_token'
-            )}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error(await res.text());
-      }
+      await fetchApi(`/auth/${editingId}`, {
+        method: 'PUT',
+        body: payload,
+      });
 
       closeModal();
       await fetchUsers();
     } catch (err) {
-      alert('Update user: ' + err.message);
+      alert('Update user: ' + (err.detail || err.message));
     } finally {
       setSaving(false);
     }
@@ -337,25 +314,10 @@ const UserManagement = () => {
     setDeletingId(id);
 
     try {
-      const res = await fetch(
-        `http://localhost:8000/api/v1/auth/${id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              'nyaya_token'
-            )}`,
-          },
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error(await res.text());
-      }
-
+      await fetchApi(`/auth/${id}`, { method: 'DELETE' });
       await fetchUsers();
     } catch (err) {
-      alert('Delete user: ' + err.message);
+      alert('Delete user: ' + (err.detail || err.message));
     } finally {
       setDeletingId(null);
     }

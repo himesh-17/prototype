@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import { getMe, login as apiLogin, getUsers } from '../services/api';
-import { MOCK_USERS } from '../data/mockData';
+import { getMe, login as apiLogin } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -10,23 +9,16 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const initAuth = async () => {
-    const savedRole = localStorage.getItem('nyaya_active_role') || 'ADMIN';
     const token = localStorage.getItem('nyaya_token');
-
     if (token) {
       try {
         const userData = await getMe();
         setUser(userData);
-      } catch (err) {
-        const fallback = MOCK_USERS.find(u => u.role === savedRole) || MOCK_USERS[0];
-        setUser(fallback);
+      } catch {
+        localStorage.removeItem('nyaya_token');
+        localStorage.removeItem('nyaya_active_role');
+        setUser(null);
       }
-    } else {
-      // Default to the saved role or ADMIN
-      const fallback = MOCK_USERS.find(u => u.role === savedRole) || MOCK_USERS[0];
-      setUser(fallback);
-      localStorage.setItem('nyaya_token', `demo-token-${fallback.role.toLowerCase()}`);
-      localStorage.setItem('nyaya_active_role', fallback.role);
     }
     setLoading(false);
   };
@@ -40,21 +32,14 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await apiLogin(username, password);
       localStorage.setItem('nyaya_token', data.access_token);
-      const activeUser = data.user || await getMe();
-      setUser(activeUser);
-      localStorage.setItem('nyaya_active_role', activeUser.role);
+      const userData = await getMe();
+      setUser(userData);
+      localStorage.setItem('nyaya_active_role', userData.role);
       return true;
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.detail || err.message || 'Login failed');
       return false;
     }
-  };
-
-  const switchRole = (newRole) => {
-    const targetUser = MOCK_USERS.find(u => u.role === newRole) || MOCK_USERS[0];
-    localStorage.setItem('nyaya_active_role', targetUser.role);
-    localStorage.setItem('nyaya_token', `demo-token-${targetUser.role.toLowerCase()}`);
-    setUser(targetUser);
   };
 
   const logout = () => {
@@ -67,11 +52,9 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        activeRole: user?.role || 'ADMIN',
+        activeRole: user?.role || null,
         login,
         logout,
-        switchRole,
-        availableRoles: MOCK_USERS,
         loading,
         error,
       }}
