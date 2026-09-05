@@ -134,3 +134,42 @@ class AuditLog(Base):
     entry_hash = Column(String, nullable=False, unique=True)
 
     user = relationship("User")
+
+
+class Comment(Base):
+    __tablename__ = "comments"
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    body = Column(Text, nullable=False)
+    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    document = relationship("Document", backref="comments")
+    user = relationship("User")
+    replies = relationship("Comment", backref="parent", remote_side=[id])
+
+
+class DocumentPermission(Base):
+    __tablename__ = "document_permissions"
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    permission = Column(String, nullable=False, default="READ")  # READ | WRITE
+    granted_by_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    document = relationship("Document", backref="permissions")
+    user = relationship("User", foreign_keys=[user_id])
+    granted_by = relationship("User", foreign_keys=[granted_by_id])
+
+
+class BlockchainBlock(Base):
+    __tablename__ = "blockchain_blocks"
+    id = Column(Integer, primary_key=True, index=True)
+    block_number = Column(Integer, nullable=False, unique=True)
+    previous_hash = Column(String, nullable=False)
+    data_hash = Column(String, nullable=False)  # hash of audit_log ids in this block
+    block_hash = Column(String, nullable=False, unique=True)
+    nonce = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
