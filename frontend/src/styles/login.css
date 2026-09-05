@@ -1,0 +1,906 @@
+/* =========================================================
+   NYAYA SETU — LOGIN
+   Compact institutional layout
+   ========================================================= */
+
+.ns-login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px 24px;
+
+  background: #f4f7f9;
+
+  color: #0f172a;
+
+  overflow-y: auto;
+}
+
+
+/* subtle background grid */
+
+.ns-login-page::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0.3;
+
+  background-image:
+    linear-gradient(
+      rgba(15, 23, 42, 0.018) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.018) 1px,
+      transparent 1px
+    );
+
+  background-size: 32px 32px;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.ns-login-container {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 620px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.ns-login-brand {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 0 2px 5px;
+}
+
+
+.ns-login-brand-mark {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #0f766e;
+
+  border: 1px solid #d8e2e6;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+
+.ns-login-brand-name {
+  margin: 0;
+
+  font-size: 19px;
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  letter-spacing: -0.025em;
+
+  color: #0f172a;
+}
+
+
+.ns-login-brand-subtitle {
+  margin: 2px 0 0;
+
+  font-size: 10px;
+  line-height: 1.4;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   AUTHORIZATION NOTICE
+   ========================================================= */
+
+.ns-login-notice {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 8px 11px;
+
+  border: 1px solid #dce7e8;
+
+  border-left: 3px solid #0f766e;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+}
+
+
+.ns-login-notice-icon {
+  width: 24px;
+  height: 24px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 5px;
+
+  background: #ecfdf5;
+
+  color: #0f766e;
+}
+
+
+.ns-login-notice strong {
+  display: inline;
+
+  margin-right: 6px;
+
+  font-size: 10px;
+
+  font-weight: 650;
+
+  color: #334155;
+}
+
+
+.ns-login-notice span {
+  display: inline;
+
+  font-size: 10px;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.ns-login-card {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5eb;
+
+  border-radius: 8px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.025),
+    0 4px 14px rgba(15, 23, 42, 0.035);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.ns-login-card-header {
+  padding: 11px 15px;
+
+  border-bottom: 1px solid #e8edf2;
+
+  background: #ffffff;
+}
+
+
+.ns-login-section-label {
+  display: block;
+
+  margin-bottom: 2px;
+
+  font-size: 8px;
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+
+  color: #0f766e;
+}
+
+
+.ns-login-card-header h2 {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.3;
+
+  font-weight: 650;
+
+  color: #0f172a;
+}
+
+
+.ns-login-card-header p {
+  margin: 2px 0 0;
+
+  font-size: 10px;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   ROLE GRID
+   ========================================================= */
+
+.ns-login-role-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 7px;
+
+  padding: 10px;
+}
+
+
+/* =========================================================
+   ROLE CARD
+   ========================================================= */
+
+.ns-login-role-card {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 9px;
+
+  text-align: left;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+
+.ns-login-role-card:hover {
+  border-color: #a7d6d0;
+
+  background: #fbfefe;
+
+  box-shadow:
+    0 2px 8px rgba(15, 118, 110, 0.06);
+
+  transform: translateY(-1px);
+}
+
+
+.ns-login-role-card:active {
+  transform: translateY(0);
+}
+
+
+.ns-login-role-card:focus-visible {
+  outline: 2px solid #0f766e;
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   ROLE ICON
+   ========================================================= */
+
+.ns-login-role-icon {
+  width: 31px;
+  height: 31px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+
+  color: var(--role-color);
+
+  background: color-mix(
+    in srgb,
+    var(--role-color) 8%,
+    white
+  );
+
+  border: 1px solid color-mix(
+    in srgb,
+    var(--role-color) 14%,
+    white
+  );
+}
+
+
+/* =========================================================
+   ROLE CONTENT
+   ========================================================= */
+
+.ns-login-role-content {
+  min-width: 0;
+
+  flex: 1;
+}
+
+
+.ns-login-role-top {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 5px;
+}
+
+
+.ns-login-role-title {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: 10px;
+
+  font-weight: 650;
+
+  color: #1e293b;
+}
+
+
+.ns-login-role-arrow {
+  flex-shrink: 0;
+
+  width: 13px;
+  height: 13px;
+
+  color: #94a3b8;
+
+  transition:
+    color 140ms ease,
+    transform 140ms ease;
+}
+
+
+.ns-login-role-card:hover .ns-login-role-arrow {
+  color: #0f766e;
+
+  transform: translateX(2px);
+}
+
+
+.ns-login-role-name {
+  display: block;
+
+  margin-top: 1px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: 9px;
+
+  color: #475569;
+}
+
+
+.ns-login-role-email {
+  display: block;
+
+  margin-top: 1px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: 8px;
+
+  color: #94a3b8;
+}
+
+
+/* =========================================================
+   LOGIN FORM
+   ========================================================= */
+
+.ns-login-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 11px;
+
+  padding: 13px 15px 14px;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.ns-login-error {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 8px 9px;
+
+  border: 1px solid #fecaca;
+
+  border-radius: 5px;
+
+  background: #fef2f2;
+
+  color: #b91c1c;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+
+.ns-login-error svg {
+  width: 13px;
+  height: 13px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   FIELDS
+   ========================================================= */
+
+.ns-login-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.ns-login-field label {
+  font-size: 10px;
+
+  font-weight: 600;
+
+  color: #334155;
+}
+
+
+.ns-login-field input {
+  width: 100%;
+
+  height: 34px;
+
+  padding: 0 10px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 5px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #0f172a;
+
+  font-family: inherit;
+
+  font-size: 10px;
+
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+
+.ns-login-field input::placeholder {
+  color: #a0aec0;
+}
+
+
+.ns-login-field input:hover {
+  border-color: #94a3b8;
+}
+
+
+.ns-login-field input:focus {
+  border-color: #0f766e;
+
+  box-shadow:
+    0 0 0 2px rgba(15, 118, 110, 0.09);
+}
+
+
+/* =========================================================
+   SUBMIT
+   ========================================================= */
+
+.ns-login-submit {
+  width: 100%;
+
+  height: 35px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  margin-top: 1px;
+
+  border: 1px solid #0f766e;
+
+  border-radius: 5px;
+
+  background: #0f766e;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+
+.ns-login-submit:hover:not(:disabled) {
+  background: #115e59;
+
+  box-shadow:
+    0 3px 8px rgba(15, 118, 110, 0.15);
+}
+
+
+.ns-login-submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+
+.ns-login-submit:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.6;
+}
+
+
+.ns-login-submit:focus-visible {
+  outline: 2px solid #0f766e;
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   SPINNER
+   ========================================================= */
+
+.ns-login-spinner {
+  width: 12px;
+  height: 12px;
+
+  border: 2px solid rgba(255, 255, 255, 0.35);
+
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation: ns-login-spin 700ms linear infinite;
+}
+
+
+@keyframes ns-login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   SECURITY NOTE
+   ========================================================= */
+
+.ns-login-security-note {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  margin-top: -1px;
+
+  font-size: 8px;
+
+  color: #94a3b8;
+}
+
+
+.ns-login-security-note svg {
+  width: 11px;
+  height: 11px;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.ns-login-footer {
+  padding-top: 1px;
+
+  text-align: center;
+}
+
+
+.ns-login-footer-line {
+  width: 100%;
+  height: 1px;
+
+  margin-bottom: 7px;
+
+  background: #dbe2e8;
+}
+
+
+.ns-login-footer-content {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 5px;
+
+  color: #64748b;
+
+  font-size: 8px;
+}
+
+
+.ns-login-footer-dot {
+  color: #cbd5e1;
+}
+
+
+.ns-login-footer-system {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 7px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.1em;
+
+  color: #a0aec0;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  .ns-login-page {
+    align-items: flex-start;
+
+    padding: 18px 12px;
+  }
+
+  .ns-login-container {
+    max-width: 100%;
+  }
+
+  .ns-login-role-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL HEIGHT SCREENS
+   Prevent unnecessary scrolling on 768px / 720px laptops
+   ========================================================= */
+
+@media (max-height: 800px) and (min-width: 641px) {
+
+  .ns-login-page {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .ns-login-container {
+    gap: 7px;
+  }
+
+  .ns-login-brand {
+    padding-bottom: 2px;
+  }
+
+  .ns-login-brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .ns-login-role-grid {
+    padding: 7px;
+    gap: 5px;
+  }
+
+  .ns-login-role-card {
+    padding: 7px;
+  }
+
+  .ns-login-role-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .ns-login-card-header {
+    padding: 8px 13px;
+  }
+
+  .ns-login-form {
+    padding: 10px 13px 11px;
+    gap: 8px;
+  }
+
+  .ns-login-field {
+    gap: 3px;
+  }
+
+  .ns-login-field input {
+    height: 31px;
+  }
+
+  .ns-login-submit {
+    height: 32px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SHORT SCREENS
+   ========================================================= */
+
+@media (max-height: 650px) and (min-width: 641px) {
+
+  .ns-login-page {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .ns-login-container {
+    gap: 5px;
+  }
+
+  .ns-login-brand-subtitle,
+  .ns-login-notice {
+    display: none;
+  }
+
+  .ns-login-role-grid {
+    padding: 6px;
+  }
+
+  .ns-login-role-card {
+    padding: 6px;
+  }
+
+  .ns-login-role-email {
+    display: none;
+  }
+
+  .ns-login-form {
+    padding-top: 8px;
+    padding-bottom: 9px;
+  }
+
+  .ns-login-security-note {
+    display: none;
+  }
+
+  .ns-login-footer-system {
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .ns-login-role-card,
+  .ns-login-role-arrow,
+  .ns-login-submit,
+  .ns-login-field input {
+    transition: none;
+  }
+
+  .ns-login-spinner {
+    animation: none;
+  }
+
+}

@@ -17,25 +17,26 @@ import {
   Search
 } from 'lucide-react';
 import { downloadDocumentVersion, verifyDocument } from '../../services/api';
+import '../../styles/document-viewer.css';
 
 const classificationStyles = {
-  'Confidential': 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  'Secret': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  'Top Secret': 'bg-rose-500/15 text-[var(--danger-base)] border-rose-500/30',
-  'Restricted': 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  Confidential: 'confidential',
+  Secret: 'secret',
+  'Top Secret': 'top-secret',
+  Restricted: 'restricted',
 };
 
 const docTypeStyles = {
-  'FIR': 'bg-[var(--success-soft)] text-[var(--success-strong)] border-emerald-500/25',
-  'Witness Statement': 'bg-sky-500/10 text-sky-400 border-sky-500/25',
-  'Forensic Report': 'bg-purple-500/10 text-purple-400 border-purple-500/25',
-  'Evidence': 'bg-amber-500/10 text-amber-400 border-amber-500/25',
-  'Judicial Order': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-teal-500/25',
-  'Seizure Memo': 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25',
+  FIR: 'success',
+  'Witness Statement': 'info',
+  'Forensic Report': 'purple',
+  Evidence: 'warning',
+  'Judicial Order': 'accent',
+  'Seizure Memo': 'indigo',
 };
 
 export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
-  const [activeTab, setActiveTab] = useState('metadata'); // 'metadata' | 'ocr' | 'custody' | 'preview'
+  const [activeTab, setActiveTab] = useState('metadata');
   const [copiedHash, setCopiedHash] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyResult, setVerifyResult] = useState(null);
@@ -46,12 +47,16 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
     if (document.sha256_hash) {
       navigator.clipboard.writeText(document.sha256_hash);
       setCopiedHash(true);
-      setTimeout(() => setCopiedHash(false), 2000);
+
+      setTimeout(() => {
+        setCopiedHash(false);
+      }, 2000);
     }
   };
 
   const handleVerify = async () => {
     setVerifying(true);
+
     try {
       const res = await verifyDocument(document.id);
       setVerifyResult(res);
@@ -63,321 +68,836 @@ export const DocumentViewerModal = ({ document, onClose, onRefresh }) => {
   };
 
   const handleDownload = () => {
-    downloadDocumentVersion(document.id, document.current_version || 1);
+    downloadDocumentVersion(
+      document.id,
+      document.current_version || 1
+    );
   };
 
-  const classificationClass = classificationStyles[document.classification] || classificationStyles['Confidential'];
-  const typeClass = docTypeStyles[document.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
+  const classificationClass =
+    classificationStyles[document.classification] ||
+    'confidential';
+
+  const typeClass =
+    docTypeStyles[document.document_type] || 'default';
+
+  const tabs = [
+    {
+      id: 'metadata',
+      label: 'Cryptographic Metadata',
+      icon: Key,
+    },
+    {
+      id: 'signature',
+      label: 'Digital Signature & Integrity',
+      icon: ShieldCheck,
+    },
+    {
+      id: 'ocr',
+      label: 'OCR Text',
+      icon: Search,
+    },
+    {
+      id: 'preview',
+      label: 'Secure Preview',
+      icon: FileCheck2,
+    },
+  ];
 
   return (
-    <div className="ns-docview-backdrop" onClick={onClose} role="dialog" aria-modal="true">
-      <div
-        className="ns-docview-modal max-w-4xl bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 flex flex-col max-h-[90vh]"
-        onClick={e => e.stopPropagation()}
+    <div
+      className="ns-docview-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Document Viewer"
+    >
+      <section
+        className="ns-docview-modal"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-inset)] px-6 py-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-soft)]">
-              <FileText size={20} strokeWidth={1.8} />
+
+        {/* =====================================================
+            HEADER
+        ====================================================== */}
+
+        <header className="ns-docview-header">
+
+          <div className="ns-docview-header-main">
+
+            <div className="ns-docview-file-icon">
+              <FileText size={22} strokeWidth={1.8} />
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base font-semibold text-[var(--text-primary)] truncate">
+
+            <div className="ns-docview-title-area">
+
+              <div className="ns-docview-title-row">
+
+                <h2
+                  className="ns-docview-title"
+                  title={document.filename}
+                >
                   {document.filename}
-                </h3>
-                <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${typeClass}`}>
+                </h2>
+
+                <span
+                  className={`ns-docview-badge ns-docview-badge-${typeClass}`}
+                >
                   {document.document_type}
                 </span>
-                <span className={`text-[11px] font-mono font-medium px-2 py-0.5 rounded-full border uppercase tracking-wider ${classificationClass}`}>
+
+                <span
+                  className={`ns-docview-badge ns-docview-classification ${classificationClass}`}
+                >
                   {document.classification || 'Confidential'}
                 </span>
+
               </div>
-              <p className="text-xs text-[var(--text-tertiary)] font-mono mt-0.5">
-                Case: {document.case_number || 'CR-2026-0891'} • Version v{document.current_version || 1} • {document.file_size || '3.2 MB'}
-              </p>
+
+              <div className="ns-docview-subtitle">
+
+                <span>
+                  Case: {document.case_number || 'CR-2026-0891'}
+                </span>
+
+                <span className="ns-docview-separator">•</span>
+
+                <span>
+                  Version v{document.current_version || 1}
+                </span>
+
+                <span className="ns-docview-separator">•</span>
+
+                <span>
+                  {document.file_size || '3.2 MB'}
+                </span>
+
+              </div>
+
             </div>
+
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="ns-docview-header-actions">
+
             <button
+              type="button"
               onClick={handleDownload}
-              className="btn btn-secondary text-xs px-3 py-1.5 inline-flex items-center gap-1.5"
+              className="ns-docview-button ns-docview-button-secondary"
               title="Download original file"
             >
-              <Download size={14} />
+              <Download size={15} />
               <span>Download</span>
             </button>
+
             <button
+              type="button"
               onClick={onClose}
-              className="ns-docview-close p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-overlay)]"
+              className="ns-docview-close"
               aria-label="Close document viewer"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
+
           </div>
+
+        </header>
+
+
+        {/* =====================================================
+            DOCUMENT STATUS STRIP
+        ====================================================== */}
+
+        <div className="ns-docview-status-strip">
+
+          <div className="ns-docview-status-item">
+            <span className="ns-docview-status-dot ns-docview-status-dot-success" />
+
+            <span>
+              Document integrity verified
+            </span>
+          </div>
+
+          <div className="ns-docview-status-divider" />
+
+          <div className="ns-docview-status-item">
+            <Lock size={14} />
+
+            <span>
+              Securely stored
+            </span>
+          </div>
+
+          <div className="ns-docview-status-divider" />
+
+          <div className="ns-docview-status-item">
+            <ShieldCheck size={14} />
+
+            <span>
+              Chain of custody protected
+            </span>
+          </div>
+
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex border-b border-[var(--border-subtle)] bg-[#141419] px-6 gap-6">
-          <button
-            onClick={() => setActiveTab('metadata')}
-            className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${activeTab === 'metadata'
-                ? 'border-[#00d4aa] text-[var(--accent-strong)]'
-                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
-              }`}
-          >
-            Cryptographic Metadata
-          </button>
-          <button
-            onClick={() => setActiveTab('signature')}
-            className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${activeTab === 'signature'
-                ? 'border-[#00d4aa] text-[var(--accent-strong)]'
-                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
-              }`}
-          >
-            Digital Signature & Integrity
-          </button>
-          <button
-            onClick={() => setActiveTab('ocr')}
-            className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${activeTab === 'ocr'
-                ? 'border-[#00d4aa] text-[var(--accent-strong)]'
-                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
-              }`}
-          >
-            OCR Text Preview
-          </button>
-          <button
-            onClick={() => setActiveTab('preview')}
-            className={`py-3 text-xs font-medium border-b-2 font-mono uppercase tracking-wider transition-colors ${activeTab === 'preview'
-                ? 'border-[#00d4aa] text-[var(--accent-strong)]'
-                : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
-              }`}
-          >
-            Secure Document Preview
-          </button>
-        </div>
 
-        {/* Body Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-5">
+        {/* =====================================================
+            NAVIGATION
+        ====================================================== */}
+
+        <nav className="ns-docview-tabs">
+
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`ns-docview-tab ${
+                  active ? 'is-active' : ''
+                }`}
+              >
+                <Icon size={15} strokeWidth={1.8} />
+
+                <span>{tab.label}</span>
+
+              </button>
+            );
+          })}
+
+        </nav>
+
+
+        {/* =====================================================
+            BODY
+        ====================================================== */}
+
+        <main className="ns-docview-content">
+
+          {/* ===================================================
+              METADATA
+          ==================================================== */}
+
           {activeTab === 'metadata' && (
-            <div className="space-y-6">
-              {/* SHA-256 Hash Block */}
-              <div className="rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] p-4">
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-1.5">
-                    <Key size={13} className="text-[var(--accent-strong)]" /> SHA-256 Cryptographic Checksum
+
+            <div className="ns-docview-section">
+
+              <div className="ns-docview-section-heading">
+
+                <div>
+                  <span className="ns-docview-eyebrow">
+                    DOCUMENT INTEGRITY
                   </span>
-                  <button
-                    onClick={handleCopyHash}
-                    className="btn btn-ghost text-[11px] py-1 px-2 text-[var(--text-secondary)] hover:text-[var(--accent-strong)] flex items-center gap-1"
-                  >
-                    {copiedHash ? <Check size={12} className="text-[var(--accent-strong)]" /> : <Copy size={12} />}
-                    <span>{copiedHash ? 'Copied' : 'Copy Hash'}</span>
-                  </button>
+
+                  <h3>
+                    Cryptographic Metadata
+                  </h3>
+
+                  <p>
+                    Digital identifiers and storage information
+                    associated with this document.
+                  </p>
                 </div>
-                <div className="font-mono text-xs text-[var(--accent-strong)]/90 break-all bg-black/40 p-3 rounded-lg border border-[var(--accent-soft)] select-all">
-                  {document.sha256_hash || '7e2b8f3c4e1d9a0b5c6f8a2e1d3b5c7e9a0f2b4c6d8e0a1b3c5d7e9f1a3b5c7d'}
+
+                <div className="ns-docview-integrity-badge">
+                  <ShieldCheck size={16} />
+                  Verified
                 </div>
-                <p className="text-[11px] text-[var(--text-tertiary)] mt-2">
-                  Recorded in immutable Merkle tree audit chain at time of upload. Tamper-evident guarantee.
-                </p>
+
               </div>
 
-              {/* Metadata Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-[var(--border-subtle)] space-y-3">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-2">
-                    <Layers size={14} className="text-[var(--text-secondary)]" /> Document Specifications
-                  </h4>
-                  <dl className="space-y-2 text-xs font-mono">
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Document ID</dt>
-                      <dd className="text-[var(--text-primary)]">DOC-{document.id.toString().padStart(5, '0')}</dd>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Document Type</dt>
-                      <dd className="text-[var(--text-primary)]">{document.document_type}</dd>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Classification</dt>
-                      <dd className="text-amber-400 font-semibold">{document.classification || 'Confidential'}</dd>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Version</dt>
-                      <dd className="text-[var(--text-primary)]">v{document.current_version || 1} (Latest)</dd>
-                    </div>
-                    <div className="flex justify-between py-1">
-                      <dt className="text-[var(--text-tertiary)]">Storage Protocol</dt>
-                      <dd className="text-[var(--accent-strong)]">AES-256-GCM HSM Enclave</dd>
-                    </div>
-                  </dl>
-                </div>
 
-                <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-[var(--border-subtle)] space-y-3">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-2">
-                    <User size={14} className="text-[var(--text-secondary)]" /> Origin & Custody
-                  </h4>
-                  <dl className="space-y-2 text-xs font-mono">
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Uploaded By</dt>
-                      <dd className="text-[var(--text-primary)]">{document.uploader_name || 'Inspector Rajesh Deshmukh'}</dd>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Date & Time</dt>
-                      <dd className="text-[var(--text-primary)]">{new Date(document.created_at || Date.now()).toLocaleString()}</dd>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Station / Agency</dt>
-                      <dd className="text-[var(--text-primary)]">Cyber Crime PS / NCRB</dd>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-white/[0.04]">
-                      <dt className="text-[var(--text-tertiary)]">Chain Node</dt>
-                      <dd className="text-[var(--text-primary)]">NCRB-NODE-DELHI-01</dd>
-                    </div>
-                    <div className="flex justify-between py-1">
-                      <dt className="text-[var(--text-tertiary)]">Integrity Status</dt>
-                      <dd className="text-[var(--success-strong)] font-semibold flex items-center gap-1">
-                        <ShieldCheck size={13} /> Intact & Verified
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          )}
+              {/* HASH */}
 
-          {activeTab === 'signature' && (
-            <div className="space-y-5">
-              <div className="rounded-lg bg-[var(--bg-overlay)] p-5 border border-[var(--border-subtle)]">
-                <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-[var(--border-subtle)]">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-[var(--success-soft)] text-[var(--success-strong)] flex items-center justify-center border border-emerald-500/20">
-                      <ShieldCheck size={18} />
+              <section className="ns-docview-card ns-docview-hash-card">
+
+                <div className="ns-docview-card-header">
+
+                  <div className="ns-docview-card-heading">
+
+                    <div className="ns-docview-card-icon">
+                      <Key size={17} />
                     </div>
+
                     <div>
-                      <h4 className="text-sm font-semibold text-[var(--text-primary)]">
-                        PKI Digital Signature Certificate
+                      <h4>
+                        SHA-256 Cryptographic Checksum
                       </h4>
-                      <p className="text-xs text-[var(--text-tertiary)] font-mono">
-                        Compliant with Information Technology Act, 2000 (Section 3A)
+
+                      <p>
+                        Immutable document fingerprint
                       </p>
                     </div>
+
                   </div>
-                  <span className="px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[var(--success-soft)] text-[var(--success-strong)] border border-emerald-500/20 inline-flex items-center gap-1.5">
-                    <Check size={13} strokeWidth={2.5} /> SIGNATURE VALID
+
+                  <button
+                    type="button"
+                    onClick={handleCopyHash}
+                    className="ns-docview-copy-button"
+                  >
+                    {copiedHash ? (
+                      <Check size={14} />
+                    ) : (
+                      <Copy size={14} />
+                    )}
+
+                    <span>
+                      {copiedHash ? 'Copied' : 'Copy Hash'}
+                    </span>
+                  </button>
+
+                </div>
+
+
+                <div className="ns-docview-hash-value">
+                  {document.sha256_hash ||
+                    '7e2b8f3c4e1d9a0b5c6f8a2e1d3b5c7e9a0f2b4c6d8e0a1b3c5d7e9f1a3b5c7d'}
+                </div>
+
+                <div className="ns-docview-hash-note">
+                  <ShieldCheck size={14} />
+
+                  <span>
+                    Recorded in the immutable audit chain at the
+                    time of upload. Any modification to the
+                    original document will produce a different
+                    cryptographic checksum.
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-[var(--text-tertiary)] block mb-1">Signatory:</span>
-                    <span className="text-[var(--text-primary)] font-medium">
-                      {document.digital_signature?.signed_by || document.uploader_name || 'Inspector Rajesh Deshmukh'}
-                    </span>
+              </section>
+
+
+              {/* INFORMATION GRID */}
+
+              <div className="ns-docview-info-grid">
+
+                {/* DOCUMENT SPECIFICATIONS */}
+
+                <section className="ns-docview-card">
+
+                  <div className="ns-docview-card-heading">
+
+                    <div className="ns-docview-card-icon">
+                      <Layers size={17} />
+                    </div>
+
+                    <div>
+                      <h4>
+                        Document Specifications
+                      </h4>
+
+                      <p>
+                        Core document attributes
+                      </p>
+                    </div>
+
                   </div>
-                  <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-[var(--text-tertiary)] block mb-1">Certifying Authority:</span>
-                    <span className="text-[var(--text-primary)] font-medium">
-                      {document.digital_signature?.certificate_authority || 'NIC-CA / e-Mudhra Government of India'}
-                    </span>
+
+                  <dl className="ns-docview-details">
+
+                    <div>
+                      <dt>Document ID</dt>
+
+                      <dd>
+                        DOC-
+                        {document.id
+                          .toString()
+                          .padStart(5, '0')}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Document Type</dt>
+
+                      <dd>
+                        {document.document_type}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Classification</dt>
+
+                      <dd>
+                        <span
+                          className={`ns-docview-inline-status ${classificationClass}`}
+                        >
+                          {document.classification ||
+                            'Confidential'}
+                        </span>
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Version</dt>
+
+                      <dd>
+                        v{document.current_version || 1}
+                        <span className="ns-docview-muted">
+                          Latest
+                        </span>
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Storage Protocol</dt>
+
+                      <dd>
+                        AES-256-GCM HSM Enclave
+                      </dd>
+                    </div>
+
+                  </dl>
+
+                </section>
+
+
+                {/* ORIGIN & CUSTODY */}
+
+                <section className="ns-docview-card">
+
+                  <div className="ns-docview-card-heading">
+
+                    <div className="ns-docview-card-icon">
+                      <User size={17} />
+                    </div>
+
+                    <div>
+                      <h4>
+                        Origin & Custody
+                      </h4>
+
+                      <p>
+                        Document provenance
+                      </p>
+                    </div>
+
                   </div>
-                  <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-[var(--text-tertiary)] block mb-1">Signing Timestamp:</span>
-                    <span className="text-[var(--text-primary)] font-medium">
-                      {document.digital_signature?.timestamp
-                        ? new Date(document.digital_signature.timestamp).toLocaleString()
-                        : new Date().toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="bg-black/30 p-3 rounded-lg border border-white/[0.04]">
-                    <span className="text-[var(--text-tertiary)] block mb-1">Certificate Key ID:</span>
-                    <span className="text-[var(--accent-strong)] font-medium">
-                      {document.digital_signature?.key_id || 'RSA-4096-7892-IN-NCRB'}
-                    </span>
-                  </div>
+
+                  <dl className="ns-docview-details">
+
+                    <div>
+                      <dt>Uploaded By</dt>
+
+                      <dd>
+                        {document.uploader_name ||
+                          'Inspector Rajesh Deshmukh'}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Date & Time</dt>
+
+                      <dd>
+                        {new Date(
+                          document.created_at || Date.now()
+                        ).toLocaleString()}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Station / Agency</dt>
+
+                      <dd>
+                        Cyber Crime PS / NCRB
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Chain Node</dt>
+
+                      <dd>
+                        NCRB-NODE-DELHI-01
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt>Integrity Status</dt>
+
+                      <dd className="ns-docview-integrity-text">
+                        <ShieldCheck size={14} />
+                        Intact & Verified
+                      </dd>
+                    </div>
+
+                  </dl>
+
+                </section>
+
+              </div>
+
+            </div>
+          )}
+
+
+          {/* ===================================================
+              DIGITAL SIGNATURE
+          ==================================================== */}
+
+          {activeTab === 'signature' && (
+
+            <div className="ns-docview-section">
+
+              <div className="ns-docview-section-heading">
+
+                <div>
+                  <span className="ns-docview-eyebrow">
+                    DIGITAL ASSURANCE
+                  </span>
+
+                  <h3>
+                    Digital Signature & Integrity
+                  </h3>
+
+                  <p>
+                    Cryptographic signature and certificate
+                    verification details.
+                  </p>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between flex-wrap gap-3">
-                  <p className="text-xs text-[var(--text-tertiary)]">
-                    Cryptographic hash matches the original uploaded byte sequence 100%. No modifications detected.
-                  </p>
+              </div>
+
+
+              <section className="ns-docview-card ns-docview-signature-card">
+
+                <div className="ns-docview-signature-header">
+
+                  <div className="ns-docview-signature-identity">
+
+                    <div className="ns-docview-signature-icon">
+                      <ShieldCheck size={20} />
+                    </div>
+
+                    <div>
+
+                      <h4>
+                        PKI Digital Signature Certificate
+                      </h4>
+
+                      <p>
+                        Compliant with Information Technology
+                        Act, 2000 (Section 3A)
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                  <div className="ns-docview-valid-badge">
+                    <Check size={14} />
+                    Signature Valid
+                  </div>
+
+                </div>
+
+
+                <div className="ns-docview-signature-grid">
+
+                  <div className="ns-docview-signature-field">
+                    <span>Signatory</span>
+
+                    <strong>
+                      {document.digital_signature?.signed_by ||
+                        document.uploader_name ||
+                        'Inspector Rajesh Deshmukh'}
+                    </strong>
+                  </div>
+
+                  <div className="ns-docview-signature-field">
+                    <span>Certifying Authority</span>
+
+                    <strong>
+                      {document.digital_signature
+                        ?.certificate_authority ||
+                        'NIC-CA / e-Mudhra Government of India'}
+                    </strong>
+                  </div>
+
+                  <div className="ns-docview-signature-field">
+                    <span>Signing Timestamp</span>
+
+                    <strong>
+                      {document.digital_signature?.timestamp
+                        ? new Date(
+                            document.digital_signature.timestamp
+                          ).toLocaleString()
+                        : new Date().toLocaleString()}
+                    </strong>
+                  </div>
+
+                  <div className="ns-docview-signature-field">
+                    <span>Certificate Key ID</span>
+
+                    <strong className="ns-docview-mono">
+                      {document.digital_signature?.key_id ||
+                        'RSA-4096-7892-IN-NCRB'}
+                    </strong>
+                  </div>
+
+                </div>
+
+
+                <div className="ns-docview-verification-bar">
+
+                  <div className="ns-docview-verification-message">
+
+                    <ShieldCheck size={17} />
+
+                    <p>
+                      Cryptographic hash matches the original
+                      uploaded byte sequence. No modifications
+                      detected.
+                    </p>
+
+                  </div>
+
                   <button
+                    type="button"
                     onClick={handleVerify}
                     disabled={verifying}
-                    className="btn btn-primary text-xs px-3.5 py-1.5 inline-flex items-center gap-1.5"
+                    className="ns-docview-button ns-docview-button-primary"
                   >
-                    {verifying ? <span className="spinner" /> : <ShieldCheck size={14} />}
-                    <span>{verifying ? 'Verifying HSM...' : 'Re-verify Ledger'}</span>
+                    {verifying ? (
+                      <span className="ns-docview-spinner" />
+                    ) : (
+                      <ShieldCheck size={15} />
+                    )}
+
+                    <span>
+                      {verifying
+                        ? 'Verifying...'
+                        : 'Re-verify Ledger'}
+                    </span>
                   </button>
+
                 </div>
-              </div>
+
+              </section>
+
 
               {verifyResult && (
-                <div className="rounded-lg bg-[var(--accent-faint)] border border-[var(--accent-soft)] p-4 text-xs font-mono text-[var(--accent-base)] flex items-start gap-2.5 animate-fade-in">
-                  <Check size={16} className="shrink-0 text-[var(--accent-strong)] mt-0.5" />
-                  <div>
-                    <span className="font-semibold block">HSM Hardware Enclave Attestation Confirmed:</span>
-                    <span>Document #{document.id} version v{document.current_version || 1} verified against national root certificate authority. Zero tamper anomalies.</span>
+
+                <div className="ns-docview-result">
+
+                  <div className="ns-docview-result-icon">
+                    <Check size={17} />
                   </div>
+
+                  <div>
+
+                    <strong>
+                      HSM Hardware Enclave Attestation Confirmed
+                    </strong>
+
+                    <p>
+                      Document #{document.id} version v
+                      {document.current_version || 1}
+                      {' '}verified against the national root
+                      certificate authority. Zero tamper anomalies.
+                    </p>
+
+                  </div>
+
                 </div>
+
               )}
+
             </div>
           )}
+
+
+          {/* ===================================================
+              OCR
+          ==================================================== */}
 
           {activeTab === 'ocr' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-1.5">
-                  <Search size={14} className="text-[var(--accent-strong)]" /> Machine Extracted OCR Text (Tesseract / EasyOCR v4)
-                </span>
-                <span className="text-[11px] font-mono text-[var(--success-strong)] bg-[var(--success-soft)] px-2 py-0.5 rounded border border-emerald-500/20">
-                  OCR CONFIDENCE: 98.4%
-                </span>
+
+            <div className="ns-docview-section">
+
+              <div className="ns-docview-section-heading">
+
+                <div>
+                  <span className="ns-docview-eyebrow">
+                    TEXT EXTRACTION
+                  </span>
+
+                  <h3>
+                    OCR Text Preview
+                  </h3>
+
+                  <p>
+                    Machine-extracted text associated with this
+                    document.
+                  </p>
+                </div>
+
+                <div className="ns-docview-confidence">
+                  OCR Confidence: 98.4%
+                </div>
+
               </div>
-              <div className="rounded-lg bg-black/60 border border-[var(--border-subtle)] p-4 text-xs font-mono text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap max-h-80 overflow-y-auto select-text">
-                {document.ocr_text || 'No OCR text extracted for this document. Text processing is currently queued.'}
-              </div>
-              <p className="text-xs text-[var(--text-tertiary)]">
-                Indexed for semantic search and keyword lookups across all agency nodes.
-              </p>
+
+
+              <section className="ns-docview-ocr-card">
+
+                <div className="ns-docview-ocr-header">
+
+                  <div>
+                    <Search size={17} />
+
+                    <span>
+                      Machine Extracted Document Text
+                    </span>
+                  </div>
+
+                  <span className="ns-docview-ocr-engine">
+                    Tesseract / EasyOCR v4
+                  </span>
+
+                </div>
+
+
+                <div className="ns-docview-ocr-content">
+                  {document.ocr_text ||
+                    'No OCR text extracted for this document. Text processing is currently queued.'}
+                </div>
+
+
+                <div className="ns-docview-ocr-footer">
+
+                  <Search size={14} />
+
+                  <span>
+                    Indexed for semantic search and keyword
+                    lookups across authorized agency nodes.
+                  </span>
+
+                </div>
+
+              </section>
+
             </div>
           )}
+
+
+          {/* ===================================================
+              SECURE PREVIEW
+          ==================================================== */}
 
           {activeTab === 'preview' && (
-            <div className="rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[300px]">
-              <div className="h-14 w-14 rounded-lg bg-[var(--bg-card)] border border-[var(--border-default)] flex items-center justify-center text-[var(--text-tertiary)]">
-                <FileCheck2 size={28} className="text-[var(--accent-strong)]" />
+
+            <div className="ns-docview-section">
+
+              <div className="ns-docview-section-heading">
+
+                <div>
+                  <span className="ns-docview-eyebrow">
+                    PROTECTED ACCESS
+                  </span>
+
+                  <h3>
+                    Secure Document Preview
+                  </h3>
+
+                  <p>
+                    Protected access to the verified document copy.
+                  </p>
+                </div>
+
               </div>
-              <div className="max-w-md">
-                <h4 className="text-sm font-semibold text-[var(--text-primary)]">
-                  Watermarked Secure View Protected
-                </h4>
-                <p className="text-xs text-[var(--text-tertiary)] mt-1 leading-relaxed">
-                  Document content is encrypted with dynamic judicial forensic watermarking (Officer ID, IP, and UTC timestamp embedded).
+
+
+              <section className="ns-docview-preview">
+
+                <div className="ns-docview-preview-icon">
+                  <FileCheck2 size={30} />
+                </div>
+
+                <span className="ns-docview-preview-label">
+                  Secure Document
+                </span>
+
+                <h3>
+                  Watermarked Secure View
+                </h3>
+
+                <p>
+                  Document content is protected using dynamic
+                  forensic watermarking. Authorized access may
+                  include officer identity, network information,
+                  and timestamp metadata.
                 </p>
-              </div>
-              <div className="flex items-center gap-3">
+
+                <div className="ns-docview-preview-security">
+
+                  <div>
+                    <ShieldCheck size={15} />
+                    Integrity Verified
+                  </div>
+
+                  <div>
+                    <Lock size={15} />
+                    Encrypted Storage
+                  </div>
+
+                </div>
+
                 <button
+                  type="button"
                   onClick={handleDownload}
-                  className="btn btn-primary text-xs px-4 py-2 inline-flex items-center gap-1.5"
+                  className="ns-docview-button ns-docview-button-primary"
                 >
-                  <Download size={14} />
-                  <span>Download Verified Copy</span>
+                  <Download size={15} />
+                  Download Verified Copy
                 </button>
-              </div>
+
+              </section>
+
             </div>
           )}
-        </div>
 
-        {/* Footer */}
-        <div className="border-t border-[var(--border-subtle)] bg-[#141419] px-6 py-3 flex items-center justify-between text-xs text-[var(--text-tertiary)] font-mono">
-          <span>Nyaya Setu • NCRB Secure Node #26190</span>
-          <button onClick={onClose} className="btn btn-secondary text-xs px-3 py-1">
+        </main>
+
+
+        {/* =====================================================
+            FOOTER
+        ====================================================== */}
+
+        <footer className="ns-docview-footer">
+
+          <div className="ns-docview-footer-info">
+
+            <ShieldCheck size={14} />
+
+            <span>
+              Nyaya Setu Secure Document Repository
+            </span>
+
+            <span className="ns-docview-footer-separator">
+              |
+            </span>
+
+            <span>
+              Cryptographic integrity protected
+            </span>
+
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="ns-docview-button ns-docview-button-secondary"
+          >
             Close Viewer
           </button>
-        </div>
-      </div>
+
+        </footer>
+
+      </section>
     </div>
   );
 };

@@ -7,7 +7,10 @@ import {
   Scale,
   Microscope,
   Lock,
+  ChevronRight,
 } from 'lucide-react';
+
+import '../styles/login.css';
 
 const DEMO_PRESETS = [
   {
@@ -15,31 +18,31 @@ const DEMO_PRESETS = [
     name: 'Vikramaditya Sharma',
     title: 'Administrator',
     email: 'admin@nyaya.dms',
-    color: '#2dd4bf',
+    color: '#0f766e',
     icon: Shield,
   },
   {
     role: 'IO',
     name: 'Rajesh Deshmukh',
-    title: 'Investigating officer',
+    title: 'Investigating Officer',
     email: 'io.deshmukh@police.gov.in',
-    color: '#38bdf8',
+    color: '#0369a1',
     icon: Briefcase,
   },
   {
     role: 'JUDGE',
     name: 'Justice Sundaram',
-    title: 'Presiding judge',
+    title: 'Presiding Judge',
     email: 'judge.sundaram@delhicourts.nic.in',
-    color: '#f59e0b',
+    color: '#b45309',
     icon: Scale,
   },
   {
     role: 'FORENSIC_EXPERT',
     name: 'Dr. Aarav Nambiar',
-    title: 'Forensic scientist',
+    title: 'Forensic Scientist',
     email: 'aarav.nambiar@cfsl.gov.in',
-    color: '#c084fc',
+    color: '#7e22ce',
     icon: Microscope,
   },
 ];
@@ -48,14 +51,19 @@ export const Login = () => {
   const [email, setEmail] = useState('admin@nyaya.dms');
   const [password, setPassword] = useState('••••••••');
   const [loading, setLoading] = useState(false);
+
   const { login, switchRole, error } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
+
     const success = await login(email, password);
+
     setLoading(false);
+
     if (success) {
       navigate('/');
     }
@@ -67,103 +75,276 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-dvh bg-[var(--bg-base)] flex flex-col items-center justify-center px-5 py-12 text-[var(--text-primary)]">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center space-y-3">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
-            <Shield size={24} strokeWidth={1.8} />
+    <div className="ns-login-page">
+      <main className="ns-login-container">
+
+        {/* ─────────────────────────────────────
+            Brand
+        ───────────────────────────────────── */}
+        <header className="ns-login-brand">
+
+          <div className="ns-login-brand-mark">
+            <Shield size={25} strokeWidth={1.8} />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
-            Nyaya Setu
-          </h1>
-          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-            NCRB secure document portal
-          </p>
+
+          <div>
+            <h1 className="ns-login-brand-name">
+              Nyaya Setu
+            </h1>
+
+            <p className="ns-login-brand-subtitle">
+              Secure Digital Document Management System
+            </p>
+          </div>
+
+        </header>
+
+
+        {/* ─────────────────────────────────────
+            Institutional Notice
+        ───────────────────────────────────── */}
+        <div className="ns-login-notice">
+
+          <div className="ns-login-notice-icon">
+            <Shield size={15} />
+          </div>
+
+          <div>
+            <strong>Authorized access only</strong>
+
+            <span>
+              This system is restricted to authorized government personnel.
+            </span>
+          </div>
+
         </div>
 
-        <div className="panel">
-          <div className="panel-head">
-            <h2 className="panel-title">Demo access</h2>
+
+        {/* ─────────────────────────────────────
+            Demo Access
+        ───────────────────────────────────── */}
+        <section className="ns-login-card">
+
+          <div className="ns-login-card-header">
+
+            <div>
+              <span className="ns-login-section-label">
+                DEMONSTRATION ENVIRONMENT
+              </span>
+
+              <h2>
+                Select a role
+              </h2>
+
+              <p>
+                Choose a predefined role to enter the prototype.
+              </p>
+            </div>
+
           </div>
-          <div className="panel-body grid grid-cols-2 gap-3">
+
+
+          <div className="ns-login-role-grid">
+
             {DEMO_PRESETS.map((preset) => {
               const Icon = preset.icon;
+
               return (
                 <button
                   key={preset.role}
                   type="button"
                   onClick={() => handleQuickLogin(preset)}
-                  className="flex items-start gap-3 p-3.5 rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] hover:border-teal-400/40 transition-colors text-left"
+                  className="ns-login-role-card"
                 >
+
                   <div
-                    className="flex h-11 w-11 items-center justify-center rounded-lg shrink-0"
-                    style={{ backgroundColor: `${preset.color}18`, color: preset.color }}
+                    className="ns-login-role-icon"
+                    style={{
+                      '--role-color': preset.color,
+                    }}
                   >
-                    <Icon size={16} strokeWidth={1.8} />
+                    <Icon size={19} strokeWidth={1.8} />
                   </div>
-                  <div className="min-w-0">
-                    <span className="block text-sm font-medium text-[var(--text-primary)]">{preset.title}</span>
-                    <span className="block text-xs text-[var(--text-secondary)] mt-0.5 truncate">{preset.name}</span>
+
+
+                  <div className="ns-login-role-content">
+
+                    <div className="ns-login-role-top">
+
+                      <span className="ns-login-role-title">
+                        {preset.title}
+                      </span>
+
+                      <ChevronRight
+                        size={15}
+                        className="ns-login-role-arrow"
+                      />
+
+                    </div>
+
+                    <span className="ns-login-role-name">
+                      {preset.name}
+                    </span>
+
+                    <span className="ns-login-role-email">
+                      {preset.email}
+                    </span>
+
                   </div>
+
                 </button>
               );
             })}
-          </div>
-        </div>
 
-        <div className="panel">
-          <div className="panel-head">
-            <h2 className="panel-title">Sign in</h2>
           </div>
-          <form onSubmit={handleSubmit} className="panel-body space-y-5">
+
+        </section>
+
+
+        {/* ─────────────────────────────────────
+            Sign In
+        ───────────────────────────────────── */}
+        <section className="ns-login-card">
+
+          <div className="ns-login-card-header">
+
+            <div>
+              <span className="ns-login-section-label">
+                SECURE AUTHENTICATION
+              </span>
+
+              <h2>
+                Sign in
+              </h2>
+
+              <p>
+                Use your official credentials to continue.
+              </p>
+            </div>
+
+          </div>
+
+
+          <form
+            onSubmit={handleSubmit}
+            className="ns-login-form"
+          >
+
             {error && (
-              <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger-base)]/20 px-3 py-2.5 text-sm text-[var(--danger-base)]">
-                {error}
+              <div className="ns-login-error">
+                <Shield size={15} />
+                <span>{error}</span>
               </div>
             )}
 
-            <div>
-              <label htmlFor="login-email">Official email</label>
+
+            {/* Email */}
+            <div className="ns-login-field">
+
+              <label htmlFor="login-email">
+                Official email
+              </label>
+
               <input
                 id="login-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@department.gov.in"
+                autoComplete="email"
                 required
               />
+
             </div>
 
-            <div>
-              <label htmlFor="login-password">Password</label>
+
+            {/* Password */}
+            <div className="ns-login-field">
+
+              <label htmlFor="login-password">
+                Password
+              </label>
+
               <input
                 id="login-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
                 required
               />
+
             </div>
 
-            <button type="submit" disabled={loading} className="btn btn-primary w-full py-2.5">
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="ns-login-submit"
+            >
+
               {loading ? (
                 <>
-                  <span className="spinner" />
-                  Signing in…
+                  <span className="ns-login-spinner" />
+                  <span>Authenticating...</span>
                 </>
               ) : (
                 <>
                   <Lock size={16} />
-                  Continue
+                  <span>Continue securely</span>
                 </>
               )}
-            </button>
-          </form>
-        </div>
 
-        <p className="text-center text-xs text-[var(--text-tertiary)] leading-relaxed">
-          Ministry of Home Affairs · NCRB
-        </p>
-      </div>
+            </button>
+
+
+            <div className="ns-login-security-note">
+
+              <Lock size={13} />
+
+              <span>
+                Your session is protected by role-based access control.
+              </span>
+
+            </div>
+
+          </form>
+
+        </section>
+
+
+        {/* ─────────────────────────────────────
+            Footer
+        ───────────────────────────────────── */}
+        <footer className="ns-login-footer">
+
+          <div className="ns-login-footer-line" />
+
+          <div className="ns-login-footer-content">
+
+            <span>
+              Ministry of Home Affairs
+            </span>
+
+            <span className="ns-login-footer-dot">
+              •
+            </span>
+
+            <span>
+              National Crime Records Bureau
+            </span>
+
+          </div>
+
+          <span className="ns-login-footer-system">
+            NYAYA SETU · SECURE PROTOTYPE
+          </span>
+
+        </footer>
+
+      </main>
     </div>
   );
 };

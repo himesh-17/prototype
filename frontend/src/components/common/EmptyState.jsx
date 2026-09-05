@@ -1,7 +1,11 @@
 import React from 'react';
-import { Plus, FolderSearch, RefreshCw } from 'lucide-react';
+import {
+  Plus,
+  FolderSearch,
+  RefreshCw,
+} from 'lucide-react';
 
-export const EmptyState = ({
+const EmptyState = ({
   icon: Icon = FolderSearch,
   title = 'No records found',
   description = 'There are currently no items in this section.',
@@ -12,29 +16,66 @@ export const EmptyState = ({
   onSecondaryAction,
   className = '',
 }) => {
+  const hasActions = actionLabel || secondaryLabel;
+
   return (
-    <div className={`empty-state ${className}`}>
-      <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[var(--bg-overlay)] text-[var(--text-secondary)]">
-        <Icon size={22} strokeWidth={1.6} />
+    <div className={`empty-state ${className}`.trim()}>
+
+      <div className="empty-state-icon">
+        <Icon
+          size={22}
+          strokeWidth={1.6}
+        />
       </div>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      {(actionLabel || secondaryLabel) && (
-        <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+
+      <div className="empty-state-content">
+
+        <h3 className="empty-state-title">
+          {title}
+        </h3>
+
+        <p className="empty-state-description">
+          {description}
+        </p>
+
+      </div>
+
+      {hasActions && (
+        <div className="empty-state-actions">
+
           {secondaryLabel && (
-            <button type="button" onClick={onSecondaryAction} className="btn btn-secondary">
-              <RefreshCw size={15} />
+            <button
+              type="button"
+              onClick={onSecondaryAction}
+              className="btn btn-secondary"
+            >
+              <RefreshCw
+                size={15}
+                strokeWidth={1.8}
+              />
+
               {secondaryLabel}
             </button>
           )}
+
           {actionLabel && (
-            <button type="button" onClick={onAction} className="btn btn-primary">
-              <ActionIcon size={15} />
+            <button
+              type="button"
+              onClick={onAction}
+              className="btn btn-primary"
+            >
+              <ActionIcon
+                size={15}
+                strokeWidth={1.8}
+              />
+
               {actionLabel}
             </button>
           )}
+
         </div>
       )}
+
     </div>
   );
 };

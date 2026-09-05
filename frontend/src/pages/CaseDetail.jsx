@@ -6,11 +6,13 @@ import {
   getDocuments,
   updateCase,
   getUsers,
-  getCaseTimeline
+  getCaseTimeline,
 } from '../services/api';
+
 import { DocumentUploadModal } from '../components/common/DocumentUploadModal';
 import { DocumentViewerModal } from '../components/common/DocumentViewerModal';
 import { ChainOfCustodyModal } from './forensic/ChainOfCustodyModal';
+
 import {
   Briefcase,
   Box,
@@ -18,7 +20,6 @@ import {
   Plus,
   X,
   Edit2,
-  Download,
   ShieldCheck,
   Eye,
   Calendar,
@@ -28,26 +29,29 @@ import {
   ArrowLeft,
   CheckCircle2,
   Layers,
-  Search
+  Search,
 } from 'lucide-react';
 
+import '../styles/cases.css';
+
 const docTypeStyles = {
-  'FIR': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-emerald-500/25',
-  'Witness Statement': 'bg-[var(--info-soft)] text-[var(--info-base)] border-sky-500/25',
-  'Forensic Report': 'bg-[var(--bg-inset)] text-[var(--text-secondary)] border-purple-500/25',
-  'Evidence': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-amber-500/25',
-  'Judicial Order': 'bg-[var(--accent-faint)] text-[var(--accent-strong)] border-teal-500/25',
-  'Seizure Memo': 'bg-[var(--info-soft)] text-[var(--info-base)] border-indigo-500/25',
+  FIR: 'ns-doc-type-fir',
+  'Witness Statement': 'ns-doc-type-witness',
+  'Forensic Report': 'ns-doc-type-forensic',
+  Evidence: 'ns-doc-type-evidence',
+  'Judicial Order': 'ns-doc-type-judicial',
+  'Seizure Memo': 'ns-doc-type-seizure',
 };
 
 const classificationStyles = {
-  'Confidential': 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  'Secret': 'bg-[var(--warn-soft)] text-[var(--warn-base)] border-[var(--warn-soft)]',
-  'Top Secret': 'bg-rose-500/15 text-[var(--danger-base)] border-rose-500/30',
+  Confidential: 'ns-class-confidential',
+  Secret: 'ns-class-secret',
+  'Top Secret': 'ns-class-top-secret',
 };
 
 export const CaseDetail = () => {
   const { id } = useParams();
+
   const [caseData, setCaseData] = useState(null);
   const [assets, setAssets] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -55,13 +59,11 @@ export const CaseDetail = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modals
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  // Edit case form
   const [editForm, setEditForm] = useState({
     title: '',
     description: '',
@@ -72,6 +74,7 @@ export const CaseDetail = () => {
 
   const fetchData = async () => {
     setLoading(true);
+
     try {
       const [c, a, d, u, t] = await Promise.all([
         getCase(id),
@@ -80,16 +83,18 @@ export const CaseDetail = () => {
         getUsers(),
         getCaseTimeline(id),
       ]);
+
       setCaseData(c);
       setAssets(a || []);
       setDocuments(d || []);
       setUsers(u || []);
       setTimeline(t || []);
+
       if (c) {
         setEditForm({
-          title: c.title,
+          title: c.title || '',
           description: c.description || '',
-          status: c.status,
+          status: c.status || 'OPEN',
           priority: c.priority || 'HIGH',
           acts_sections: c.acts_sections || '',
         });
@@ -107,6 +112,7 @@ export const CaseDetail = () => {
 
   const handleUpdateCase = async (e) => {
     e.preventDefault();
+
     try {
       await updateCase(id, editForm);
       setShowEditModal(false);
@@ -118,270 +124,524 @@ export const CaseDetail = () => {
 
   if (loading) {
     return (
-      <div className="page flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="spinner" style={{ width: 28, height: 28 }} />
-        <span className="text-xs font-mono text-[var(--text-tertiary)] mt-4">
-          Loading case docket and cryptographic documents...
-        </span>
+      <div className="ns-case-loading">
+        <div className="spinner ns-case-spinner" />
+        <p>Loading case record...</p>
       </div>
     );
   }
 
   if (!caseData) {
     return (
-      <div className="page text-center py-20">
-        <h3 className="text-base font-semibold text-[var(--text-primary)]">Case record not found</h3>
-        <Link to="/cases" className="btn btn-primary mt-4 inline-flex items-center gap-2">
-          <ArrowLeft size={16} /> Back to Cases
-        </Link>
+      <div className="ns-case-not-found">
+        <div className="ns-case-not-found-card">
+          <div className="ns-case-not-found-icon">
+            <Briefcase size={22} />
+          </div>
+
+          <h3>Case record not found</h3>
+
+          <p>
+            The requested case record could not be located in the registry.
+          </p>
+
+          <Link to="/cases" className="btn btn-primary">
+            <ArrowLeft size={16} />
+            Back to Cases
+          </Link>
+        </div>
       </div>
     );
   }
 
-  const assignedIO = users.find(u => u.id === caseData.assigned_io_id);
+  const assignedIO = users.find(
+    (u) => u.id === caseData.assigned_io_id
+  );
+
+  const statusClass =
+    caseData.status === 'OPEN'
+      ? 'ns-status-open'
+      : caseData.status === 'CLOSED'
+      ? 'ns-status-closed'
+      : 'ns-status-neutral';
 
   return (
-    <div className="page">
-      <div className="page-header">
-        <div className="page-heading">
-          <Link to="/cases" className="page-eyebrow inline-flex items-center gap-1.5 hover:text-[var(--text-primary)]">
-            <ArrowLeft size={14} />
-            Cases
+    <div className="ns-case-page">
+
+      {/* =====================================================
+          CASE HEADER
+      ====================================================== */}
+
+      <section className="ns-case-header">
+
+        <div className="ns-case-header-main">
+
+          <Link to="/cases" className="ns-case-back">
+            <ArrowLeft size={15} />
+            <span>National Case Registry</span>
           </Link>
-          <h1 className="page-title">{caseData.title}</h1>
-          <p className="page-description">
-            {caseData.description || 'No description provided.'}
-          </p>
-          <div className="flex items-center gap-2 flex-wrap pt-1">
-            <span className="badge badge-info">{caseData.case_number}</span>
-            <span
-              className={`badge ${
-                caseData.status === 'OPEN'
-                  ? 'badge-warn'
-                  : caseData.status === 'CLOSED'
-                  ? 'badge-accent'
-                  : 'badge-info'
-              }`}
-            >
+
+          <div className="ns-case-heading-row">
+
+            <div className="ns-case-heading-icon">
+              <Briefcase size={22} />
+            </div>
+
+            <div>
+              <div className="ns-case-kicker">
+                CASE RECORD
+              </div>
+
+              <h1 className="ns-case-title">
+                {caseData.title}
+              </h1>
+
+              <p className="ns-case-description">
+                {caseData.description ||
+                  'No description has been provided for this case.'}
+              </p>
+            </div>
+
+          </div>
+
+          <div className="ns-case-identifiers">
+
+            <span className="ns-case-number">
+              {caseData.case_number}
+            </span>
+
+            <span className={`ns-case-status ${statusClass}`}>
+              <span className="ns-status-dot" />
               {caseData.status}
             </span>
-            <span className="badge">{caseData.priority || 'HIGH'}</span>
+
+            <span className="ns-case-priority">
+              Priority: {caseData.priority || 'HIGH'}
+            </span>
+
           </div>
+
         </div>
 
-        <div className="page-actions">
-          <button onClick={() => setShowUploadModal(true)} className="btn btn-primary">
+        <div className="ns-case-header-actions">
+
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="btn btn-primary"
+          >
             <Plus size={16} />
-            Upload document
+            Upload Document
           </button>
-          <button onClick={() => setShowEditModal(true)} className="btn btn-secondary">
+
+          <button
+            onClick={() => setShowEditModal(true)}
+            className="btn btn-secondary"
+          >
             <Edit2 size={15} />
-            Edit case
+            Edit Case
           </button>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div>
-          <span className="page-eyebrow">Sections</span>
-          <p className="text-sm text-[var(--text-primary)] mt-1.5">{caseData.acts_sections || 'BNS / IT Act'}</p>
         </div>
-        <div>
-          <span className="page-eyebrow">Investigating officer</span>
-          <p className="text-sm text-[var(--text-primary)] mt-1.5">
-            {caseData.assigned_io_name || assignedIO?.name || 'Inspector Rajesh Deshmukh'}
-          </p>
-        </div>
-        <div>
-          <span className="page-eyebrow">Police station</span>
-          <p className="text-sm text-[var(--text-primary)] mt-1.5">{caseData.police_station || 'Cyber Crime PS, Delhi'}</p>
-        </div>
-        <div>
-          <span className="page-eyebrow">Court</span>
-          <p className="text-sm text-[var(--text-primary)] mt-1.5">{caseData.court_jurisdiction || 'Special Cyber Court'}</p>
-        </div>
-      </div>
 
-      {/* Main Grid: Documents (with type badges) & Physical Evidence */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 panel flex flex-col">
-          <div className="panel-head">
-            <h3 className="panel-title">
-              <FileText size={17} className="text-[var(--accent-strong)]" />
-              Documents
-            </h3>
-            <span className="text-sm text-[var(--text-tertiary)]">{documents.length} files</span>
+      </section>
+
+      {/* =====================================================
+          CASE INFORMATION
+      ====================================================== */}
+
+      <section className="ns-case-info-card">
+
+        <div className="ns-case-info-heading">
+          <div className="ns-section-icon">
+            <Layers size={17} />
           </div>
 
-          <div className="overflow-x-auto flex-1">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Document Name</th>
-                  <th style={{ width: '150px' }}>Type</th>
-                  <th style={{ width: '120px' }}>Classification</th>
-                  <th style={{ width: '80px' }}>Version</th>
-                  <th style={{ width: '110px' }}>Digital Sig</th>
-                  <th style={{ width: '90px' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {documents.map(d => {
-                  const typeBadgeClass = docTypeStyles[d.document_type] || 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
-                  const classBadgeClass = classificationStyles[d.classification] || classificationStyles['Confidential'];
+          <div>
+            <h2>Case Information</h2>
+            <p>Administrative and jurisdiction details</p>
+          </div>
+        </div>
 
-                  return (
-                    <tr
-                      key={d.id}
-                      onClick={() => setSelectedDoc(d)}
-                      className="hover:bg-[var(--bg-overlay)] cursor-pointer transition-colors"
-                    >
-                      <td>
-                        <div className="font-medium text-[var(--text-primary)]">
+        <div className="ns-case-info-grid">
+
+          <div className="ns-info-item">
+            <span className="ns-info-label">
+              Acts & Penal Sections
+            </span>
+
+            <span className="ns-info-value">
+              {caseData.acts_sections || 'BNS / IT Act'}
+            </span>
+          </div>
+
+          <div className="ns-info-item">
+            <span className="ns-info-label">
+              Investigating Officer
+            </span>
+
+            <span className="ns-info-value">
+              {caseData.assigned_io_name ||
+                assignedIO?.name ||
+                'Inspector Rajesh Deshmukh'}
+            </span>
+          </div>
+
+          <div className="ns-info-item">
+            <span className="ns-info-label">
+              Police Station
+            </span>
+
+            <span className="ns-info-value">
+              {caseData.police_station ||
+                'Cyber Crime PS, Delhi'}
+            </span>
+          </div>
+
+          <div className="ns-info-item">
+            <span className="ns-info-label">
+              Court Jurisdiction
+            </span>
+
+            <span className="ns-info-value">
+              {caseData.court_jurisdiction ||
+                'Special Cyber Court'}
+            </span>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          DOCUMENTS + PHYSICAL ASSETS
+      ====================================================== */}
+
+      <section className="ns-case-content-grid">
+
+        {/* DOCUMENTS */}
+
+        <div className="ns-case-card ns-documents-card">
+
+          <div className="ns-card-header">
+
+            <div className="ns-card-heading">
+
+              <div className="ns-card-icon ns-card-icon-blue">
+                <FileText size={18} />
+              </div>
+
+              <div>
+                <h2>Digital Documents</h2>
+                <p>Documents secured within this case record</p>
+              </div>
+
+            </div>
+
+            <span className="ns-count">
+              {documents.length} files
+            </span>
+
+          </div>
+
+          <div className="ns-document-list">
+
+            {documents.length === 0 ? (
+
+              <div className="ns-empty-state">
+                <FileText size={28} />
+                <strong>No documents registered</strong>
+                <span>
+                  Upload a document to add it to this case.
+                </span>
+              </div>
+
+            ) : (
+
+              documents.map((d) => {
+
+                const typeClass =
+                  docTypeStyles[d.document_type] ||
+                  'ns-doc-type-default';
+
+                const classificationClass =
+                  classificationStyles[d.classification] ||
+                  classificationStyles.Confidential;
+
+                return (
+                  <div
+                    key={d.id}
+                    className="ns-document-row"
+                    onClick={() => setSelectedDoc(d)}
+                  >
+
+                    <div className="ns-document-main">
+
+                      <div className="ns-document-icon">
+                        <FileText size={18} />
+                      </div>
+
+                      <div className="ns-document-details">
+
+                        <div className="ns-document-name">
                           {d.filename}
                         </div>
-                        <div className="text-xs text-[var(--text-tertiary)] truncate max-w-xs mt-1 font-mono">
-                          SHA256: {d.sha256_hash?.substring(0, 18)}...
+
+                        <div className="ns-document-meta">
+
+                          <span className={typeClass}>
+                            {d.document_type}
+                          </span>
+
+                          <span className={classificationClass}>
+                            {d.classification ||
+                              'Confidential'}
+                          </span>
+
                         </div>
-                      </td>
-                      <td>
-                        <span className={`text-[11px] font-mono font-medium px-2 py-0.5 rounded-full border ${typeBadgeClass}`}>
-                          {d.document_type}
-                        </span>
-                      </td>
-                      <td>
-                        <span className={`text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full border font-semibold ${classBadgeClass}`}>
-                          {d.classification || 'Confidential'}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="font-mono text-xs text-[var(--text-secondary)]">
-                          v{d.current_version || 1}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="text-[var(--accent-strong)] text-xs font-mono flex items-center gap-1 font-semibold">
-                          <ShieldCheck size={14} /> VALID
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedDoc(d);
-                          }}
-                          className="btn btn-secondary text-xs px-2.5 py-1 inline-flex items-center gap-1"
-                        >
-                          <Eye size={12} />
-                          <span>View</span>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+
+                        <div className="ns-document-hash">
+                          SHA-256:
+                          {' '}
+                          {d.sha256_hash?.substring(0, 22)}
+                          ...
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div className="ns-document-version">
+                      <span>VERSION</span>
+                      <strong>
+                        v{d.current_version || 1}
+                      </strong>
+                    </div>
+
+                    <div className="ns-document-signature">
+
+                      <ShieldCheck size={16} />
+
+                      <div>
+                        <strong>Verified</strong>
+                        <span>Digital signature</span>
+                      </div>
+
+                    </div>
+
+                    <button
+                      className="ns-view-document"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedDoc(d);
+                      }}
+                    >
+                      <Eye size={15} />
+                      View
+                    </button>
+
+                  </div>
+                );
+              })
+
+            )}
+
           </div>
+
         </div>
 
-        {/* Physical Evidence Items & Custody (1 Col) */}
-        <div className="panel flex flex-col">
-          <div className="panel-head">
-            <h3 className="panel-title">
-              <Box size={17} className="text-[var(--accent-strong)]" />
-              Physical assets
-            </h3>
-            <span className="text-sm text-[var(--text-tertiary)]">{assets.length}</span>
-          </div>
-          <div className="panel-body space-y-4">
+        {/* PHYSICAL ASSETS */}
 
-            <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
-              {assets.length === 0 ? (
-                <p className="text-xs text-[var(--text-tertiary)] font-mono text-center py-6">
-                  No physical evidence logged for this case.
-                </p>
-              ) : (
-                assets.map(a => (
-                  <div
-                    key={a.id}
-                    className="p-3.5 rounded-lg bg-[var(--bg-overlay)] border border-[var(--border-subtle)] hover:border-[#00d4aa]/30 transition-all space-y-2"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="badge badge-info font-mono text-xs">{a.asset_number}</span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
-                        {a.status}
-                      </span>
-                    </div>
-                    <h4 className="text-xs font-semibold text-[var(--text-primary)]">{a.name}</h4>
-                    <p className="text-[11px] font-mono text-[var(--text-tertiary)]">
-                      Custodian: {a.current_custodian_name || 'Dr. Aarav Nambiar (CFSL)'}
-                    </p>
-                    <div className="pt-1 flex items-center justify-between text-[11px] font-mono">
-                      <span className="text-[var(--text-tertiary)]">Seal: {a.seal_number || 'INTACT'}</span>
-                      <button
-                        onClick={() => setSelectedAsset(a)}
-                        className="text-[var(--accent-strong)] hover:underline flex items-center gap-1 font-semibold"
-                      >
-                        <ShieldCheck size={12} />
-                        <span>Track Custody</span>
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
+        <div className="ns-case-card ns-assets-card">
+
+          <div className="ns-card-header">
+
+            <div className="ns-card-heading">
+
+              <div className="ns-card-icon ns-card-icon-slate">
+                <Box size={18} />
+              </div>
+
+              <div>
+                <h2>Physical Evidence</h2>
+                <p>Assets and chain of custody</p>
+              </div>
+
             </div>
+
+            <span className="ns-count">
+              {assets.length}
+            </span>
+
           </div>
 
-          <div className="pt-3 border-t border-[var(--border-subtle)] text-xs font-mono text-[var(--text-tertiary)] text-center">
+          <div className="ns-assets-list">
+
+            {assets.length === 0 ? (
+
+              <div className="ns-empty-state ns-empty-small">
+                <Box size={26} />
+                <strong>No physical evidence</strong>
+                <span>
+                  No assets have been logged for this case.
+                </span>
+              </div>
+
+            ) : (
+
+              assets.map((a) => (
+
+                <div
+                  key={a.id}
+                  className="ns-asset-item"
+                >
+
+                  <div className="ns-asset-top">
+
+                    <span className="ns-asset-number">
+                      {a.asset_number}
+                    </span>
+
+                    <span className="ns-asset-status">
+                      {a.status}
+                    </span>
+
+                  </div>
+
+                  <h3>{a.name}</h3>
+
+                  <div className="ns-asset-info">
+                    <span>Custodian</span>
+                    <strong>
+                      {a.current_custodian_name ||
+                        'Dr. Aarav Nambiar (CFSL)'}
+                    </strong>
+                  </div>
+
+                  <div className="ns-asset-footer">
+
+                    <span>
+                      Seal:{' '}
+                      {a.seal_number || 'INTACT'}
+                    </span>
+
+                    <button
+                      onClick={() => setSelectedAsset(a)}
+                    >
+                      <ShieldCheck size={14} />
+                      Track Custody
+                    </button>
+
+                  </div>
+
+                </div>
+
+              ))
+
+            )}
+
+          </div>
+
+          <div className="ns-assets-note">
+            <ShieldCheck size={14} />
             Every evidence handover is cryptographically signed
           </div>
+
         </div>
-      </div>
 
-      {/* Case Timeline: Legal & Investigative Milestones */}
-      <div className="panel">
-        <div className="panel-head">
-          <h3 className="panel-title">
-            <Clock size={17} className="text-[var(--accent-strong)]" />
-            Timeline
-          </h3>
-          <span className="text-sm text-[var(--text-tertiary)]">{timeline.length} events</span>
-        </div>
-        <div className="panel-body">
+      </section>
 
-        <div className="relative border-l-2 border-[var(--accent-soft)] ml-4 space-y-6 pl-6 py-2">
-          {timeline.map((item, idx) => (
-            <div key={item.id || idx} className="relative group">
-              {/* Timeline marker */}
-              <div className="absolute -left-[31px] top-1 h-3.5 w-3.5 rounded-full bg-[#111116] border-2 border-[#00d4aa] group-hover:scale-125 transition-transform flex items-center justify-center">
-                <div className="h-1 w-1 rounded-full bg-[#00d4aa]" />
-              </div>
+      {/* =====================================================
+          TIMELINE
+      ====================================================== */}
 
-              <div className="rounded-lg bg-[var(--bg-overlay)] p-4 border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-colors space-y-1.5">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-xs font-semibold text-[var(--text-primary)]">
-                      {item.title}
-                    </h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--accent-faint)] text-[var(--accent-strong)] border border-[var(--accent-faint)]">
-                      {item.badge || item.type}
-                    </span>
-                  </div>
-                  <span className="text-[11px] font-mono text-[var(--text-tertiary)]">
-                    {item.date}
-                  </span>
-                </div>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {item.detail}
-                </p>
-              </div>
+      <section className="ns-case-card ns-timeline-card">
+
+        <div className="ns-card-header">
+
+          <div className="ns-card-heading">
+
+            <div className="ns-card-icon ns-card-icon-blue">
+              <Clock size={18} />
             </div>
-          ))}
-        </div>
-        </div>
-      </div>
 
-      {/* Modals */}
+            <div>
+              <h2>Case Timeline</h2>
+              <p>
+                Legal, investigative and evidence milestones
+              </p>
+            </div>
+
+          </div>
+
+          <span className="ns-count">
+            {timeline.length} events
+          </span>
+
+        </div>
+
+        <div className="ns-timeline">
+
+          {timeline.length === 0 ? (
+
+            <div className="ns-empty-state">
+              <Clock size={28} />
+              <strong>No timeline events</strong>
+              <span>
+                Case activity will appear here.
+              </span>
+            </div>
+
+          ) : (
+
+            timeline.map((item, idx) => (
+
+              <div
+                key={item.id || idx}
+                className="ns-timeline-item"
+              >
+
+                <div className="ns-timeline-marker">
+                  <span />
+                </div>
+
+                <div className="ns-timeline-content">
+
+                  <div className="ns-timeline-top">
+
+                    <div className="ns-timeline-title-group">
+
+                      <h3>{item.title}</h3>
+
+                      <span className="ns-timeline-badge">
+                        {item.badge || item.type}
+                      </span>
+
+                    </div>
+
+                    <time>
+                      {item.date}
+                    </time>
+
+                  </div>
+
+                  <p>{item.detail}</p>
+
+                </div>
+
+              </div>
+
+            ))
+
+          )}
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          DOCUMENT UPLOAD
+      ====================================================== */}
+
       {showUploadModal && (
         <DocumentUploadModal
           caseId={caseData.id}
@@ -391,6 +651,10 @@ export const CaseDetail = () => {
         />
       )}
 
+      {/* =====================================================
+          DOCUMENT VIEWER
+      ====================================================== */}
+
       {selectedDoc && (
         <DocumentViewerModal
           document={selectedDoc}
@@ -399,100 +663,195 @@ export const CaseDetail = () => {
         />
       )}
 
+      {/* =====================================================
+          CHAIN OF CUSTODY
+      ====================================================== */}
+
       {selectedAsset && (
         <ChainOfCustodyModal
           asset={selectedAsset}
-          events={selectedAsset.events || [
-            {
-              id: 1,
-              action: 'EVIDENCE_SEIZED',
-              from_name: 'Crime Scene (Noida Sector 62)',
-              to_name: 'Inspector Rajesh Deshmukh',
-              timestamp: '2026-08-16T18:00:00Z',
-              location: 'Noida Sector 62',
-              seal_status: 'Sealed with Lacquer Stamp #DL-9912',
-              remarks: 'Seized during authorized raid.',
-            },
-            {
-              id: 2,
-              action: 'LAB_INTAKE_RECEIVED',
-              from_name: 'Sub-Inspector Anil Kumar',
-              to_name: 'Dr. Aarav Nambiar (CFSL)',
-              timestamp: '2026-08-20T11:45:00Z',
-              location: 'CFSL Clean Room 2',
-              seal_status: 'Seal Checked & Intact',
-              remarks: 'Bitstream image created under write-blocker.',
-            }
-          ]}
+          events={
+            selectedAsset.events || [
+              {
+                id: 1,
+                action: 'EVIDENCE_SEIZED',
+                from_name: 'Crime Scene (Noida Sector 62)',
+                to_name: 'Inspector Rajesh Deshmukh',
+                timestamp: '2026-08-16T18:00:00Z',
+                location: 'Noida Sector 62',
+                seal_status:
+                  'Sealed with Lacquer Stamp #DL-9912',
+                remarks:
+                  'Seized during authorized raid.',
+              },
+              {
+                id: 2,
+                action: 'LAB_INTAKE_RECEIVED',
+                from_name: 'Sub-Inspector Anil Kumar',
+                to_name: 'Dr. Aarav Nambiar (CFSL)',
+                timestamp: '2026-08-20T11:45:00Z',
+                location: 'CFSL Clean Room 2',
+                seal_status: 'Seal Checked & Intact',
+                remarks:
+                  'Bitstream image created under write-blocker.',
+              },
+            ]
+          }
           onClose={() => setSelectedAsset(null)}
           onRefresh={() => fetchData()}
         />
       )}
 
-      {/* Edit Case Modal */}
+      {/* =====================================================
+          EDIT CASE MODAL
+      ====================================================== */}
+
       {showEditModal && (
-        <div className="ns-cases-backdrop" onClick={() => setShowEditModal(false)} role="dialog" aria-modal="true">
+
+        <div
+          className="ns-edit-backdrop"
+          onClick={() => setShowEditModal(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+
           <div
-            className="ns-cases-modal max-w-lg bg-[var(--bg-raised)] border border-[var(--border-default)] shadow-2xl rounded-lg overflow-hidden p-0 animate-modal-in"
-            onClick={e => e.stopPropagation()}
+            className="ns-edit-modal"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-overlay)] px-6 py-4">
-              <h3 className="text-sm font-semibold text-[var(--text-primary)]">Edit Case Details</h3>
-              <button onClick={() => setShowEditModal(false)} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] p-1 rounded">
-                <X size={16} />
+
+            <div className="ns-edit-header">
+
+              <div>
+                <span>CASE MANAGEMENT</span>
+                <h2>Edit Case Details</h2>
+              </div>
+
+              <button
+                onClick={() => setShowEditModal(false)}
+                aria-label="Close edit case"
+              >
+                <X size={18} />
               </button>
+
             </div>
-            <form onSubmit={handleUpdateCase} className="p-6 space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Title</label>
+
+            <form
+              onSubmit={handleUpdateCase}
+              className="ns-edit-form"
+            >
+
+              <div className="ns-edit-field ns-edit-full">
+                <label>Case Title</label>
+
                 <input
-                  className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                   value={editForm.title}
-                  onChange={e => setEditForm({ ...editForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      title: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Status</label>
+
+              <div className="ns-edit-field">
+                <label>Status</label>
+
                 <select
-                  className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2"
                   value={editForm.status}
-                  onChange={e => setEditForm({ ...editForm, status: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      status: e.target.value,
+                    })
+                  }
                 >
                   <option value="OPEN">OPEN</option>
                   <option value="CLOSED">CLOSED</option>
-                  <option value="ARCHIVED">ARCHIVED</option>
+                  <option value="ARCHIVED">
+                    ARCHIVED
+                  </option>
                 </select>
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Acts & Penal Sections</label>
+
+              <div className="ns-edit-field">
+                <label>Priority</label>
+
+                <select
+                  value={editForm.priority}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      priority: e.target.value,
+                    })
+                  }
+                >
+                  <option value="LOW">LOW</option>
+                  <option value="MEDIUM">MEDIUM</option>
+                  <option value="HIGH">HIGH</option>
+                </select>
+              </div>
+
+              <div className="ns-edit-field ns-edit-full">
+                <label>Acts & Penal Sections</label>
+
                 <input
-                  className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2 font-mono"
                   value={editForm.acts_sections}
-                  onChange={e => setEditForm({ ...editForm, acts_sections: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      acts_sections: e.target.value,
+                    })
+                  }
                 />
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-[var(--text-tertiary)]">Case Facts / Description</label>
+
+              <div className="ns-edit-field ns-edit-full">
+                <label>Case Facts / Description</label>
+
                 <textarea
-                  className="input bg-[var(--bg-inset)] border-[var(--border-default)] text-xs py-2 min-h-[70px]"
                   value={editForm.description}
-                  onChange={e => setEditForm({ ...editForm, description: e.target.value })}
-                  rows={3}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      description: e.target.value,
+                    })
+                  }
+                  rows={5}
                 />
               </div>
-              <div className="flex justify-end gap-2 pt-3 border-t border-[var(--border-subtle)]">
-                <button type="button" onClick={() => setShowEditModal(false)} className="btn btn-secondary text-xs px-4 py-2">
+
+              <div className="ns-edit-actions">
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowEditModal(false)
+                  }
+                  className="btn btn-secondary"
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary text-xs px-5 py-2">
+
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                >
                   Save Changes
                 </button>
+
               </div>
+
             </form>
+
           </div>
+
         </div>
+
       )}
+
     </div>
   );
 };

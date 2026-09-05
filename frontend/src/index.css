@@ -13,91 +13,197 @@
 @import "./styles/court.css";
 @import "./styles/admin.css";
 
+
 /* ═══════════════════════════════════════════
-   Global Design Tokens
+   NYAYA SETU — GLOBAL DESIGN TOKENS
    ═══════════════════════════════════════════ */
 
 :root {
   color-scheme: light;
 
-  --bg-base: #F7F9FB;
+  /* ── Surfaces ───────────────────────────── */
+
+  --bg-base: #F7F9FC;
   --bg-raised: #FFFFFF;
   --bg-overlay: #FFFFFF;
+  --bg-card: #FFFFFF;
   --bg-inset: #F1F5F9;
 
-  --border-faint: #E2E8F0;
-  --border-subtle: #D9E0E7;
+  /* ── Borders ────────────────────────────── */
+
+  --border-faint: #E8EDF3;
+  --border-subtle: #DCE3EA;
   --border-default: #CBD5E1;
   --border-strong: #94A3B8;
+
+  /* ── Typography ─────────────────────────── */
 
   --text-primary: #002147;
   --text-secondary: #334155;
   --text-tertiary: #64748B;
   --text-disabled: #94A3B8;
 
+  /* Text used on strong/accent backgrounds */
+  --text-on-accent: #FFFFFF;
+
+  /* ── Primary Accent ─────────────────────── */
+
   --accent-base: #0056B3;
   --accent-strong: #004494;
-  --accent-soft: rgba(0, 86, 179, 0.08);
-  --accent-faint: rgba(0, 86, 179, 0.04);
+
+  --accent-soft: rgba(0, 86, 179, 0.10);
+  --accent-faint: rgba(0, 86, 179, 0.055);
+
+  /* ── Success ────────────────────────────── */
+
+  --success-base: #15803D;
+  --success-soft: rgba(22, 163, 74, 0.11);
+  --success-faint: rgba(22, 163, 74, 0.055);
+
+  /* ── Warning ────────────────────────────── */
 
   --warn-base: #B45309;
   --warn-soft: rgba(245, 158, 11, 0.12);
+  --warn-faint: rgba(245, 158, 11, 0.055);
+
+  /* ── Danger ─────────────────────────────── */
 
   --danger-base: #B91C1C;
   --danger-soft: rgba(239, 68, 68, 0.12);
+  --danger-faint: rgba(239, 68, 68, 0.055);
 
-  --info-base: #64748B;
-  --info-soft: rgba(100, 116, 139, 0.1);
+  /* ── Information ────────────────────────── */
 
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  --info-base: #475569;
+  --info-soft: rgba(100, 116, 139, 0.11);
+  --info-faint: rgba(100, 116, 139, 0.055);
+
+  /* ── Purple ─────────────────────────────── */
+
+  --purple-base: #7E22CE;
+  --purple-soft: rgba(168, 85, 247, 0.11);
+
+  /* ── Radius ─────────────────────────────── */
+
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 7px;
+  --radius-lg: 9px;
   --radius-xl: 12px;
 
-  --shadow-overlay: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px var(--border-subtle);
+  /* ── Shadows ────────────────────────────── */
 
-  --font-sans: 'Inter', 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --shadow-xs:
+    0 1px 2px rgba(15, 23, 42, 0.04);
+
+  --shadow-sm:
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 1px 2px rgba(15, 23, 42, 0.03);
+
+  --shadow-md:
+    0 4px 10px rgba(15, 23, 42, 0.06),
+    0 2px 4px rgba(15, 23, 42, 0.03);
+
+  --shadow-overlay:
+    0 10px 30px rgba(15, 23, 42, 0.10),
+    0 0 0 1px var(--border-subtle);
+
+  /* ── Typography ─────────────────────────── */
+
+  --font-sans:
+    'Geist',
+    'Noto Sans',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+
+  --font-mono:
+    'Geist Mono',
+    'JetBrains Mono',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  /* ── Layout ─────────────────────────────── */
+
+  --content-max-width: 1440px;
+  --page-padding: 28px;
+
+  /* ── Motion ─────────────────────────────── */
+
+  --transition-fast: 120ms ease;
+  --transition-base: 160ms ease;
+  --transition-slow: 220ms ease;
 }
+
 
 /* ═══════════════════════════════════════════
-   Global Reset
+   GLOBAL RESET
    ═══════════════════════════════════════════ */
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
-html,
+html {
+  min-height: 100%;
+  background: var(--bg-base);
+  scroll-behavior: smooth;
+}
+
 body,
 #root {
   min-height: 100dvh;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
   background: var(--bg-base);
   color: var(--text-primary);
+
   font-family: var(--font-sans);
   font-size: 15px;
   line-height: 1.55;
-  font-feature-settings: 'cv11', 'ss01', 'ss03';
+
+  font-feature-settings:
+    'cv11',
+    'ss01',
+    'ss03';
+
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   text-rendering: optimizeLegibility;
+
   overflow-x: hidden;
 }
 
+
+/* ═══════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════ */
+
 ::selection {
-  background: var(--accent-soft);
+  background: rgba(0, 86, 179, 0.16);
   color: var(--accent-strong);
 }
 
+
 /* ═══════════════════════════════════════════
-   Global Scrollbar
+   GLOBAL SCROLLBAR
    ═══════════════════════════════════════════ */
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-track {
@@ -105,17 +211,23 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-default);
+  background: #CBD5E1;
   border-radius: 999px;
   border: 2px solid var(--bg-base);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
+  background: #94A3B8;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+
+
 /* ═══════════════════════════════════════════
-   Global Typography
+   GLOBAL TYPOGRAPHY
    ═══════════════════════════════════════════ */
 
 a {
@@ -129,18 +241,22 @@ h3,
 h4,
 h5,
 h6 {
+  margin: 0;
+
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: -0.015em;
+
   color: var(--text-primary);
+
   text-wrap: balance;
 }
 
 h1 {
   font-size: 1.85rem;
-  letter-spacing: -0.03em;
-  font-weight: 600;
   line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.03em;
 }
 
 h2 {
@@ -153,29 +269,87 @@ h3 {
   line-height: 1.35;
 }
 
+h4 {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
 p {
+  margin: 0;
   color: var(--text-secondary);
   text-wrap: pretty;
 }
 
+small {
+  font-size: 0.8125rem;
+}
+
 code,
+pre,
 .mono {
   font-family: var(--font-mono);
+}
+
+code,
+.mono {
   font-size: 0.85em;
   letter-spacing: -0.01em;
 }
 
+
 /* ═══════════════════════════════════════════
-   Global Form Normalization
+   GLOBAL BUTTON NORMALIZATION
    ═══════════════════════════════════════════ */
 
 button {
+  margin: 0;
+
   font: inherit;
   color: inherit;
+
   background: none;
   border: none;
+
   cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
 }
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-base);
+  outline-offset: 2px;
+}
+
+
+/* ═══════════════════════════════════════════
+   PRIMARY BUTTON FOUNDATION
+   ═══════════════════════════════════════════
+
+   .btn-primary is mainly defined in
+   styles/components.css.
+
+   These rules guarantee proper contrast
+   for the primary action buttons.
+   ═══════════════════════════════════════════ */
+
+.btn-primary {
+  color: var(--text-on-accent);
+}
+
+.btn-primary svg {
+  color: currentColor;
+  flex-shrink: 0;
+}
+
+
+/* ═══════════════════════════════════════════
+   FORM NORMALIZATION
+   ═══════════════════════════════════════════ */
 
 input,
 select,
@@ -188,13 +362,22 @@ input,
 select,
 textarea {
   color: var(--text-primary);
+
   background: var(--bg-inset);
+
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
+
   padding: 0.55rem 0.75rem;
+
   font-size: 0.875rem;
+
   width: 100%;
-  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+
+  transition:
+    border-color var(--transition-base),
+    background var(--transition-base),
+    box-shadow var(--transition-base);
 }
 
 input::placeholder,
@@ -212,10 +395,26 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
+
   border-color: var(--accent-base);
+
   background: var(--bg-raised);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+
+  box-shadow:
+    0 0 0 3px var(--accent-soft);
 }
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* ═══════════════════════════════════════════
+   FILE INPUT
+   ═══════════════════════════════════════════ */
 
 input[type='file'] {
   padding: 0.4rem;
@@ -225,33 +424,59 @@ input[type='file'] {
 input[type='file']::file-selector-button {
   background: var(--bg-overlay);
   color: var(--text-primary);
+
   border: 1px solid var(--border-default);
   border-radius: var(--radius-xs);
+
   padding: 0.3rem 0.7rem;
   margin-right: 0.75rem;
+
   font-size: 0.8125rem;
+  font-family: var(--font-sans);
+
   cursor: pointer;
-  transition: background 160ms ease;
+
+  transition:
+    background var(--transition-base),
+    border-color var(--transition-base);
 }
 
 input[type='file']::file-selector-button:hover {
   background: var(--bg-raised);
+  border-color: var(--border-strong);
 }
+
+
+/* ═══════════════════════════════════════════
+   LABELS
+   ═══════════════════════════════════════════ */
 
 label {
   display: block;
-  font-size: 0.8rem;
-  letter-spacing: 0.01em;
-  color: var(--text-secondary);
+
   margin-bottom: 0.45rem;
+
+  font-size: 0.8rem;
   font-weight: 500;
+
+  letter-spacing: 0.01em;
+
+  color: var(--text-secondary);
 }
+
+
+/* ═══════════════════════════════════════════
+   SELECT
+   ═══════════════════════════════════════════ */
 
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10' fill='none'><path d='M2 3.5L5 6.5L8 3.5' stroke='%2371717a' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10' fill='none'><path d='M2 3.5L5 6.5L8 3.5' stroke='%2364748B' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
+
   padding-right: 2rem;
 }
 
@@ -260,8 +485,32 @@ select option {
   color: var(--text-primary);
 }
 
+
 /* ═══════════════════════════════════════════
-   Global Keyframe Animations
+   TABLE / INTERACTION HELPERS
+   ═══════════════════════════════════════════ */
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-fast);
+}
+
+
+/* ═══════════════════════════════════════════
+   GLOBAL KEYFRAME ANIMATIONS
    ═══════════════════════════════════════════ */
 
 @keyframes fadeIn {
@@ -302,11 +551,15 @@ select option {
   }
 }
 
+
 /* ═══════════════════════════════════════════
-   Global Accessibility
+   REDUCED MOTION / ACCESSIBILITY
    ═══════════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
   *,
   *::before,
@@ -320,5 +573,38 @@ select option {
   .skeleton {
     animation: none !important;
     background: var(--bg-raised) !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE TYPOGRAPHY / SPACING
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  :root {
+    --page-padding: 18px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.55rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --page-padding: 14px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
   }
 }
